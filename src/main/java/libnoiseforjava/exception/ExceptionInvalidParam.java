@@ -25,7 +25,7 @@
 
 package libnoiseforjava.exception;
 
-public class ExceptionInvalidParam extends Exception
+public class ExceptionInvalidParam extends RuntimeException
 {
 
    /**

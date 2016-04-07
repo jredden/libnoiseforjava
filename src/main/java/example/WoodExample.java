@@ -34,84 +34,87 @@ import javax.imageio.ImageIO;
 
 import libnoiseforjava.NoiseGen.NoiseQuality;
 import libnoiseforjava.exception.*;
-
 import libnoiseforjava.module.*;
 import libnoiseforjava.util.*;
 
-public class GraniteExample {
-	// generates an example Granite texture, as shown at
+public class WoodExample {
+	// generates an example Wood grain texture, as shown at
 	// http://libnoise.sourceforge.net/examples/textures/index.html
 
 	static final int TEXTURE_HEIGHT = 256;
 
 	public static void main(String[] args) throws ExceptionInvalidParam {
 
-		// Primary granite texture. This generates the "roughness" of the
-		// texture
-		// when lit by a light source.
-		Billow primaryGranite = new Billow();
-		primaryGranite.setSeed(0);
-		primaryGranite.setFrequency(8.0);
-		primaryGranite.setPersistence(0.625);
-		primaryGranite.setLacunarity(2.18359375);
-		primaryGranite.setOctaveCount(6);
-		primaryGranite.setNoiseQuality(NoiseQuality.QUALITY_STD);
+		// Base wood texture. The base texture uses concentric cylinders aligned
+		// on the z axis, like a log.
+		Cylinders baseWood = new Cylinders();
+		baseWood.setFrequency(16.0);
 
-		// Use Voronoi polygons to produce the small grains for the granite
+		// Perlin noise to use for the wood grain.
+		Perlin woodGrainNoise = new Perlin();
+		woodGrainNoise.setSeed(0);
+		woodGrainNoise.setFrequency(48.0);
+		woodGrainNoise.setPersistence(0.5);
+		woodGrainNoise.setLacunarity(2.20703125);
+		woodGrainNoise.setOctaveCount(3);
+		woodGrainNoise.setNoiseQuality(NoiseQuality.QUALITY_STD);
+
+		// Stretch the Perlin noise in the same direction as the center of the
+		// log. This produces a nice wood-grain texture.
+		ScalePoint scaledBaseWoodGrain = new ScalePoint(woodGrainNoise);
+		scaledBaseWoodGrain.setYScale(0.25);
+
+		// Scale the wood-grain values so that they may be added to the base
+		// wood
 		// texture.
-		Voronoi baseGrains = new Voronoi();
-		baseGrains.setSeed(1);
-		baseGrains.setFrequency(16.0);
-		baseGrains.enableDistance(true);
+		ScaleBias woodGrain = new ScaleBias(scaledBaseWoodGrain);
+		woodGrain.setScale(0.25);
+		woodGrain.setBias(0.125);
 
-		// Scale the small grain values so that they may be added to the base
-		// granite texture. Voronoi polygons normally generate pits, so apply a
-		// negative scaling factor to produce bumps instead.
-		ScaleBias scaledGrains = new ScaleBias(baseGrains);
-		scaledGrains.setScale(-0.5);
-		scaledGrains.setBias(0.0);
+		// Add the wood grain texture to the base wood texture.
+		Add combinedWood = new Add(baseWood, woodGrain);
 
-		// Combine the primary granite texture with the small grain texture.
-		Add combinedGranite = new Add(primaryGranite, scaledGrains);
-		// Finally, perturb the granite texture to add realism.
-		Turbulence finalGranite = new Turbulence(combinedGranite);
-		finalGranite.setSeed(2);
-		finalGranite.setFrequency(4.0);
-		finalGranite.setPower(1.0 / 8.0);
-		finalGranite.setRoughness(6);
+		// Slightly perturb the wood texture for more realism.
+		Turbulence perturbedWood = new Turbulence(combinedWood);
+		perturbedWood.setSeed(1);
+		perturbedWood.setFrequency(4.0);
+		perturbedWood.setPower(1.0 / 256.0);
+		perturbedWood.setRoughness(4);
 
-		// Given the granite noise module, create a non-seamless texture map
+		// Cut the wood texture a small distance from the center of the "log".
+		TranslatePoint translatedWood = new TranslatePoint(perturbedWood);
+		translatedWood.setZTranslation(1.48);
+
+		// Cut the wood texture on an angle to produce a more interesting wood
+		// texture.
+		RotatePoint rotatedWood = new RotatePoint(translatedWood);
+		rotatedWood.setAngles(84.0, 0.0, 0.0);
+		// Finally, perturb the wood texture to produce the final texture.
+		Turbulence finalWood = new Turbulence(rotatedWood);
+		finalWood.setSeed(2);
+		finalWood.setFrequency(2.0);
+		finalWood.setPower(1.0 / 64.0);
+		finalWood.setRoughness(4);
+
+		// Given the wood noise module, create a non-seamless texture map
 		// create Noisemap object
 		NoiseMap textureMap = new NoiseMap(256, 256);
-		textureMap = CreatePlanarTexture(finalGranite, false, TEXTURE_HEIGHT);
+		textureMap = CreatePlanarTexture(finalWood, false, TEXTURE_HEIGHT);
 
 		// create renderer object
 		RendererImage renderer = new RendererImage();
 
-		// Create a gray granite palette. Black and pink appear at either ends
-		// of
-		// the palette; those colors provide the charactistic black and pink
-		// flecks
-		// in granite.
+		// Create a dark-stained wood palette
 		renderer.clearGradient();
-		renderer.addGradientPoint(-1.0000, new ColorCafe(0, 0, 0, 255));
-		renderer.addGradientPoint(-0.9375, new ColorCafe(0, 0, 0, 255));
-		renderer.addGradientPoint(-0.8750, new ColorCafe(216, 216, 242, 255));
-		renderer.addGradientPoint(0.0000, new ColorCafe(191, 191, 191, 255));
-		renderer.addGradientPoint(0.5000, new ColorCafe(210, 116, 125, 255));
-		renderer.addGradientPoint(0.7500, new ColorCafe(210, 113, 98, 255));
-		renderer.addGradientPoint(1.0000, new ColorCafe(255, 176, 192, 255));
+		renderer.addGradientPoint(-1.00, new ColorCafe(189, 94, 4, 255));
+		renderer.addGradientPoint(0.50, new ColorCafe(144, 48, 6, 255));
+		renderer.addGradientPoint(1.00, new ColorCafe(60, 10, 8, 255));
 
 		// Set up the texture renderer and pass the noise map to it.
 		ImageCafe destTexture = new ImageCafe(textureMap.getWidth(),
 				textureMap.getHeight());
 		renderer.setSourceNoiseMap(textureMap);
 		renderer.setDestImage(destTexture);
-		renderer.enableLight(true);
-		renderer.setLightAzimuth(135.0);
-		renderer.setLightElev(60.0);
-		renderer.setLightContrast(2.0);
-		renderer.setLightColor(new ColorCafe(255, 255, 255, 0));
 
 		// Render the texture.
 		renderer.render();
@@ -120,7 +123,7 @@ public class GraniteExample {
 				destTexture.getWidth(), destTexture);
 
 		try {
-			ImageIO.write(im, "png", new File("granite_test.png"));
+			ImageIO.write(im, "png", new File("wood_test.png"));
 		} catch (IOException e1) {
 			System.out.println("Could not write the image file.");
 		}

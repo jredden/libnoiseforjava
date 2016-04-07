@@ -38,80 +38,85 @@ import libnoiseforjava.exception.*;
 import libnoiseforjava.module.*;
 import libnoiseforjava.util.*;
 
-public class GraniteExample {
-	// generates an example Granite texture, as shown at
+public class JadeExample {
+	// generates an example Jade texture, as shown at
 	// http://libnoise.sourceforge.net/examples/textures/index.html
 
 	static final int TEXTURE_HEIGHT = 256;
 
 	public static void main(String[] args) throws ExceptionInvalidParam {
 
-		// Primary granite texture. This generates the "roughness" of the
-		// texture
-		// when lit by a light source.
-		Billow primaryGranite = new Billow();
-		primaryGranite.setSeed(0);
-		primaryGranite.setFrequency(8.0);
-		primaryGranite.setPersistence(0.625);
-		primaryGranite.setLacunarity(2.18359375);
-		primaryGranite.setOctaveCount(6);
-		primaryGranite.setNoiseQuality(NoiseQuality.QUALITY_STD);
+		// Primary jade texture. The ridges from the ridged-multifractal module
+		// produces the veins.
+		RidgedMulti primaryJade = new RidgedMulti();
+		primaryJade.setSeed(0);
+		primaryJade.setFrequency(2.0);
+		primaryJade.setLacunarity(2.20703125);
+		primaryJade.setOctaveCount(6);
+		// primaryJade.setNoiseQuality (NoiseQuality.QUALITY_STD);
 
-		// Use Voronoi polygons to produce the small grains for the granite
-		// texture.
-		Voronoi baseGrains = new Voronoi();
-		baseGrains.setSeed(1);
-		baseGrains.setFrequency(16.0);
-		baseGrains.enableDistance(true);
+		// Base of the secondary jade texture. The base texture uses concentric
+		// cylinders aligned on the z axis, which will eventually be perturbed.
+		Cylinders baseSecondaryJade = new Cylinders();
+		baseSecondaryJade.setFrequency(2.0);
 
-		// Scale the small grain values so that they may be added to the base
-		// granite texture. Voronoi polygons normally generate pits, so apply a
-		// negative scaling factor to produce bumps instead.
-		ScaleBias scaledGrains = new ScaleBias(baseGrains);
-		scaledGrains.setScale(-0.5);
-		scaledGrains.setBias(0.0);
+		// Rotate the base secondary jade texture so that the cylinders are not
+		// aligned with any axis. This produces more variation in the secondary
+		// jade texture since the texture is parallel to the y-axis.
+		RotatePoint rotatedBaseSecondaryJade = new RotatePoint(
+				baseSecondaryJade);
+		rotatedBaseSecondaryJade.setAngles(90.0, 25.0, 5.0);
 
-		// Combine the primary granite texture with the small grain texture.
-		Add combinedGranite = new Add(primaryGranite, scaledGrains);
-		// Finally, perturb the granite texture to add realism.
-		Turbulence finalGranite = new Turbulence(combinedGranite);
-		finalGranite.setSeed(2);
-		finalGranite.setFrequency(4.0);
-		finalGranite.setPower(1.0 / 8.0);
-		finalGranite.setRoughness(6);
+		// Slightly perturb the secondary jade texture for more realism.
+		Turbulence perturbedBaseSecondaryJade = new Turbulence(
+				rotatedBaseSecondaryJade);
+		perturbedBaseSecondaryJade.setSeed(1);
+		perturbedBaseSecondaryJade.setFrequency(4.0);
+		perturbedBaseSecondaryJade.setPower(1.0 / 4.0);
+		perturbedBaseSecondaryJade.setRoughness(4);
 
-		// Given the granite noise module, create a non-seamless texture map
+		// Scale the secondary jade texture so it contributes a small part to
+		// the
+		// final jade texture.
+		ScaleBias secondaryJade = new ScaleBias(perturbedBaseSecondaryJade);
+		secondaryJade.setScale(0.25);
+		secondaryJade.setBias(0.0);
+
+		// Add the two jade textures together. These two textures were produced
+		// using different combinations of coherent noise, so the final texture
+		// will
+		// have a lot of variation.
+		Add combinedJade = new Add(primaryJade, secondaryJade);
+
+		// Finally, perturb the combined jade textures to produce the final jade
+		// texture. A low roughness produces nice veins.
+		Turbulence finalJade = new Turbulence(combinedJade);
+		finalJade.setSeed(2);
+		finalJade.setFrequency(4.0);
+		finalJade.setPower(1.0 / 16.0);
+		finalJade.setRoughness(2);
+
+		// Given the jade noise module, create a non-seamless texture map
 		// create Noisemap object
 		NoiseMap textureMap = new NoiseMap(256, 256);
-		textureMap = CreatePlanarTexture(finalGranite, false, TEXTURE_HEIGHT);
+		textureMap = CreatePlanarTexture(finalJade, false, TEXTURE_HEIGHT);
 
 		// create renderer object
 		RendererImage renderer = new RendererImage();
 
-		// Create a gray granite palette. Black and pink appear at either ends
-		// of
-		// the palette; those colors provide the charactistic black and pink
-		// flecks
-		// in granite.
+		// jade gradient
 		renderer.clearGradient();
-		renderer.addGradientPoint(-1.0000, new ColorCafe(0, 0, 0, 255));
-		renderer.addGradientPoint(-0.9375, new ColorCafe(0, 0, 0, 255));
-		renderer.addGradientPoint(-0.8750, new ColorCafe(216, 216, 242, 255));
-		renderer.addGradientPoint(0.0000, new ColorCafe(191, 191, 191, 255));
-		renderer.addGradientPoint(0.5000, new ColorCafe(210, 116, 125, 255));
-		renderer.addGradientPoint(0.7500, new ColorCafe(210, 113, 98, 255));
-		renderer.addGradientPoint(1.0000, new ColorCafe(255, 176, 192, 255));
+		renderer.addGradientPoint(-1.000, new ColorCafe(24, 146, 102, 255));
+		renderer.addGradientPoint(0.000, new ColorCafe(78, 154, 115, 255));
+		renderer.addGradientPoint(0.250, new ColorCafe(128, 204, 165, 255));
+		renderer.addGradientPoint(0.375, new ColorCafe(78, 154, 115, 255));
+		renderer.addGradientPoint(1.000, new ColorCafe(29, 135, 102, 255));
 
 		// Set up the texture renderer and pass the noise map to it.
 		ImageCafe destTexture = new ImageCafe(textureMap.getWidth(),
 				textureMap.getHeight());
 		renderer.setSourceNoiseMap(textureMap);
 		renderer.setDestImage(destTexture);
-		renderer.enableLight(true);
-		renderer.setLightAzimuth(135.0);
-		renderer.setLightElev(60.0);
-		renderer.setLightContrast(2.0);
-		renderer.setLightColor(new ColorCafe(255, 255, 255, 0));
 
 		// Render the texture.
 		renderer.render();
@@ -120,7 +125,7 @@ public class GraniteExample {
 				destTexture.getWidth(), destTexture);
 
 		try {
-			ImageIO.write(im, "png", new File("granite_test.png"));
+			ImageIO.write(im, "png", new File("jade_test.png"));
 		} catch (IOException e1) {
 			System.out.println("Could not write the image file.");
 		}
@@ -168,5 +173,4 @@ public class GraniteExample {
 		int rgbnumber = color.getRGB();
 		return rgbnumber;
 	}
-
 }

@@ -34,73 +34,80 @@ import javax.imageio.ImageIO;
 
 import libnoiseforjava.NoiseGen.NoiseQuality;
 import libnoiseforjava.exception.*;
-
 import libnoiseforjava.module.*;
 import libnoiseforjava.util.*;
 
-public class GraniteExample {
-	// generates an example Granite texture, as shown at
+public class SlimeExample {
+	// generates an example Slime texture, as shown at
 	// http://libnoise.sourceforge.net/examples/textures/index.html
 
 	static final int TEXTURE_HEIGHT = 256;
 
 	public static void main(String[] args) throws ExceptionInvalidParam {
 
-		// Primary granite texture. This generates the "roughness" of the
-		// texture
-		// when lit by a light source.
-		Billow primaryGranite = new Billow();
-		primaryGranite.setSeed(0);
-		primaryGranite.setFrequency(8.0);
-		primaryGranite.setPersistence(0.625);
-		primaryGranite.setLacunarity(2.18359375);
-		primaryGranite.setOctaveCount(6);
-		primaryGranite.setNoiseQuality(NoiseQuality.QUALITY_STD);
+		// Large slime bubble texture.
+		Billow largeSlime = new Billow();
+		largeSlime.setSeed(0);
+		largeSlime.setFrequency(4.0);
+		largeSlime.setLacunarity(2.12109375);
+		largeSlime.setOctaveCount(1);
+		largeSlime.setNoiseQuality(NoiseQuality.QUALITY_BEST);
 
-		// Use Voronoi polygons to produce the small grains for the granite
-		// texture.
-		Voronoi baseGrains = new Voronoi();
-		baseGrains.setSeed(1);
-		baseGrains.setFrequency(16.0);
-		baseGrains.enableDistance(true);
+		// Base of the small slime bubble texture. This texture will eventually
+		// appear inside cracks in the large slime bubble texture.
+		Billow smallSlimeBase = new Billow();
+		smallSlimeBase.setSeed(1);
+		smallSlimeBase.setFrequency(24.0);
+		smallSlimeBase.setLacunarity(2.14453125);
+		smallSlimeBase.setOctaveCount(1);
+		smallSlimeBase.setNoiseQuality(NoiseQuality.QUALITY_BEST);
 
-		// Scale the small grain values so that they may be added to the base
-		// granite texture. Voronoi polygons normally generate pits, so apply a
-		// negative scaling factor to produce bumps instead.
-		ScaleBias scaledGrains = new ScaleBias(baseGrains);
-		scaledGrains.setScale(-0.5);
-		scaledGrains.setBias(0.0);
+		// Scale and lower the small slime bubble values.
+		ScaleBias smallSlime = new ScaleBias(smallSlimeBase);
+		smallSlime.setScale(0.5);
+		smallSlime.setBias(-0.5);
 
-		// Combine the primary granite texture with the small grain texture.
-		Add combinedGranite = new Add(primaryGranite, scaledGrains);
-		// Finally, perturb the granite texture to add realism.
-		Turbulence finalGranite = new Turbulence(combinedGranite);
-		finalGranite.setSeed(2);
-		finalGranite.setFrequency(4.0);
-		finalGranite.setPower(1.0 / 8.0);
-		finalGranite.setRoughness(6);
+		// Create a map that specifies where the large and small slime bubble
+		// textures will appear in the final texture map.
+		RidgedMulti slimeMap = new RidgedMulti();
+		slimeMap.setSeed(0);
+		slimeMap.setFrequency(2.0);
+		slimeMap.setLacunarity(2.20703125);
+		slimeMap.setOctaveCount(3);
+		slimeMap.setNoiseQuality(NoiseQuality.QUALITY_STD);
 
-		// Given the granite noise module, create a non-seamless texture map
+		// Choose between the large or small slime bubble textures depending on
+		// the
+		// corresponding value from the slime map. Choose the small slime bubble
+		// texture if the slime map value is within a narrow range of values,
+		// otherwise choose the large slime bubble texture. The edge falloff is
+		// non-zero so that there is a smooth transition between the two
+		// textures
+		Select slimeChooser = new Select(largeSlime, smallSlime, slimeMap);
+		slimeChooser.setBounds(-0.375, 0.375);
+		slimeChooser.setEdgeFalloff(0.5);
+
+		// Finally, perturb the slime texture to add realism.
+		Turbulence finalSlime = new Turbulence(slimeChooser);
+		finalSlime.setSeed(2);
+		finalSlime.setFrequency(8.0);
+		finalSlime.setPower(1.0 / 32.0);
+		finalSlime.setRoughness(2);
+
+		// Given the slime noise module, create a non-seamless texture map
 		// create Noisemap object
 		NoiseMap textureMap = new NoiseMap(256, 256);
-		textureMap = CreatePlanarTexture(finalGranite, false, TEXTURE_HEIGHT);
+		textureMap = CreatePlanarTexture(finalSlime, false, TEXTURE_HEIGHT);
 
 		// create renderer object
 		RendererImage renderer = new RendererImage();
 
-		// Create a gray granite palette. Black and pink appear at either ends
-		// of
-		// the palette; those colors provide the charactistic black and pink
-		// flecks
-		// in granite.
+		// Create a green slime palette. A dirt brown color is used for very low
+		// values while green is used for the rest of the values.
 		renderer.clearGradient();
-		renderer.addGradientPoint(-1.0000, new ColorCafe(0, 0, 0, 255));
-		renderer.addGradientPoint(-0.9375, new ColorCafe(0, 0, 0, 255));
-		renderer.addGradientPoint(-0.8750, new ColorCafe(216, 216, 242, 255));
-		renderer.addGradientPoint(0.0000, new ColorCafe(191, 191, 191, 255));
-		renderer.addGradientPoint(0.5000, new ColorCafe(210, 116, 125, 255));
-		renderer.addGradientPoint(0.7500, new ColorCafe(210, 113, 98, 255));
-		renderer.addGradientPoint(1.0000, new ColorCafe(255, 176, 192, 255));
+		renderer.addGradientPoint(-1.0000, new ColorCafe(160, 64, 42, 255));
+		renderer.addGradientPoint(0.0000, new ColorCafe(64, 192, 64, 255));
+		renderer.addGradientPoint(1.0000, new ColorCafe(128, 255, 128, 255));
 
 		// Set up the texture renderer and pass the noise map to it.
 		ImageCafe destTexture = new ImageCafe(textureMap.getWidth(),
@@ -120,7 +127,7 @@ public class GraniteExample {
 				destTexture.getWidth(), destTexture);
 
 		try {
-			ImageIO.write(im, "png", new File("granite_test.png"));
+			ImageIO.write(im, "png", new File("slime_test.png"));
 		} catch (IOException e1) {
 			System.out.println("Could not write the image file.");
 		}
