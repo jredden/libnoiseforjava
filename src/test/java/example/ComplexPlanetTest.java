@@ -10,13 +10,17 @@ import libnoiseforjava.domain.Builder;
 import libnoiseforjava.domain.GradientPointParameter;
 import libnoiseforjava.domain.RenderImageParameter;
 import libnoiseforjava.domain.RenderImageSphereParameter;
+import libnoiseforjava.module.Blend;
 import libnoiseforjava.module.Cached;
 import libnoiseforjava.module.Clamp;
+import libnoiseforjava.module.Const;
 import libnoiseforjava.module.Curve;
 import libnoiseforjava.module.Min;
 import libnoiseforjava.module.Perlin;
+import libnoiseforjava.module.RidgedMulti;
 import libnoiseforjava.module.ScaleBias;
 import libnoiseforjava.module.Select;
+import libnoiseforjava.module.Terrace;
 import libnoiseforjava.module.Turbulence;
 import libnoiseforjava.persistence.Output;
 import libnoiseforjava.util.ColorCafe;
@@ -100,10 +104,17 @@ public class ComplexPlanetTest {
 	private static Integer GRID_WIDTH = 4096;
 	// Height of elevation grid, in points
 	private static Integer GRID_HEIGHT = 2048;
-	
+
 	private static Double PLANET_CIRCUMFERENCE = 44236800.0;
-	private static Double METERS_PER_DEGREE = PLANET_CIRCUMFERENCE/360.0;
-	// 
+	private static Double METERS_PER_DEGREE = PLANET_CIRCUMFERENCE / 360.0;
+
+	// Offset to apply to the terrain type definition. Low values (< 1.0) cause
+	// the rough areas to appear only at high elevations. High values (> 2.0)
+	// cause the rough areas to appear at any elevation. The percentage of
+	// rough areas on the planet are independent of this value.
+	private static Double TERRAIN_OFFSET = 1.0;
+
+	//
 
 	// create a spherical-noise-map builder
 	private static NoiseMapBuilderSphere planet = new NoiseMapBuilderSphere();
@@ -153,12 +164,25 @@ public class ComplexPlanetTest {
 	static Double lightBrightness = new Double(2.0);
 	static Double lightElevation = new Double(45.0);
 	static Double lightAzumith = new Double(135.0);
-	
-	static Double  degExtent = EAST_COORD - WEST_COORD;
+
+	static Double degExtent = EAST_COORD - WEST_COORD;
 	static Double gridExtent = new Double(GRID_WIDTH);
 	// double resInMeters = (degExtent / gridExtent) * metersPerDegree;
 	static Double resInMeters = (degExtent / gridExtent) * METERS_PER_DEGREE;
-	static Double INVERSE_RES_IN_METERS = 1.0/resInMeters;
+	static Double INVERSE_RES_IN_METERS = 1.0 / resInMeters;
+
+	// Specifies the level on the planet in which continental shelves appear.
+	// This value must be between -1.0 (minimum planet elevation) and +1.0
+	// (maximum planet elevation), and must be less than SEA_LEVEL.
+	static Double SHELF_LEVEL = -0.375;
+
+	// Lacunarity of the planet's mountains. Changing this value produces
+	// slightly different mountains. For the best results, this value should
+	// be random, but close to 2.0.
+	static Double MOUNTAIN_LACUNARITY = 2.142578125;
+	
+	  // Specifies the "twistiness" of the mountains.
+	 static Double MOUNTAINS_TWIST = 1.0;
 
 	// 1: [Continent module]: This Perlin-noise module generates the continents.
 	// This noise module has a high number of octaves so that detail is
@@ -254,143 +278,312 @@ public class ComplexPlanetTest {
 	}
 
 	static private Cached baseContinentDef = new Cached(baseContinentDef_cl);
-	
-	  ////////////////////////////////////////////////////////////////////////////
-	  // Module subgroup: continent definition (5 noise modules)
-	  //
-	  // This subgroup warps the output value from the the base-continent-
-	  // definition subgroup, producing more realistic terrain.
-	  //
-	  // Warping the base continent definition produces lumpier terrain with
-	  // cliffs and rifts.
-	  //
-	  // -1.0 represents the lowest elevations and +1.0 represents the highest
-	  // elevations.
-	  //
 
-	  // 1: [Coarse-turbulence module]: This turbulence module warps the output
-	  //    value from the base-continent-definition subgroup, adding some coarse
-	  //    detail to it.
+	// //////////////////////////////////////////////////////////////////////////
+	// Module subgroup: continent definition (5 noise modules)
+	//
+	// This subgroup warps the output value from the the base-continent-
+	// definition subgroup, producing more realistic terrain.
+	//
+	// Warping the base continent definition produces lumpier terrain with
+	// cliffs and rifts.
+	//
+	// -1.0 represents the lowest elevations and +1.0 represents the highest
+	// elevations.
+	//
+
+	// 1: [Coarse-turbulence module]: This turbulence module warps the output
+	// value from the base-continent-definition subgroup, adding some coarse
+	// detail to it.
 	static private Double TU0_FREQUENCY = 15.25;
-	   /// The frequency of the turbulence determines how rapidly the
-	   /// displacement amount changes.
-	static private Double TU0_POWER_SCALAR =  113.75;
-	   /// The power of the turbulence determines the scaling factor that is
-	   /// applied to the displacement amount.
+	// / The frequency of the turbulence determines how rapidly the
+	// / displacement amount changes.
+	static private Double TU0_POWER_SCALAR = 113.75;
+	// / The power of the turbulence determines the scaling factor that is
+	// / applied to the displacement amount.
 	static private Integer TU0_ROUGHNESS = 13;
-	   /// The roughness of the turbulence determines the roughness of the
-	   /// changes to the displacement amount.  Low values smoothly change
-	   /// the displacement amount.  High values roughly change the
-	   /// displacement amount, which produces more "kinky" changes.
-	   ///
-	   /// Internally, there are three Perlin noise modules
-	   /// that displace the input value; one for the @a x, one for the @a y,
-	   /// and one for the @a z coordinate.  The roughness value is equal to
-	   /// the number of octaves used by the noise::module::Perlin noise
-	   /// modules.
+	// / The roughness of the turbulence determines the roughness of the
+	// / changes to the displacement amount. Low values smoothly change
+	// / the displacement amount. High values roughly change the
+	// / displacement amount, which produces more "kinky" changes.
+	// /
+	// / Internally, there are three Perlin noise modules
+	// / that displace the input value; one for the @a x, one for the @a y,
+	// / and one for the @a z coordinate. The roughness value is equal to
+	// / the number of octaves used by the noise::module::Perlin noise
+	// / modules.
 
-	static private Turbulence continentDef_tu0 = new Turbulence(baseContinentDef);
-	static{
-		continentDef_tu0.setSeed(CUR_SEED+10);
-		continentDef_tu0.setFrequency(TU0_FREQUENCY*CONTINENT_FREQUENCY);
-		continentDef_tu0.setPower(CONTINENT_FREQUENCY/TU0_POWER_SCALAR);
+	static private Turbulence continentDef_tu0 = new Turbulence(
+			baseContinentDef);
+	static {
+		continentDef_tu0.setSeed(CUR_SEED + 10);
+		continentDef_tu0.setFrequency(TU0_FREQUENCY * CONTINENT_FREQUENCY);
+		continentDef_tu0.setPower(CONTINENT_FREQUENCY / TU0_POWER_SCALAR);
 		continentDef_tu0.setRoughness(TU0_ROUGHNESS);
 	}
-	
-	  // 2: [Intermediate-turbulence module]: This turbulence module warps the
-	  //    output value from the coarse-turbulence module.  This turbulence has
-	  //    a higher frequency, but lower power, than the coarse-turbulence
-	  //    module, adding some intermediate detail to it.
 
-	static private Double TU1_FREQUENCY =  47.25;
-	static private Double TU1_POWER_SCALAR =   433.75;
+	// 2: [Intermediate-turbulence module]: This turbulence module warps the
+	// output value from the coarse-turbulence module. This turbulence has
+	// a higher frequency, but lower power, than the coarse-turbulence
+	// module, adding some intermediate detail to it.
+
+	static private Double TU1_FREQUENCY = 47.25;
+	static private Double TU1_POWER_SCALAR = 433.75;
 	static private Integer TU1_ROUGHNESS = 12;
 
-	static private Turbulence continentDef_tu1 = new Turbulence(continentDef_tu0);
-	static{
-		continentDef_tu1.setSeed(CUR_SEED+11);
-		continentDef_tu1.setFrequency(TU1_FREQUENCY*CONTINENT_FREQUENCY);
-		continentDef_tu1.setPower(CONTINENT_FREQUENCY/TU1_POWER_SCALAR);
+	static private Turbulence continentDef_tu1 = new Turbulence(
+			continentDef_tu0);
+	static {
+		continentDef_tu1.setSeed(CUR_SEED + 11);
+		continentDef_tu1.setFrequency(TU1_FREQUENCY * CONTINENT_FREQUENCY);
+		continentDef_tu1.setPower(CONTINENT_FREQUENCY / TU1_POWER_SCALAR);
 		continentDef_tu1.setRoughness(TU1_ROUGHNESS);
 	}
 
-	  // 3: [Warped-base-continent-definition module]: This turbulence module
-	  //    warps the output value from the intermediate-turbulence module.  This
-	  //    turbulence has a higher frequency, but lower power, than the
-	  //    intermediate-turbulence module, adding some fine detail to it.
-	
-	static private Double TU2_FREQUENCY =  95.25;
-	static private Double TU2_POWER_SCALAR =   1019.75;
+	// 3: [Warped-base-continent-definition module]: This turbulence module
+	// warps the output value from the intermediate-turbulence module. This
+	// turbulence has a higher frequency, but lower power, than the
+	// intermediate-turbulence module, adding some fine detail to it.
+
+	static private Double TU2_FREQUENCY = 95.25;
+	static private Double TU2_POWER_SCALAR = 1019.75;
 	static private Integer TU2_ROUGHNESS = 11;
 
-	static private Turbulence continentDef_tu2 = new Turbulence(continentDef_tu1);
-	static{
-		continentDef_tu2.setSeed(CUR_SEED+12);
-		continentDef_tu2.setFrequency(TU2_FREQUENCY*CONTINENT_FREQUENCY);
-		continentDef_tu2.setPower(CONTINENT_FREQUENCY/TU2_POWER_SCALAR);
+	static private Turbulence continentDef_tu2 = new Turbulence(
+			continentDef_tu1);
+	static {
+		continentDef_tu2.setSeed(CUR_SEED + 12);
+		continentDef_tu2.setFrequency(TU2_FREQUENCY * CONTINENT_FREQUENCY);
+		continentDef_tu2.setPower(CONTINENT_FREQUENCY / TU2_POWER_SCALAR);
 		continentDef_tu2.setRoughness(TU2_ROUGHNESS);
-		
+
 	}
-	  // 4: [Select-turbulence module]: At this stage, the turbulence is applied
-	  //    to the entire base-continent-definition subgroup, producing some very
-	  //    rugged, unrealistic coastlines.  This selector module selects the
-	  //    output values from the (unwarped) base-continent-definition subgroup
-	  //    and the warped-base-continent-definition module, based on the output
-	  //    value from the (unwarped) base-continent-definition subgroup.  The
-	  //    selection boundary is near sea level and has a relatively smooth
-	  //    transition.  In effect, only the higher areas of the base-continent-
-	  //    definition subgroup become warped; the underwater and coastal areas
-	  //    remain unaffected.
-	
-	
-	   /// The control module (baseContinentDef) determines the output value to select.  If the
-	   /// output value from the control module is within a range of values
-	   /// known as the <i>selection range</i>, the getValue() method outputs
-	   /// the value from the source module with an index value of 1.
-	   /// Otherwise, this method outputs the value from the source module
-	   /// with an index value of 0.
-	   ///
-	   /// This method assigns the control module an index value of 2.
-	   /// Passing the control module to this method produces the same
-	   /// results as passing the control module to the setSourceModule()
-	   /// method while assigning that noise module an index value of 2.
-	   ///
-	   /// This control module must exist throughout the lifetime of this
-	   /// noise module unless another control module replaces that control
-	   /// module.
+	// 4: [Select-turbulence module]: At this stage, the turbulence is applied
+	// to the entire base-continent-definition subgroup, producing some very
+	// rugged, unrealistic coastlines. This selector module selects the
+	// output values from the (unwarped) base-continent-definition subgroup
+	// and the warped-base-continent-definition module, based on the output
+	// value from the (unwarped) base-continent-definition subgroup. The
+	// selection boundary is near sea level and has a relatively smooth
+	// transition. In effect, only the higher areas of the base-continent-
+	// definition subgroup become warped; the underwater and coastal areas
+	// remain unaffected.
+
+	// / The control module (baseContinentDef) determines the output value to
+	// select. If the
+	// / output value from the control module is within a range of values
+	// / known as the <i>selection range</i>, the getValue() method outputs
+	// / the value from the source module with an index value of 1.
+	// / Otherwise, this method outputs the value from the source module
+	// / with an index value of 0.
+	// /
+	// / This method assigns the control module an index value of 2.
+	// / Passing the control module to this method produces the same
+	// / results as passing the control module to the setSourceModule()
+	// / method while assigning that noise module an index value of 2.
+	// /
+	// / This control module must exist throughout the lifetime of this
+	// / noise module unless another control module replaces that control
+	// / module.
 
 	private static Double CONTINENT_DEF_SE_LOWER_BOUNDS = SEA_LEVEL - 0.0375;
 	private static Double CONTINENT_DEF_SE_UPPER_BOUNDS = SEA_LEVEL + 1000.0375;
 	private static Double CONTINENT_DEF_SE_EDGE_FALLOFF = 0.0625;
-	  /// By default, there is an abrupt transition between the values from
-	   /// the two source modules at the boundaries of the selection range.
-	   ///
-	   /// For example, if the selection range is 0.5 to 0.8, and the edge
-	   /// falloff value is 0.1, then the getValue() method outputs:
-	   /// - the output value from the source module with an index value of 0
-	   ///   if the output value from the control module is less than 0.4
-	   ///   ( = 0.5 - 0.1).
-	   /// - a linear blend between the two output values from the two source
-	   ///   modules if the output value from the control module is between
-	   ///   0.4 ( = 0.5 - 0.1) and 0.6 ( = 0.5 + 0.1).
-	   /// - the output value from the source module with an index value of 1
-	   ///   if the output value from the control module is between 0.6
-	   ///   ( = 0.5 + 0.1) and 0.7 ( = 0.8 - 0.1).
-	   /// - a linear blend between the output values from the two source
-	   ///   modules if the output value from the control module is between
-	   ///   0.7 ( = 0.8 - 0.1 ) and 0.9 ( = 0.8 + 0.1).
-	   /// - the output value from the source module with an index value of 0
-	   ///   if the output value from the control module is greater than 0.9
-	   ///   ( = 0.8 + 0.1).
+	// / By default, there is an abrupt transition between the values from
+	// / the two source modules at the boundaries of the selection range.
+	// /
+	// / For example, if the selection range is 0.5 to 0.8, and the edge
+	// / falloff value is 0.1, then the getValue() method outputs:
+	// / - the output value from the source module with an index value of 0
+	// / if the output value from the control module is less than 0.4
+	// / ( = 0.5 - 0.1).
+	// / - a linear blend between the two output values from the two source
+	// / modules if the output value from the control module is between
+	// / 0.4 ( = 0.5 - 0.1) and 0.6 ( = 0.5 + 0.1).
+	// / - the output value from the source module with an index value of 1
+	// / if the output value from the control module is between 0.6
+	// / ( = 0.5 + 0.1) and 0.7 ( = 0.8 - 0.1).
+	// / - a linear blend between the output values from the two source
+	// / modules if the output value from the control module is between
+	// / 0.7 ( = 0.8 - 0.1 ) and 0.9 ( = 0.8 + 0.1).
+	// / - the output value from the source module with an index value of 0
+	// / if the output value from the control module is greater than 0.9
+	// / ( = 0.8 + 0.1).
 
-	static private Select continentDef_se = new Select(baseContinentDef, continentDef_tu2, baseContinentDef);
-	static{
-		continentDef_se.setBounds(CONTINENT_DEF_SE_LOWER_BOUNDS, CONTINENT_DEF_SE_UPPER_BOUNDS);
+	static private Select continentDef_se = new Select(baseContinentDef,
+			continentDef_tu2, baseContinentDef);
+	static {
+		continentDef_se.setBounds(CONTINENT_DEF_SE_LOWER_BOUNDS,
+				CONTINENT_DEF_SE_UPPER_BOUNDS);
 		continentDef_se.setEdgeFalloff(CONTINENT_DEF_SE_EDGE_FALLOFF);
 	}
+
+	static private Cached continentDef = new Cached(continentDef_se);
+
+	// //////////////////////////////////////////////////////////////////////////
+	// Module group: terrain type definition
+	// //////////////////////////////////////////////////////////////////////////
+
+	// //////////////////////////////////////////////////////////////////////////
+	// Module subgroup: terrain type definition (3 noise modules)
+	//
+	// This subgroup defines the positions of the terrain types on the planet.
+	//
+	// Terrain types include, in order of increasing roughness, plains, hills,
+	// and mountains.
+	//
+	// This subgroup's output value is based on the output value from the
+	// continent-definition group. Rougher terrain mainly appears at higher
+	// elevations.
+	//
+	// -1.0 represents the smoothest terrain types (plains and underwater) and
+	// +1.0 represents the roughest terrain types (mountains).
+	//
+
+	// 1: [Warped-continent module]: This turbulence module slightly warps the
+	// output value from the continent-definition group. This prevents the
+	// rougher terrain from appearing exclusively at higher elevations.
+	// Rough areas may now appear in the the ocean, creating rocky islands
+	// and fjords.
+
+	static private Double TERRAIN_TYPE_TU_FREQUENCY = 18.125;
+	static private Double TERRAIN_TYPE_TU_POWER = 20.59375;
+	static private Integer TERRAIN_TYPE_TU_ROUGHNESS = 3;
+	static private Turbulence terrainTypeDef_tu = new Turbulence(continentDef);
+	static {
+		terrainTypeDef_tu.setSeed(CUR_SEED + 20);
+		terrainTypeDef_tu.setFrequency(CONTINENT_FREQUENCY
+				* TERRAIN_TYPE_TU_FREQUENCY);
+		terrainTypeDef_tu.setPower(CONTINENT_FREQUENCY / TERRAIN_TYPE_TU_POWER
+				* TERRAIN_OFFSET);
+		terrainTypeDef_tu.setRoughness(TERRAIN_TYPE_TU_ROUGHNESS);
+	}
+
+	// 2: [Roughness-probability-shift module]: This terracing module sharpens
+	// the edges of the warped-continent module near sea level and lowers
+	// the slope towards the higher-elevation areas. This shrinks the areas
+	// in which the rough terrain appears, increasing the "rarity" of rough
+	// terrain.
+	static private Double TERRAIN_TYPE_DEF_LOW_CONTROL_POINT = -1.00;
+	static private Double TERRAIN_TYPE_DEF_MID_CONTROL_POINT_SCALAR = 2.00;
+	static private Double TERRAIN_TYPE_DEF_HIGH_CONTROL_POINT = 1.00;
+
+	static private Terrace terrainTypeDef_te = new Terrace(terrainTypeDef_tu);
+	static {
+		terrainTypeDef_te.addControlPoint(TERRAIN_TYPE_DEF_LOW_CONTROL_POINT);
+		terrainTypeDef_te.addControlPoint(SHELF_LEVEL + SEA_LEVEL
+				/ TERRAIN_TYPE_DEF_MID_CONTROL_POINT_SCALAR);
+		terrainTypeDef_te.addControlPoint(TERRAIN_TYPE_DEF_HIGH_CONTROL_POINT);
+
+	}
+
+	static private Cached terrainTypeDef = new Cached(terrainTypeDef_te);
+
+	// //////////////////////////////////////////////////////////////////////////
+	// Module group: mountainous terrain
+	// //////////////////////////////////////////////////////////////////////////
+
+	// //////////////////////////////////////////////////////////////////////////
+	// Module subgroup: mountain base definition (9 noise modules)
+	//
+	// This subgroup generates the base-mountain elevations. Other subgroups
+	// will add the ridges and low areas to the base elevations.
+	//
+	// -1.0 represents low mountainous terrain and +1.0 represents high
+	// mountainous terrain.
+	//
+
+	// 1: [Mountain-ridge module]: This ridged-multifractal-noise module
+	// generates the mountain ridges.
+	static private Double MOUNTAIN_BASE_DEF_RM0_FREQUENCY = 1723.0;
+	static private Integer MOUNTAIN_BASE_DEF_RM0_OCTAVE_COUNT = 4;
+	static private RidgedMulti mountainBaseDef_rm0 = new RidgedMulti();
+	static {
+		mountainBaseDef_rm0.setSeed(CUR_SEED + 30);
+		mountainBaseDef_rm0.setFrequency(MOUNTAIN_BASE_DEF_RM0_FREQUENCY);
+		mountainBaseDef_rm0.setLacunarity(MOUNTAIN_LACUNARITY);
+		mountainBaseDef_rm0.setOctaveCount(MOUNTAIN_BASE_DEF_RM0_OCTAVE_COUNT);
+		mountainBaseDef_rm0.setNoiseQuality(NoiseQuality.QUALITY_STD);
+	}
+
+	// 2: [Scaled-mountain-ridge module]: Next, a scale/bias module scales the
+	// output value from the mountain-ridge module so that its ridges are not
+	// too high. The reason for this is that another subgroup adds actual
+	// mountainous terrain to these ridges.
+	static private Double MOUNTAIN_BASE_DEF_SB0_SCALE = 0.5;
+	static private Double MOUNTAIN_BASE_DEF_SB0_BIAS = 0.375;
+
+	static private ScaleBias mountainBaseDef_sb0 = new ScaleBias(
+			mountainBaseDef_rm0);
+	static {
+		mountainBaseDef_sb0.setScale(MOUNTAIN_BASE_DEF_SB0_SCALE);
+		mountainBaseDef_sb0.setBias(MOUNTAIN_BASE_DEF_SB0_BIAS);
+	}
+
+	// 3: [River-valley module]: This ridged-multifractal-noise module generates
+	// the river valleys. It has a much lower frequency than the mountain-
+	// ridge module so that more mountain ridges will appear outside of the
+	// valleys. Note that this noise module generates ridged-multifractal
+	// noise using only one octave; this information will be important in the
+	// next step.
+	static private Double MOUNTAIN_BASE_DEF_RM1_FREQUENCY = 367.0;
+	static private Integer MOUNTAIN_BASE_DEF_RM1_OCTAVE_COUNT = 1;
+
+	static private RidgedMulti mountainBaseDef_rm1 = new RidgedMulti();
+	static {
+		mountainBaseDef_rm1.setSeed(CUR_SEED + 31);
+		mountainBaseDef_rm1.setFrequency(MOUNTAIN_BASE_DEF_RM1_FREQUENCY);
+		mountainBaseDef_rm1.setLacunarity(MOUNTAIN_LACUNARITY);
+		mountainBaseDef_rm1.setOctaveCount(MOUNTAIN_BASE_DEF_RM1_OCTAVE_COUNT);
+		mountainBaseDef_rm1.setNoiseQuality(NoiseQuality.QUALITY_BEST);
+	}
+
+	  // 4: [Scaled-river-valley module]: Next, a scale/bias module applies a
+	  //    scaling factor of -2.0 to the output value from the river-valley
+	  //    module.  This stretches the possible elevation values because one-
+	  //    octave ridged-multifractal noise has a lower range of output values
+	  //    than multiple-octave ridged-multifractal noise.  The negative scaling
+	  //    factor inverts the range of the output value, turning the ridges from
+	  //    the river-valley module into valleys.
+	static private Double MOUNTAIN_BASE_DEF_SB1_SCALE = -2.0;
+	static private Double MOUNTAIN_BASE_DEF_SB1_BIAS = -0.5;
+
+	static private ScaleBias mountainBaseDef_sb1 = new ScaleBias(
+			mountainBaseDef_rm1);
+	static {
+		mountainBaseDef_sb1.setScale(MOUNTAIN_BASE_DEF_SB1_SCALE);
+		mountainBaseDef_sb1.setBias(MOUNTAIN_BASE_DEF_SB1_BIAS);
+	}
 	
-	static private Cached  continentDef = new Cached(continentDef_se);
+	static public Const mountainBaseDef_co = new Const();
+	static {
+		mountainBaseDef_co.setConstValue(-1.0);  // wimpy ... 
+	}
+	  // 6: [Mountains-and-valleys module]: This blender module merges the
+	  //    scaled-mountain-ridge module and the scaled-river-valley module
+	  //    together.  It causes the low-lying areas of the terrain to become
+	  //    smooth, and causes the high-lying areas of the terrain to contain
+	  //    ridges.  To do this, it uses the scaled-river-valley module as the
+	  //    control module, causing the low-flat module to appear in the lower
+	  //    areas and causing the scaled-mountain-ridge module to appear in the
+	  //    higher areas.
+
+	static private Blend mountainBaseDef_bl = new Blend(mountainBaseDef_co, mountainBaseDef_sb0, mountainBaseDef_sb1);
 	
+	  // 7: [Coarse-turbulence module]: This turbulence module warps the output
+	  //    value from the mountain-and-valleys module, adding some coarse detail
+	  //    to it.
+	static private Double MOUNTAIN_BASE_DEF_TU1_FREQUENCY = 21221.0;
+	static private Double MOUNTAIN_BASE_DEF_TU1_POWER_SCALAR0 = 1.0;
+	static private Double MOUNTAIN_BASE_DEF_TU1_POWER_SCALAR1 = 120157.0 * MOUNTAINS_TWIST;
+	static private Integer MOUNTAIN_BASE_DEF_TU1_ROUGHNESS = 6;
+	static private Turbulence  mountainBaseDef_tu1 = new Turbulence(mountainBaseDef_bl);
+	static{
+		mountainBaseDef_tu1.setSeed(CUR_SEED+33);
+		mountainBaseDef_tu1.setFrequency(MOUNTAIN_BASE_DEF_TU1_FREQUENCY);
+		mountainBaseDef_tu1.setPower(MOUNTAIN_BASE_DEF_TU1_POWER_SCALAR0/MOUNTAIN_BASE_DEF_TU1_POWER_SCALAR1);
+		mountainBaseDef_tu1.setRoughness(MOUNTAIN_BASE_DEF_TU1_ROUGHNESS);
+	}
 	
 	@Test
 	public void test() {
@@ -400,12 +593,15 @@ public class ComplexPlanetTest {
 		planet.setDestNoiseMap(elevGrid);
 		planet.build();
 		RendererImage surfaceRenderer = new RendererImage();
-		ImageCafe destImage = new ImageCafe(elevGrid.getWidth(), elevGrid.getHeight());
+		ImageCafe destImage = new ImageCafe(elevGrid.getWidth(),
+				elevGrid.getHeight());
 		surfaceRenderer.setDestImage(destImage);
 		surfaceRenderer.setSourceNoiseMap(elevGrid);
 		surfaceRenderer.clearGradient();
-		for (GradientPointParameter gradientPointParameter : gradientPointList ){
-			surfaceRenderer.addGradientPoint(gradientPointParameter.getGradientPosition(), gradientPointParameter.getColorCafe());
+		for (GradientPointParameter gradientPointParameter : gradientPointList) {
+			surfaceRenderer.addGradientPoint(
+					gradientPointParameter.getGradientPosition(),
+					gradientPointParameter.getColorCafe());
 		}
 		surfaceRenderer.enableLight(Boolean.TRUE);
 		surfaceRenderer.setLightContrast(lightContrast);
@@ -413,7 +609,7 @@ public class ComplexPlanetTest {
 		surfaceRenderer.setLightElev(lightElevation);
 		surfaceRenderer.setLightAzimuth(lightAzumith);
 		surfaceRenderer.render();
-		String uri = "images/"+Math.random()+"complextPlanet0_test.png";
+		String uri = "images/" + Math.random() + "complextPlanet0_test.png";
 		Output.writer(destImage, uri);
 
 	}
@@ -425,9 +621,11 @@ public class ComplexPlanetTest {
 		planet.setSourceModule(baseContinentDef);
 		planet.setDestNoiseMap(elevGrid);
 		planet.build();
-		RenderImageParameter renderImageParameter = new RenderImageParameter(gradientPointList, elevGrid, Boolean.TRUE, lightContrast, lightBrightness);
+		RenderImageParameter renderImageParameter = new RenderImageParameter(
+				gradientPointList, elevGrid, Boolean.TRUE, lightContrast,
+				lightBrightness);
 		ImageCafe imageCafe = Builder.buildRendererImage(renderImageParameter);
-		String uri = "images/"+Math.random()+"complextPlanet1_test.png";
+		String uri = "images/" + Math.random() + "complextPlanet1_test.png";
 		Output.writer(imageCafe, uri);
 
 	}
@@ -439,11 +637,28 @@ public class ComplexPlanetTest {
 		planet.setSourceModule(continentDef);
 		planet.setDestNoiseMap(elevGrid);
 		planet.build();
-		RenderImageParameter renderImageParameter = new RenderImageParameter(gradientPointList, elevGrid, Boolean.TRUE, lightContrast, lightBrightness);
+		RenderImageParameter renderImageParameter = new RenderImageParameter(
+				gradientPointList, elevGrid, Boolean.TRUE, lightContrast,
+				lightBrightness);
 		ImageCafe imageCafe = Builder.buildRendererImage(renderImageParameter);
-		String uri = "images/"+Math.random()+"complextPlanet2_test.png";
+		String uri = "images/" + Math.random() + "complextPlanet2_test.png";
 		Output.writer(imageCafe, uri);
 
 	}
 
+	@Test
+	public void test2() {
+		// Build the elevation grid with the output values from the final-planet
+		// group.
+		planet.setSourceModule(terrainTypeDef);
+		planet.setDestNoiseMap(elevGrid);
+		planet.build();
+		RenderImageParameter renderImageParameter = new RenderImageParameter(
+				gradientPointList, elevGrid, Boolean.TRUE, lightContrast,
+				lightBrightness);
+		ImageCafe imageCafe = Builder.buildRendererImage(renderImageParameter);
+		String uri = "images/" + Math.random() + "complextPlanet3_test.png";
+		Output.writer(imageCafe, uri);
+
+	}
 }
