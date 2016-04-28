@@ -10,12 +10,15 @@ import libnoiseforjava.domain.Builder;
 import libnoiseforjava.domain.GradientPointParameter;
 import libnoiseforjava.domain.RenderImageParameter;
 import libnoiseforjava.domain.RenderImageSphereParameter;
+import libnoiseforjava.module.Add;
 import libnoiseforjava.module.Blend;
 import libnoiseforjava.module.Cached;
 import libnoiseforjava.module.Clamp;
 import libnoiseforjava.module.Const;
 import libnoiseforjava.module.Curve;
+import libnoiseforjava.module.Max;
 import libnoiseforjava.module.Min;
+import libnoiseforjava.module.Multiply;
 import libnoiseforjava.module.Perlin;
 import libnoiseforjava.module.RidgedMulti;
 import libnoiseforjava.module.ScaleBias;
@@ -573,17 +576,230 @@ public class ComplexPlanetTest {
 	  // 7: [Coarse-turbulence module]: This turbulence module warps the output
 	  //    value from the mountain-and-valleys module, adding some coarse detail
 	  //    to it.
+	static private Double MOUNTAIN_BASE_DEF_TU0_FREQUENCY = 1337.0;
+	static private Double MOUNTAIN_BASE_DEF_TU0_POWER_SCALAR0 = 1.0;
+	static private Double MOUNTAIN_BASE_DEF_TU0_POWER_SCALAR1 = 6730.0 * MOUNTAINS_TWIST;
+	static private Integer MOUNTAIN_BASE_DEF_TU0_ROUGHNESS = 4;
+	static private Turbulence  mountainBaseDef_tu0 = new Turbulence(mountainBaseDef_bl);
+	static{
+		mountainBaseDef_tu0.setSeed(CUR_SEED+32);
+		mountainBaseDef_tu0.setFrequency(MOUNTAIN_BASE_DEF_TU0_FREQUENCY);
+		mountainBaseDef_tu0.setPower(MOUNTAIN_BASE_DEF_TU0_POWER_SCALAR0/MOUNTAIN_BASE_DEF_TU0_POWER_SCALAR1);
+		mountainBaseDef_tu0.setRoughness(MOUNTAIN_BASE_DEF_TU0_ROUGHNESS);
+	}
+	
+	  // 8: [Warped-mountains-and-valleys module]: This turbulence module warps
+	  //    the output value from the coarse-turbulence module.  This turbulence
+	  //    has a higher frequency, but lower power, than the coarse-turbulence
+	  //    module, adding some fine detail to it.
 	static private Double MOUNTAIN_BASE_DEF_TU1_FREQUENCY = 21221.0;
 	static private Double MOUNTAIN_BASE_DEF_TU1_POWER_SCALAR0 = 1.0;
 	static private Double MOUNTAIN_BASE_DEF_TU1_POWER_SCALAR1 = 120157.0 * MOUNTAINS_TWIST;
 	static private Integer MOUNTAIN_BASE_DEF_TU1_ROUGHNESS = 6;
-	static private Turbulence  mountainBaseDef_tu1 = new Turbulence(mountainBaseDef_bl);
+	static private Turbulence  mountainBaseDef_tu1 = new Turbulence(mountainBaseDef_tu0);
 	static{
 		mountainBaseDef_tu1.setSeed(CUR_SEED+33);
 		mountainBaseDef_tu1.setFrequency(MOUNTAIN_BASE_DEF_TU1_FREQUENCY);
 		mountainBaseDef_tu1.setPower(MOUNTAIN_BASE_DEF_TU1_POWER_SCALAR0/MOUNTAIN_BASE_DEF_TU1_POWER_SCALAR1);
 		mountainBaseDef_tu1.setRoughness(MOUNTAIN_BASE_DEF_TU1_ROUGHNESS);
 	}
+
+	static private Cached mountainBaseDef = new Cached(mountainBaseDef_tu1);
+	
+	  ////////////////////////////////////////////////////////////////////////////
+	  // Module subgroup: high mountainous terrain (5 noise modules)
+	  //
+	  // This subgroup generates the mountainous terrain that appears at high
+	  // elevations within the mountain ridges.
+	  //
+	  // -1.0 represents the lowest elevations and +1.0 represents the highest
+	  // elevations.
+	  //
+
+	  // 1: [Mountain-basis-0 module]: This ridged-multifractal-noise module,
+	  //    along with the mountain-basis-1 module, generates the individual
+	  //    mountains.
+	static private Double MOUNTAINOUS_HIGH_RM0_FREQUENCY = 2371.0;
+	static private Double MOUNTAINOUS_HIGH_RM0_LACUNARITY = MOUNTAIN_LACUNARITY;
+	static private Integer MOUNTAINOUS_HIGH_RM0_OCTAVE_COUNT = 3;
+	static private RidgedMulti mountainousHigh_rm0 = new RidgedMulti();
+	static{
+		mountainousHigh_rm0.setSeed(CUR_SEED+40);
+		mountainousHigh_rm0.setFrequency(MOUNTAINOUS_HIGH_RM0_FREQUENCY);
+		mountainousHigh_rm0.setLacunarity(MOUNTAINOUS_HIGH_RM0_LACUNARITY);
+		mountainousHigh_rm0.setOctaveCount(MOUNTAINOUS_HIGH_RM0_OCTAVE_COUNT);
+		mountainousHigh_rm0.setNoiseQuality(NoiseQuality.QUALITY_BEST);
+	}
+	
+	  // 2: [Mountain-basis-1 module]: This ridged-multifractal-noise module,
+	  //    along with the mountain-basis-0 module, generates the individual
+	  //    mountains.
+	static private Double MOUNTAINOUS_HIGH_RM1_FREQUENCY = 2341.0;
+	static private Double MOUNTAINOUS_HIGH_RM1_LACUNARITY = MOUNTAIN_LACUNARITY;
+	static private Integer MOUNTAINOUS_HIGH_RM1_OCTAVE_COUNT = 3;
+	static private RidgedMulti mountainousHigh_rm1 = new RidgedMulti();
+	static{
+		mountainousHigh_rm1.setSeed(CUR_SEED+41);
+		mountainousHigh_rm1.setFrequency(MOUNTAINOUS_HIGH_RM1_FREQUENCY);
+		mountainousHigh_rm1.setLacunarity(MOUNTAINOUS_HIGH_RM1_LACUNARITY);
+		mountainousHigh_rm1.setOctaveCount(MOUNTAINOUS_HIGH_RM1_OCTAVE_COUNT);
+		mountainousHigh_rm1.setNoiseQuality(NoiseQuality.QUALITY_BEST);
+	}
+
+	  // 3: [High-mountains module]: Next, a maximum-value module causes more
+	  //    mountains to appear at the expense of valleys.  It does this by
+	  //    ensuring that only the maximum of the output values from the two
+	  //    ridged-multifractal-noise modules contribute to the output value of
+	  //    this subgroup.
+	static private Max  mountainousHigh_ma = new Max(mountainousHigh_rm0, mountainousHigh_rm1);
+	
+	  // 4: [Warped-high-mountains module]: This turbulence module warps the
+	  //    output value from the high-mountains module, adding some detail to it.
+	static private Double MOUNTAINOUS_HIGH_TU_FREQUENCY = 31511.0;
+	static private Double MOUNTAINOUS_HIGH_TU_SCALAR1 = 1.0;
+	static private Double MOUNTAINOUS_HIGH_TU_SCALAR2 = 180371.0;
+	static private Double MOUNTAINOUS_HIGH_TU_POWER = MOUNTAINOUS_HIGH_TU_SCALAR1/MOUNTAINOUS_HIGH_TU_SCALAR2 * MOUNTAINS_TWIST;
+	static private Integer MOUNTAINOUS_HIGH_TU_ROUGHNESS = 4;
+	static private Turbulence mountainousHigh_tu = new Turbulence(mountainousHigh_ma);
+	static{
+		mountainousHigh_tu.setSeed(CUR_SEED+42);
+		mountainousHigh_tu.setFrequency(MOUNTAINOUS_HIGH_TU_FREQUENCY);
+		mountainousHigh_tu.setPower(MOUNTAINOUS_HIGH_TU_POWER);
+		mountainousHigh_tu.setRoughness(MOUNTAINOUS_HIGH_TU_ROUGHNESS);
+	}
+	
+	private static Cached  mountainousHigh = new Cached(mountainousHigh_tu);
+	
+	  ////////////////////////////////////////////////////////////////////////////
+	  // Module subgroup: low mountainous terrain (4 noise modules)
+	  //
+	  // This subgroup generates the mountainous terrain that appears at low
+	  // elevations within the river valleys.
+	  //
+	  // -1.0 represents the lowest elevations and +1.0 represents the highest
+	  // elevations.
+	  //
+
+	  // 1: [Lowland-basis-0 module]: This ridged-multifractal-noise module,
+	  //    along with the lowland-basis-1 module, produces the low mountainous
+	  //    terrain.
+
+	static private Double MOUNTAINOUS_LOW_RM0_FREQUENCY = 1381.0;
+	static private Double MOUNTAINOUS_LOW_RM0_LACUNARITY = MOUNTAIN_LACUNARITY;
+	static private Integer MOUNTAINOUS_LOW_RM0_OCTAVE_COUNT = 8;
+	static private RidgedMulti mountainousLow_rm0 = new RidgedMulti();
+	static{
+		mountainousLow_rm0.setSeed(CUR_SEED + 50);
+		mountainousLow_rm0.setFrequency(MOUNTAINOUS_LOW_RM0_FREQUENCY);
+		mountainousLow_rm0.setLacunarity(MOUNTAINOUS_LOW_RM0_LACUNARITY);
+		mountainousLow_rm0.setOctaveCount(MOUNTAINOUS_LOW_RM0_OCTAVE_COUNT);
+	}
+	  // 1: [Lowland-basis-1 module]: This ridged-multifractal-noise module,
+	  //    along with the lowland-basis-0 module, produces the low mountainous
+	  //    terrain.
+	static private Double MOUNTAINOUS_LOW_RM1_FREQUENCY = 1427.0;
+	static private Double MOUNTAINOUS_LOW_RM1_LACUNARITY = MOUNTAIN_LACUNARITY;
+	static private Integer MOUNTAINOUS_LOW_RM1_OCTAVE_COUNT = 8;
+	static private RidgedMulti mountainousLow_rm1 = new RidgedMulti();
+	static{
+		mountainousLow_rm1.setSeed(CUR_SEED + 51);
+		mountainousLow_rm1.setFrequency(MOUNTAINOUS_LOW_RM1_FREQUENCY);
+		mountainousLow_rm1.setLacunarity(MOUNTAINOUS_LOW_RM1_LACUNARITY);
+		mountainousLow_rm1.setOctaveCount(MOUNTAINOUS_LOW_RM1_OCTAVE_COUNT);
+	}
+
+	  // 3: [Low-mountainous-terrain module]: This multiplication module combines
+	  //    the output values from the two ridged-multifractal-noise modules.
+	  //    This causes the following to appear in the resulting terrain:
+	  //    - Cracks appear when two negative output values are multiplied
+	  //      together.
+	  //    - Flat areas appear when a positive and a negative output value are
+	  //      multiplied together.
+	  //    - Ridges appear when two positive output values are multiplied
+	  //      together.
+	private static Multiply mountainousLow_mu = new Multiply(mountainousLow_rm0, mountainousLow_rm1);
+	
+	private static Cached mountainousLow = new Cached(mountainousLow_mu);
+	
+	  ////////////////////////////////////////////////////////////////////////////
+	  // Module subgroup: mountainous terrain (7 noise modules)
+	  //
+	  // This subgroup generates the final mountainous terrain by combining the
+	  // high-mountainous-terrain subgroup with the low-mountainous-terrain
+	  // subgroup.
+	  //
+	  // -1.0 represents the lowest elevations and +1.0 represents the highest
+	  // elevations.
+	  //
+
+	  // 1: [Scaled-low-mountainous-terrain module]: First, this scale/bias module
+	  //    scales the output value from the low-mountainous-terrain subgroup to a
+	  //    very low value and biases it towards -1.0.  This results in the low
+	  //    mountainous areas becoming more-or-less flat with little variation.
+	  //    This will also result in the low mountainous areas appearing at the
+	  //    lowest elevations in this subgroup.
+	static private Double MOUNTAINOUS_TERRAIN_SB0_SCALE = 0.03125;
+	static private Double MOUNTAINOUS_TERRAIN_SB0_BIAS = -0.96875;
+	static private ScaleBias mountainousTerrain_sb0 = new ScaleBias(mountainousLow);
+	static{
+		mountainousTerrain_sb0.setScale(MOUNTAINOUS_TERRAIN_SB0_SCALE);
+		mountainousTerrain_sb0.setBias(MOUNTAINOUS_TERRAIN_SB0_BIAS);
+	}
+	
+	  // 2: [Scaled-high-mountainous-terrain module]: Next, this scale/bias module
+	  //    scales the output value from the high-mountainous-terrain subgroup to
+	  //    1/4 of its initial value and biases it so that its output value is
+	  //    usually positive.
+	static private Double MOUNTAINOUS_TERRAIN_SB1_SCALE = 0.25;
+	static private Double MOUNTAINOUS_TERRAIN_SB1_BIAS = 0.25;
+	static private ScaleBias mountainousTerrain_sb1 = new ScaleBias(mountainousHigh);
+	static{
+		mountainousTerrain_sb1.setScale(MOUNTAINOUS_TERRAIN_SB1_SCALE);
+		mountainousTerrain_sb1.setBias(MOUNTAINOUS_TERRAIN_SB1_BIAS);
+	}
+
+	  // 3: [Added-high-mountainous-terrain module]: This addition module adds the
+	  //    output value from the scaled-high-mountainous-terrain module to the
+	  //    output value from the mountain-base-definition subgroup.  Mountains
+	  //    now appear all over the terrain.
+	static private Add  mountainousTerrain_ad = new Add(mountainousTerrain_sb1,  mountainBaseDef);
+	
+	  // 4: [Combined-mountainous-terrain module]: Note that at this point, the
+	  //    entire terrain is covered in high mountainous terrain, even at the low
+	  //    elevations.  To make sure the mountains only appear at the higher
+	  //    elevations, this selector module causes low mountainous terrain to
+	  //    appear at the low elevations (within the valleys) and the high
+	  //    mountainous terrain to appear at the high elevations (within the
+	  //    ridges.)  To do this, this noise module selects the output value from
+	  //    the added-high-mountainous-terrain module if the output value from the
+	  //    mountain-base-definition subgroup is higher than a set amount.
+	  //    Otherwise, this noise module selects the output value from the scaled-
+	  //    low-mountainous-terrain module.
+	
+	/// Sets the lower and upper bounds of the selection range.
+	static private Double MOUNTAINOUS_TERRAIN_SE_BOUNDS_PARAM_0 = -0.5;
+	static private Double MOUNTAINOUS_TERRAIN_SE_BOUNDS_PARAM_1 = 999.5;
+	   /// Sets the falloff value at the edge transition.
+	static private Double MOUNTAINOUS_TERRAIN_SE_EDGE_FALLOFF = 0.5;
+	static private Select mountainousTerrain_se = new Select(mountainousTerrain_sb0, mountainousTerrain_ad, mountainBaseDef);
+	static{
+		mountainousTerrain_se.setBounds(MOUNTAINOUS_TERRAIN_SE_BOUNDS_PARAM_0, MOUNTAINOUS_TERRAIN_SE_BOUNDS_PARAM_1);
+		mountainousTerrain_se.setEdgeFalloff(MOUNTAINOUS_TERRAIN_SE_EDGE_FALLOFF);
+	}
+	  // 5: [Scaled-mountainous-terrain-module]: This scale/bias module slightly
+	  //    reduces the range of the output value from the combined-mountainous-
+	  //    terrain module, decreasing the heights of the mountain peaks.
+	static private Double MOUNTAINOUS_TERRAIN_SB2_SCALE = 0.8;
+	static private Double MOUNTAINOUS_TERRAIN_SB2_BIAS = 0.0;
+	static private ScaleBias mountainousTerrain_sb2 = new ScaleBias(mountainousTerrain_se);
+	static{
+		 mountainousTerrain_sb2.setScale(MOUNTAINOUS_TERRAIN_SB2_SCALE);
+		 mountainousTerrain_sb2.setBias(MOUNTAINOUS_TERRAIN_SB2_BIAS);
+	}
+	
+	/**
+	 * t e s t s     s t a r t    h e r e
+	 */
 	
 	@Test
 	public void test() {
