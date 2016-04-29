@@ -11,11 +11,13 @@ import libnoiseforjava.domain.GradientPointParameter;
 import libnoiseforjava.domain.RenderImageParameter;
 import libnoiseforjava.domain.RenderImageSphereParameter;
 import libnoiseforjava.module.Add;
+import libnoiseforjava.module.Billow;
 import libnoiseforjava.module.Blend;
 import libnoiseforjava.module.Cached;
 import libnoiseforjava.module.Clamp;
 import libnoiseforjava.module.Const;
 import libnoiseforjava.module.Curve;
+import libnoiseforjava.module.Exponent;
 import libnoiseforjava.module.Max;
 import libnoiseforjava.module.Min;
 import libnoiseforjava.module.Multiply;
@@ -186,7 +188,15 @@ public class ComplexPlanetTest {
 	
 	  // Specifies the "twistiness" of the mountains.
 	 static Double MOUNTAINS_TWIST = 1.0;
-
+	  // Specifies the amount of "glaciation" on the mountains.  This value
+	  // should be close to 1.0 and greater than 1.0.
+	 static Double MOUNTAIN_GLACIATION = 1.375;
+	  // Lacunarity of the planet's hills.  Changing this value produces slightly
+	  // different hills.  For the best results, this value should be random, but
+	  // close to 2.0.
+	 static Double HILLS_LACUNARITY = 2.162109375;
+	 
+	 
 	// 1: [Continent module]: This Perlin-noise module generates the continents.
 	// This noise module has a high number of octaves so that detail is
 	// visible at high zoom levels.
@@ -796,6 +806,73 @@ public class ComplexPlanetTest {
 		 mountainousTerrain_sb2.setScale(MOUNTAINOUS_TERRAIN_SB2_SCALE);
 		 mountainousTerrain_sb2.setBias(MOUNTAINOUS_TERRAIN_SB2_BIAS);
 	}
+	  // 6: [Glaciated-mountainous-terrain-module]: This exponential-curve module
+	  //    applies an exponential curve to the output value from the scaled-
+	  //    mountainous-terrain module.  This causes the slope of the mountains to
+	  //    smoothly increase towards higher elevations, as if a glacier grinded
+	  //    out those mountains.  This exponential-curve module expects the output
+	  //    value to range from -1.0 to +1.0.
+	static private Exponent mountainousTerrain_ex = new Exponent(mountainousTerrain_sb2);
+	static{
+		mountainousTerrain_ex.setExponent(MOUNTAIN_GLACIATION);
+	}
+	static private Cached mountainousTerrain = new Cached(mountainousTerrain_ex);
+	
+	  ////////////////////////////////////////////////////////////////////////////
+	  // Module group: hilly terrain
+	  ////////////////////////////////////////////////////////////////////////////
+
+	  ////////////////////////////////////////////////////////////////////////////
+	  // Module subgroup: hilly terrain (11 noise modules)
+	  //
+	  // This subgroup generates the hilly terrain.
+	  //
+	  // -1.0 represents the lowest elevations and +1.0 represents the highest
+	  // elevations.
+	  //
+
+	  // 1: [Hills module]: This billow-noise module generates the hills.
+		private static Double HILLY_TERRAIN_BI_FREQUENCY = 1663.0;
+		private static Double HILLY_TERRAIN_BI_PERSISTENCE = 0.5;
+		private static Integer HILLY_TERRAIN_BI_OCTAVE_COUNT = 6;
+		private static Billow  hillyTerrain_bi = new Billow();
+		static{
+			hillyTerrain_bi.setSeed(CUR_SEED+60);
+			hillyTerrain_bi.setFrequency(HILLY_TERRAIN_BI_FREQUENCY);
+			hillyTerrain_bi.setPersistence(HILLY_TERRAIN_BI_PERSISTENCE);
+			hillyTerrain_bi.setLacunarity(HILLS_LACUNARITY);
+			hillyTerrain_bi.setOctaveCount(HILLY_TERRAIN_BI_OCTAVE_COUNT);
+			hillyTerrain_bi.setNoiseQuality(NoiseQuality.QUALITY_BEST);
+		}
+		
+		
+		  // 2: [Scaled-hills module]: Next, a scale/bias module scales the output
+		  //    value from the hills module so that its hilltops are not too high.
+		  //    The reason for this is that these hills are eventually added to the
+		  //    river valleys (see below.)
+		static private Double HILLY_TERRAIN_SB0_SCALE = 0.5;
+		static private Double HILLY_TERRAIN_SB0_BIAS = 0.5;
+		static private ScaleBias  hillyTerrain_sb0 = new ScaleBias(hillyTerrain_bi);
+		static {
+			hillyTerrain_sb0.setScale(HILLY_TERRAIN_SB0_SCALE);
+			hillyTerrain_sb0.setBias(HILLY_TERRAIN_SB0_BIAS);
+		}
+		
+		  // 3: [River-valley module]: This ridged-multifractal-noise module generates
+		  //    the river valleys.  It has a much lower frequency so that more hills
+		  //    will appear in between the valleys.  Note that this noise module
+		  //    generates ridged-multifractal noise using only one octave; this
+		  //    information will be important in the next step.
+		static private Double HILLY_TERRAIN_RM_FREQUENCY = 367.5;
+		static private Integer HILLY_TERRAIN_RM_OCTAVE_COUNT = 1;
+		static private RidgedMulti  hillyTerrain_rm = new RidgedMulti();
+		static{
+			hillyTerrain_rm.setSeed(CUR_SEED+61);
+			hillyTerrain_rm.setFrequency(HILLY_TERRAIN_RM_FREQUENCY);
+			hillyTerrain_rm.setLacunarity(HILLS_LACUNARITY);
+			hillyTerrain_rm.setNoiseQuality(NoiseQuality.QUALITY_BEST);
+			hillyTerrain_rm.setOctaveCount(HILLY_TERRAIN_RM_OCTAVE_COUNT);
+		}
 	
 	/**
 	 * t e s t s     s t a r t    h e r e
