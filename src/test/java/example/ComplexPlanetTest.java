@@ -195,7 +195,18 @@ public class ComplexPlanetTest {
 	  // different hills.  For the best results, this value should be random, but
 	  // close to 2.0.
 	 static Double HILLS_LACUNARITY = 2.162109375;
-	 
+	// Specifies the "twistiness" of the hills
+	 static Double HILLS_TWIST = 1.0;
+	 // Lacunarity of the planet's plains.  Changing this value produces slightly
+	  // different plains.  For the best results, this value should be random, but
+	  // close to 2.0.
+	 static Double PLAINS_LACUNARITY = 2.314453125;
+	  // Lacunarity of the planet's badlands.  Changing this value produces
+	  // slightly different badlands.  For the best results, this value should be
+	  // random, but close to 2.0.
+	 static Double BADLANDS_LACUNARITY = 2.212890625;
+	// Specifies the "twistiness" of the badlands.
+	 static Double  BADLANDS_TWIST = 1.0;
 	 
 	// 1: [Continent module]: This Perlin-noise module generates the continents.
 	// This noise module has a high number of octaves so that detail is
@@ -873,7 +884,216 @@ public class ComplexPlanetTest {
 			hillyTerrain_rm.setNoiseQuality(NoiseQuality.QUALITY_BEST);
 			hillyTerrain_rm.setOctaveCount(HILLY_TERRAIN_RM_OCTAVE_COUNT);
 		}
+		 // 4: [Scaled-river-valley module]: Next, a scale/bias module applies a
+		  //    scaling factor of -2.0 to the output value from the river-valley
+		  //    module.  This stretches the possible elevation values because one-
+		  //    octave ridged-multifractal noise has a lower range of output values
+		  //    than multiple-octave ridged-multifractal noise.  The negative scaling
+		  //    factor inverts the range of the output value, turning the ridges from
+		  //    the river-valley module into valleys.
+		static private Double HILLY_TERRAIN_SB1_SCALE = -2.0;
+		static private Double HILLY_TERRAIN_SB1_BIAS = -0.5;
+		static private ScaleBias  hillyTerrain_sb1 = new ScaleBias(hillyTerrain_rm);
+		static {
+			hillyTerrain_sb1.setScale(HILLY_TERRAIN_SB1_SCALE);
+			hillyTerrain_sb1.setBias(HILLY_TERRAIN_SB1_BIAS);
+		}
+
+		// 5:
+		static private Double HILLY_TERRAIN_CO = -1.0;
+		static private Const  hillyTerrain_co = new Const();
+		static{
+			hillyTerrain_co.setConstValue(HILLY_TERRAIN_CO);
+		}
+		
+		  // 6: [Mountains-and-valleys module]: This blender module merges the
+		  //    scaled-hills module and the scaled-river-valley module together.  It
+		  //    causes the low-lying areas of the terrain to become smooth, and causes
+		  //    the high-lying areas of the terrain to contain hills.  To do this, it
+		  //    uses the scaled-hills module as the control module, causing the low-
+		  //    flat module to appear in the lower areas and causing the scaled-river-
+		  //    valley module to appear in the higher areas.
+
+		static private Blend hillyTerrain_bl = new Blend(hillyTerrain_co, hillyTerrain_sb0, hillyTerrain_sb1);
+		
+		 // 7: [Scaled-hills-and-valleys module]: This scale/bias module slightly
+		  //    reduces the range of the output value from the hills-and-valleys
+		  //    module, decreasing the heights of the hilltops.
+
+		static private Double HILLY_TERRAIN_SB2_SCALE = 0.75;
+		static private Double HILLY_TERRAIN_SB2_BIAS = -0.25;
+		static private ScaleBias  hillyTerrain_sb2 = new ScaleBias(hillyTerrain_bl);
+		static {
+			hillyTerrain_sb2.setScale(HILLY_TERRAIN_SB2_SCALE);
+			hillyTerrain_sb2.setBias(HILLY_TERRAIN_SB2_BIAS);
+		}
+
+		  // 8: [Increased-slope-hilly-terrain module]: To increase the hill slopes at
+		  //    higher elevations, this exponential-curve module applies an
+		  //    exponential curve to the output value the scaled-hills-and-valleys
+		  //    module.  This exponential-curve module expects the input value to
+		  //    range from -1.0 to 1.0.
+		static private Double HILLY_TERRAIN_EX = 1.375;
+		static private Exponent hillyTerrain_ex = new Exponent(hillyTerrain_sb2);
+		static{
+			hillyTerrain_ex.setExponent(HILLY_TERRAIN_EX);
+		}
+		
+		 // 9: [Coarse-turbulence module]: This turbulence module warps the output
+		  //    value from the increased-slope-hilly-terrain module, adding some
+		  //    coarse detail to it.
+		static private Double HILLY_TERRAIN_TU0_FREQUENCY = 1531.0;
+		static private Double HILLY_TERRAIN_TU0_SCALAR0 = 1.0;
+		static private Double HILLY_TERRAIN_TU0_SCALAR1 = 16921.0;
+		static private Integer HILLY_TERRAIN_TU0_ROUGHNESS = 4;
+
+		static private Turbulence hillyTerrain_tu0 = new Turbulence(hillyTerrain_ex);
+		static{
+			hillyTerrain_tu0.setSeed(CUR_SEED+62);
+			hillyTerrain_tu0.setFrequency(HILLY_TERRAIN_TU0_FREQUENCY);
+			hillyTerrain_tu0.setPower(HILLY_TERRAIN_TU0_SCALAR0/HILLY_TERRAIN_TU0_SCALAR1 * HILLS_TWIST);
+			hillyTerrain_tu0.setRoughness(HILLY_TERRAIN_TU0_ROUGHNESS);
+		}
+		
+		  // 10: [Warped-hilly-terrain module]: This turbulence module warps the
+		  //     output value from the coarse-turbulence module.  This turbulence has
+		  //     a higher frequency, but lower power, than the coarse-turbulence
+		  //     module, adding some fine detail to it.
+		 
+		static private Double HILLY_TERRAIN_TU1_FREQUENCY = 21617.0;
+		static private Double HILLY_TERRAIN_TU1_SCALAR0 = 1.0;
+		static private Double HILLY_TERRAIN_TU1_SCALAR1 = 117529.0;
+		static private Integer HILLY_TERRAIN_TU1_ROUGHNESS = 6;
+
+		static private Turbulence hillyTerrain_tu1 = new Turbulence(hillyTerrain_tu0);
+		static{
+			hillyTerrain_tu1.setSeed(CUR_SEED+63);
+			hillyTerrain_tu1.setFrequency(HILLY_TERRAIN_TU1_FREQUENCY);
+			hillyTerrain_tu1.setPower(HILLY_TERRAIN_TU1_SCALAR0/HILLY_TERRAIN_TU1_SCALAR1 * HILLS_TWIST);
+			hillyTerrain_tu1.setRoughness(HILLY_TERRAIN_TU1_ROUGHNESS);
+		}
 	
+		// 11:
+		static private Cached hillyTerrain = new Cached(hillyTerrain_tu1);
+		
+		 ////////////////////////////////////////////////////////////////////////////
+		  // Module group: plains terrain
+		  ////////////////////////////////////////////////////////////////////////////
+
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module subgroup: plains terrain (7 noise modules)
+		  //
+		  // This subgroup generates the plains terrain.
+		  //
+		  // Because this subgroup will eventually be flattened considerably, the
+		  // types and combinations of noise modules that generate the plains are not
+		  // really that important; they only need to "look" interesting.
+		  //
+		  // -1.0 represents the lowest elevations and +1.0 represents the highest
+		  // elevations.
+		  //
+
+		  // 1: [Plains-basis-0 module]: This billow-noise module, along with the
+		  //    plains-basis-1 module, produces the plains.
+		private static Double PLAINS_TERRAIN_BI0_FREQUENCY = 1097.0;
+		private static Double PLAINS_TERRAIN_BI0_PERSISTENCE = 0.5;
+		private static Integer PLAINS_TERRAIN_BI0_OCTAVE_COUNT = 8;
+		private static Billow  plainsTerrain_bi0 = new Billow();
+		static{
+			plainsTerrain_bi0.setSeed(CUR_SEED+70);
+			plainsTerrain_bi0.setFrequency(PLAINS_TERRAIN_BI0_FREQUENCY);
+			plainsTerrain_bi0.setPersistence(PLAINS_TERRAIN_BI0_PERSISTENCE);
+			plainsTerrain_bi0.setLacunarity(PLAINS_LACUNARITY);
+			plainsTerrain_bi0.setOctaveCount(PLAINS_TERRAIN_BI0_OCTAVE_COUNT);
+			plainsTerrain_bi0.setNoiseQuality(NoiseQuality.QUALITY_BEST);
+		}
+
+		// 2: [Positive-plains-basis-0 module]: This scale/bias module makes the
+		  //    output value from the plains-basis-0 module positive since this output
+		  //    value will be multiplied together with the positive-plains-basis-1
+		  //    module.
+		static private Double PLAINS_TERRAIN_SB0_SCALE = 0.5;
+		static private Double PLAINS_TERRAIN_SB0_BIAS = 0.5;
+		static private ScaleBias plainsTerrain_sb0 = new ScaleBias(plainsTerrain_bi0);
+		static{
+			plainsTerrain_sb0.setScale(PLAINS_TERRAIN_SB0_SCALE);
+			plainsTerrain_sb0.setBias(PLAINS_TERRAIN_SB0_BIAS);
+		}
+		
+		 // 3: [Plains-basis-1 module]: This billow-noise module, along with the
+		  //    plains-basis-2 module, produces the plains.
+
+		private static Double PLAINS_TERRAIN_BI1_FREQUENCY = 1319.0;
+		private static Double PLAINS_TERRAIN_BI1_PERSISTENCE = 0.5;
+		private static Integer PLAINS_TERRAIN_BI1_OCTAVE_COUNT = 8;
+		private static Billow  plainsTerrain_bi1 = new Billow();
+		static{
+			plainsTerrain_bi1.setSeed(CUR_SEED+71);
+			plainsTerrain_bi1.setFrequency(PLAINS_TERRAIN_BI1_FREQUENCY);
+			plainsTerrain_bi1.setPersistence(PLAINS_TERRAIN_BI1_PERSISTENCE);
+			plainsTerrain_bi1.setLacunarity(PLAINS_LACUNARITY);
+			plainsTerrain_bi1.setOctaveCount(PLAINS_TERRAIN_BI1_OCTAVE_COUNT);
+			plainsTerrain_bi1.setNoiseQuality(NoiseQuality.QUALITY_BEST);
+		}
+
+		 // 4: [Positive-plains-basis-1 module]: This scale/bias module makes the
+		  //    output value from the plains-basis-1 module positive since this output
+		  //    value will be multiplied together with the positive-plains-basis-0
+		  //    module.
+		static private Double PLAINS_TERRAIN_SB1_SCALE = 0.5;
+		static private Double PLAINS_TERRAIN_SB1_BIAS = 0.5;
+		static private ScaleBias plainsTerrain_sb1 = new ScaleBias(plainsTerrain_bi1);
+		static{
+			plainsTerrain_sb1.setScale(PLAINS_TERRAIN_SB1_SCALE);
+			plainsTerrain_sb1.setBias(PLAINS_TERRAIN_SB1_BIAS);
+		}
+
+		  // 5: [Combined-plains-basis module]: This multiplication module combines
+		  //    the two plains basis modules together.
+		static private Multiply  plainsTerrain_mu = new Multiply(plainsTerrain_sb0, plainsTerrain_sb1);
+	
+		  // 6: [Rescaled-plains-basis module]: This scale/bias module maps the output
+		  //    value that ranges from 0.0 to 1.0 back to a value that ranges from
+		  //    -1.0 to +1.0.
+		static private Double PLAINS_TERRAIN_SB2_SCALE = 2.0;
+		static private Double PLAINS_TERRAIN_SB2_BIAS = -1.0;
+		static private ScaleBias plainsTerrain_sb2 = new ScaleBias(plainsTerrain_mu);
+		static{
+			plainsTerrain_sb2.setScale(PLAINS_TERRAIN_SB2_SCALE);
+			plainsTerrain_sb2.setBias(PLAINS_TERRAIN_SB2_BIAS);
+		}
+		 
+		// 7:
+		static private Cached plainsTerrain = new Cached(plainsTerrain_sb2);
+		
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module group: badlands terrain
+		  ////////////////////////////////////////////////////////////////////////////
+
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module subgroup: badlands sand (6 noise modules)
+		  //
+		  // This subgroup generates the sandy terrain for the badlands.
+		  //
+		  // -1.0 represents the lowest elevations and +1.0 represents the highest
+		  // elevations.
+		  //
+
+		  // 1: [Sand-dunes module]: This ridged-multifractal-noise module generates
+		  //    sand dunes.  This ridged-multifractal noise is generated with a single
+		  //    octave, which makes very smooth dunes.
+		static private Double BADLANDS_SAND_RM_FREQUENCY = 6163.5;
+		static private Integer BADLANDS_SAND_RM_OCTAVE_COUNT = 1;
+		static private RidgedMulti  badlandsSand_rm = new RidgedMulti();
+		static{
+			badlandsSand_rm.setSeed(CUR_SEED+80);
+			badlandsSand_rm.setFrequency(BADLANDS_SAND_RM_FREQUENCY);
+			badlandsSand_rm.setLacunarity(BADLANDS_LACUNARITY);
+			badlandsSand_rm.setNoiseQuality(NoiseQuality.QUALITY_BEST);
+			badlandsSand_rm.setOctaveCount(BADLANDS_SAND_RM_OCTAVE_COUNT);
+		}
+		
+		
 	/**
 	 * t e s t s     s t a r t    h e r e
 	 */
