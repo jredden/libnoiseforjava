@@ -27,6 +27,7 @@ import libnoiseforjava.module.ScaleBias;
 import libnoiseforjava.module.Select;
 import libnoiseforjava.module.Terrace;
 import libnoiseforjava.module.Turbulence;
+import libnoiseforjava.module.Voronoi;
 import libnoiseforjava.persistence.Output;
 import libnoiseforjava.util.ColorCafe;
 import libnoiseforjava.util.ImageCafe;
@@ -1091,6 +1092,189 @@ public class ComplexPlanetTest {
 			badlandsSand_rm.setLacunarity(BADLANDS_LACUNARITY);
 			badlandsSand_rm.setNoiseQuality(NoiseQuality.QUALITY_BEST);
 			badlandsSand_rm.setOctaveCount(BADLANDS_SAND_RM_OCTAVE_COUNT);
+		}
+		
+		  // 2: [Scaled-sand-dunes module]: This scale/bias module shrinks the dune
+		  //    heights by a small amount.  This is necessary so that the subsequent
+		  //    noise modules in this subgroup can add some detail to the dunes.
+
+		static private Double BADLANDS_SAND_SB0_SCALE = 0.875;
+		static private Double BADLANDS_SAND_SB0_BIAS = 0.0;
+
+		static private ScaleBias badlandsSand_sb0 = new ScaleBias(
+				badlandsSand_rm);
+		static {
+			badlandsSand_sb0.setScale(BADLANDS_SAND_SB0_SCALE);
+			badlandsSand_sb0.setBias(BADLANDS_SAND_SB0_BIAS);
+		}
+		
+		  // 3: [Dune-detail module]: This noise module uses Voronoi polygons to
+		  //    generate the detail to add to the dunes.  By enabling the distance
+		  //    algorithm, small polygonal pits are generated; the edges of the pits
+		  //    are joined to the edges of nearby pits.
+		
+		   /// The frequency determines the size of the Voronoi cells and the
+		   /// distance between these cells.
+		static private Double BADLANDS_SAND_VO_FREQUENCY = 16183.25;
+		   /// This noise module assigns each Voronoi cell with a random constant
+		   /// value from a coherent-noise function.  The <i>displacement
+		   /// value</i> controls the range of random values to assign to each
+		   /// cell.  The range of random values is +/- the displacement value.
+		static private Double BADLANDS_SAND_VO_DISPLACEMWNT = 0.0;
+
+		static private Voronoi badlandsSand_vo = new Voronoi();
+		static{
+			badlandsSand_vo.setSeed(CUR_SEED+81);
+			badlandsSand_vo.setFrequency(BADLANDS_SAND_VO_FREQUENCY);
+			badlandsSand_vo.setDisplacement(BADLANDS_SAND_VO_DISPLACEMWNT);
+			badlandsSand_vo.enableDistance(Boolean.TRUE);
+		}
+		
+		  // 4: [Scaled-dune-detail module]: This scale/bias module shrinks the dune
+		  //    details by a large amount.  This is necessary so that the subsequent
+		  //    noise modules in this subgroup can add this detail to the sand-dunes
+		  //    module.
+		static private Double BADLANDS_SAND_SB1_SCALE = 0.25;
+		static private Double BADLANDS_SAND_SB1_BIAS = 0.25;
+
+		static private ScaleBias badlandsSand_sb1 = new ScaleBias(
+				badlandsSand_vo);
+		static {
+			badlandsSand_sb1.setScale(BADLANDS_SAND_SB1_SCALE);
+			badlandsSand_sb1.setBias(BADLANDS_SAND_SB1_BIAS);
+		}
+		
+		  // 5: [Dunes-with-detail module]: This addition module combines the scaled-
+		  //    sand-dunes module with the scaled-dune-detail module.
+		static private Add badlandsSand_ad = new Add(badlandsSand_sb0, badlandsSand_sb1);
+
+		// 6:
+		static private Cached badlandsSand = new Cached(badlandsSand_ad);
+		
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module subgroup: badlands cliffs (7 noise modules)
+		  //
+		  // This subgroup generates the cliffs for the badlands.
+		  //
+		  // -1.0 represents the lowest elevations and +1.0 represents the highest
+		  // elevations.
+		  //
+
+		  // 1: [Cliff-basis module]: This Perlin-noise module generates some coherent
+		  //    noise that will be used to generate the cliffs.
+		static private Double BADLANDS_CLIFFS_PE_FREQUENCY = CONTINENT_FREQUENCY*839;
+		static private Double BADLANDS_CLIFFS_PE_PERSISTENCE = 0.5;
+		static private Integer BADLANDS_CLIFFS_PE_OCTAVE_COUNT = 6;
+		static private Perlin  badlandsCliffs_pe = new Perlin();
+		static {
+			badlandsCliffs_pe.setSeed(CUR_SEED+90);
+			badlandsCliffs_pe.setFrequency(BADLANDS_CLIFFS_PE_FREQUENCY);
+			badlandsCliffs_pe.setPersistence(BADLANDS_CLIFFS_PE_PERSISTENCE);
+			badlandsCliffs_pe.setLacunarity(BADLANDS_LACUNARITY);
+			badlandsCliffs_pe.setOctaveCount(BADLANDS_CLIFFS_PE_OCTAVE_COUNT);
+			badlandsCliffs_pe.setNoiseQuality(NoiseQuality.QUALITY_STD);
+		}
+		
+		  // 2: [Cliff-shaping module]: Next, this curve module applies a curve to the
+		  //    output value from the cliff-basis module.  This curve is initially
+		  //    very shallow, but then its slope increases sharply.  At the highest
+		  //    elevations, the curve becomes very flat again.  This produces the
+		  //    stereotypical Utah-style desert cliffs.
+		
+
+		static private Curve  badlandsCliffs_cu = new Curve(badlandsCliffs_pe);
+		static{
+			badlandsCliffs_cu.addControlPoint(-2.0000, -2.0000);
+			badlandsCliffs_cu.addControlPoint(-1.0000, -1.2500);
+			badlandsCliffs_cu.addControlPoint(-0.0000, -0.7500);
+			badlandsCliffs_cu.addControlPoint(0.5000, -0.2500);
+			badlandsCliffs_cu.addControlPoint(0.6250, 0.8750);
+			badlandsCliffs_cu.addControlPoint(0.7500, 1.0000);
+			badlandsCliffs_cu.addControlPoint(-2.0000, 1.2500);
+		}
+		
+		  // 3: [Clamped-cliffs module]: This clamping module makes the tops of the
+		  //    cliffs very flat by clamping the output value from the cliff-shaping
+		  //    module so that the tops of the cliffs are very flat.
+		static private Double BADLANDS_CLIFFS_CL_LOWER_BOUND = -999.125;
+		static private Double BADLANDS_CLIFFS_CL_UPPER_BOUND = 0.875;
+		
+		static private Clamp badlandsCliffs_cl  = new Clamp(badlandsCliffs_cu) ;
+		static{
+			badlandsCliffs_cl.setBounds(BADLANDS_CLIFFS_CL_LOWER_BOUND, BADLANDS_CLIFFS_CL_UPPER_BOUND);
+		}
+
+		  // 4: [Terraced-cliffs module]: Next, this terracing module applies some
+		  //    terraces to the clamped-cliffs module in the lower elevations before
+		  //    the sharp cliff transition.
+
+		static private Terrace  badlandsCliffs_te = new Terrace(badlandsCliffs_cl);
+		static{
+			badlandsCliffs_te.addControlPoint(-1.0000);
+			badlandsCliffs_te.addControlPoint(-0.8750);
+			badlandsCliffs_te.addControlPoint(-0.7500);
+			badlandsCliffs_te.addControlPoint(-0.5000);
+			badlandsCliffs_te.addControlPoint(1.0000);
+		}
+		
+		  // 5: [Coarse-turbulence module]: This turbulence module warps the output
+		  //    value from the terraced-cliffs module, adding some coarse detail to
+		  //    it.
+		static private Double BADLANDS_CLIFFS_TU0_FREQUENCY = 16111.0;
+		static private Double BADLANDS_CLIFFS_TU0_SCALAR0 = 1.0;
+		static private Double BADLANDS_CLIFFS_TU0_SCALAR1 = 141539.0;
+		static private Integer BADLANDS_CLIFFS_TU0_ROUGHNESS = 3;
+		static private Turbulence  badlandsCliffs_tu0 = new Turbulence(badlandsCliffs_te);
+		static {
+			badlandsCliffs_tu0.setSeed(CUR_SEED+91);
+			badlandsCliffs_tu0.setFrequency(BADLANDS_CLIFFS_TU0_FREQUENCY);
+			badlandsCliffs_tu0.setPower(BADLANDS_CLIFFS_TU0_SCALAR0/BADLANDS_CLIFFS_TU0_SCALAR1*BADLANDS_TWIST);
+			badlandsCliffs_tu0.setRoughness(BADLANDS_CLIFFS_TU0_ROUGHNESS);
+		}
+		
+		  // 6: [Warped-cliffs module]: This turbulence module warps the output value
+		  //    from the coarse-turbulence module.  This turbulence has a higher
+		  //    frequency, but lower power, than the coarse-turbulence module, adding
+		  //    some fine detail to it.
+		static private Double BADLANDS_CLIFFS_TU1_FREQUENCY = 36107.0;
+		static private Double BADLANDS_CLIFFS_TU1_SCALAR0 = 1.0;
+		static private Double BADLANDS_CLIFFS_TU1_SCALAR1 = 211543.0;
+		static private Integer BADLANDS_CLIFFS_TU1_ROUGHNESS = 3;
+		static private Turbulence  badlandsCliffs_tu1 = new Turbulence(badlandsCliffs_tu0);
+		static {
+			badlandsCliffs_tu1.setSeed(CUR_SEED+92);
+			badlandsCliffs_tu1.setFrequency(BADLANDS_CLIFFS_TU1_FREQUENCY);
+			badlandsCliffs_tu1.setPower(BADLANDS_CLIFFS_TU1_SCALAR0/BADLANDS_CLIFFS_TU1_SCALAR1*BADLANDS_TWIST);
+			badlandsCliffs_tu1.setRoughness(BADLANDS_CLIFFS_TU1_ROUGHNESS);
+		}
+
+		// 7:
+		static private Cached badlandsCliffs = new Cached(badlandsCliffs_tu1);
+		
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module subgroup: badlands terrain (3 noise modules)
+		  //
+		  // Generates the final badlands terrain.
+		  //
+		  // Using a scale/bias module, the badlands sand is flattened considerably,
+		  // then the sand elevations are lowered to around -1.0.  The maximum value
+		  // from the flattened sand module and the cliff module contributes to the
+		  // final elevation.  This causes sand to appear at the low elevations since
+		  // the sand is slightly higher than the cliff base.
+		  //
+		  // -1.0 represents the lowest elevations and +1.0 represents the highest
+		  // elevations.
+		  //
+
+		  // 1: [Scaled-sand-dunes module]: This scale/bias module considerably
+		  //    flattens the output value from the badlands-sands subgroup and lowers
+		  //    this value to near -1.0.
+		static private Double BADLANDS_TERRAIN_SB_SCALE = 0.25;
+		static private Double BADLANDS_TERRAIN_SB_BIAS = -0.75;
+		static private ScaleBias  badlandsTerrain_sb = new ScaleBias(badlandsSand);
+		static{
+			badlandsTerrain_sb.setScale(BADLANDS_TERRAIN_SB_SCALE);
+			badlandsTerrain_sb.setScale(BADLANDS_TERRAIN_SB_BIAS);
 		}
 		
 		
