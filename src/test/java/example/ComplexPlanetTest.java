@@ -1277,6 +1277,108 @@ public class ComplexPlanetTest {
 			badlandsTerrain_sb.setScale(BADLANDS_TERRAIN_SB_BIAS);
 		}
 		
+		  // 2: [Dunes-and-cliffs module]: This maximum-value module causes the dunes
+		  //    to appear in the low areas and the cliffs to appear in the high areas.
+		  //    It does this by selecting the maximum of the output values from the
+		  //    scaled-sand-dunes module and the badlands-cliffs subgroup.
+
+		static private Max  badlandsTerrain_ma = new Max(badlandsCliffs, badlandsTerrain_sb);
+		
+		// 3:
+		static private Cached  badlandsTerrain = new Cached(badlandsTerrain_ma);
+		
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module group: river positions
+		  ////////////////////////////////////////////////////////////////////////////
+
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module subgroup: river positions (7 noise modules)
+		  //
+		  // This subgroup generates the river positions.
+		  //
+		  // -1.0 represents the lowest elevations and +1.0 represents the highest
+		  // elevations.
+		  //
+
+		  // 1: [Large-river-basis module]: This ridged-multifractal-noise module
+		  //    creates the large, deep rivers.
+		static private Double RIVER_POSITIONS_RM0_FREQUENCY = 18.75;
+		static private Integer RIVER_POSITIONS_RM0_OCTAVE_COUNT = 1;
+		static private RidgedMulti  riverPositions_rm0 = new RidgedMulti();
+		static {
+			riverPositions_rm0.setSeed(CUR_SEED + 100);
+			riverPositions_rm0.setFrequency(RIVER_POSITIONS_RM0_FREQUENCY);
+			riverPositions_rm0.setLacunarity(CONTINENT_LACUNARITY);
+			riverPositions_rm0.setOctaveCount(RIVER_POSITIONS_RM0_OCTAVE_COUNT);
+			riverPositions_rm0.setNoiseQuality(NoiseQuality.QUALITY_BEST);
+		}
+		
+		  // 2: [Large-river-curve module]: This curve module applies a curve to the
+		  //    output value from the large-river-basis module so that the ridges
+		  //    become inverted.  This creates the rivers.  This curve also compresses
+		  //    the edge of the rivers, producing a sharp transition from the land to
+		  //    the river bottom.
+		static private Curve riverPositions_cu0 = new Curve(riverPositions_rm0);
+		static{
+			riverPositions_cu0.addControlPoint(-2.000,  2.000);
+			riverPositions_cu0.addControlPoint(-1.000,  1.000);
+			riverPositions_cu0.addControlPoint(-0.125,  0.875);
+			riverPositions_cu0.addControlPoint( 0.000, -1.000);
+			riverPositions_cu0.addControlPoint( 1.000, -1.500);
+			riverPositions_cu0.addControlPoint( 2.000, -2.000);
+		}
+		
+		  /// 3: [Small-river-basis module]: This ridged-multifractal-noise module
+		  //     creates the small, shallow rivers.
+		static private Double RIVER_POSITIONS_RM1_FREQUENCY = 43.25;
+		static private Integer RIVER_POSITIONS_RM1_OCTAVE_COUNT = 1;
+		static private RidgedMulti  riverPositions_rm1 = new RidgedMulti();
+		static {
+			riverPositions_rm1.setSeed(CUR_SEED + 101);
+			riverPositions_rm1.setFrequency(RIVER_POSITIONS_RM1_FREQUENCY);
+			riverPositions_rm1.setLacunarity(CONTINENT_LACUNARITY);
+			riverPositions_rm1.setOctaveCount(RIVER_POSITIONS_RM1_OCTAVE_COUNT);
+			riverPositions_rm1.setNoiseQuality(NoiseQuality.QUALITY_BEST);
+		}
+
+		  // 4: [Small-river-curve module]: This curve module applies a curve to the
+		  //    output value from the small-river-basis module so that the ridges
+		  //    become inverted.  This creates the rivers.  This curve also compresses
+		  //    the edge of the rivers, producing a sharp transition from the land to
+		  //    the river bottom.
+		static private Curve riverPositions_cu1 = new Curve(riverPositions_rm1);
+		static{
+			riverPositions_cu1.addControlPoint(-2.000, 2.0000);
+			riverPositions_cu1.addControlPoint(-1.000, 1.5000);
+			riverPositions_cu1.addControlPoint(-0.125, 1.4375);
+			riverPositions_cu1.addControlPoint( 0.000, 0.5000);
+			riverPositions_cu1.addControlPoint( 1.000, 0.2500);
+			riverPositions_cu1.addControlPoint(2.000,  0.0000);
+		}
+
+		  // 5: [Combined-rivers module]: This minimum-value module causes the small
+		  //    rivers to cut into the large rivers.  It does this by selecting the
+		  //    minimum output values from the large-river-curve module and the small-
+		  //    river-curve module.
+		static private Min  riverPositions_mi = new Min(riverPositions_cu0, riverPositions_cu1);
+		
+		  // 6: [Warped-rivers module]: This turbulence module warps the output value
+		  //    from the combined-rivers module, which twists the rivers.  The high
+		  //    roughness produces less-smooth rivers.
+		static private Double RIVER_POSITIONS_TU_FREQUENCY = 9.25;
+		static private Double RIVER_POSITIONS_TU_SCALAR0 = 1.0;
+		static private Double RIVER_POSITIONS_TU_SCALAR1 = 57.75;
+		static private Integer RIVER_POSITIONS_TU_ROUGHNESS = 6;
+		static private Turbulence riverPositions_tu = new Turbulence(riverPositions_mi);
+		static{
+			riverPositions_tu.setSeed(CUR_SEED+102);
+			riverPositions_tu.setFrequency(RIVER_POSITIONS_TU_FREQUENCY);
+			riverPositions_tu.setPower(RIVER_POSITIONS_TU_SCALAR0/RIVER_POSITIONS_TU_SCALAR1);
+			riverPositions_tu.setRoughness(RIVER_POSITIONS_TU_ROUGHNESS);
+		}
+		
+		// 7:
+		static private Cached riverPositions = new Cached(riverPositions_tu);
 		
 	/**
 	 * t e s t s     s t a r t    h e r e
