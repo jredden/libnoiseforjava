@@ -1380,6 +1380,315 @@ public class ComplexPlanetTest {
 		// 7:
 		static private Cached riverPositions = new Cached(riverPositions_tu);
 		
+
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module group: scaled mountainous terrain
+		  ////////////////////////////////////////////////////////////////////////////
+
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module subgroup: scaled mountainous terrain (6 noise modules)
+		  //
+		  // This subgroup scales the output value from the mountainous-terrain group
+		  // so that it can be added to the elevation defined by the continent-
+		  // definition group.
+		  //
+		  // This subgroup scales the output value such that it is almost always
+		  // positive.  This is done so that a negative elevation does not get applied
+		  // to the continent-definition group, preventing parts of that group from
+		  // having negative terrain features "stamped" into it.
+		  //
+		  // The output value from this module subgroup is measured in planetary
+		  // elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
+		  // highest mountain peaks.)
+		  //
+
+		  // 1: [Base-scaled-mountainous-terrain module]: This scale/bias module
+		  //    scales the output value from the mountainous-terrain group so that the
+		  //    output value is measured in planetary elevation units.
+		static private Double SCALED_MOUNTAINOUS_TERRAIN_SB0_SCALE = 0.125;
+		static private Double SCALED_MOUNTAINOUS_TERRAIN_SB0_BIAS = 0.125;
+		static private ScaleBias scaledMountainousTerrain_sb0 = new ScaleBias(mountainousTerrain);
+		static{
+			scaledMountainousTerrain_sb0.setScale(SCALED_MOUNTAINOUS_TERRAIN_SB0_SCALE);
+			scaledMountainousTerrain_sb0.setBias(SCALED_MOUNTAINOUS_TERRAIN_SB0_BIAS);
+		}
+		
+		  // 2: [Base-peak-modulation module]: At this stage, most mountain peaks have
+		  //    roughly the same elevation.  This Perlin-noise module generates some
+		  //    random values that will be used by subsequent noise modules to
+		  //    randomly change the elevations of the mountain peaks.
+		static private Double SCALED_MOUNTAINOUS_TERRAIN_PE_FREQUENCY = 14.5;
+		static private Double SCALED_MOUNTAINOUS_TERRAIN_PE_PERSISTENCE = 0.5;
+		static private Integer SCALED_MOUNTAINOUS_TERRAIN_PE_OCTAVE_COUNT = 6;
+		static private Perlin scaledMountainousTerrain_pe = new Perlin();
+		static{
+			scaledMountainousTerrain_pe.setSeed(CUR_SEED+110);
+			scaledMountainousTerrain_pe.setFrequency(SCALED_MOUNTAINOUS_TERRAIN_PE_FREQUENCY);
+			scaledMountainousTerrain_pe.setPersistence(SCALED_MOUNTAINOUS_TERRAIN_PE_PERSISTENCE);
+			scaledMountainousTerrain_pe.setLacunarity(MOUNTAIN_LACUNARITY);
+			scaledMountainousTerrain_pe.setOctaveCount(SCALED_MOUNTAINOUS_TERRAIN_PE_OCTAVE_COUNT);
+			scaledMountainousTerrain_pe.setNoiseQuality(NoiseQuality.QUALITY_STD);
+		}
+		
+		  // 3: [Peak-modulation module]: This exponential-curve module applies an
+		  //    exponential curve to the output value from the base-peak-modulation
+		  //    module.  This produces a small number of high values and a much larger
+		  //    number of low values.  This means there will be a few peaks with much
+		  //    higher elevations than the majority of the peaks, making the terrain
+		  //    features more varied.
+		static private Double SCALED_MOUNTAINOUS_TERRAIN_EX_EXPONENT = 1.25;
+		static private Exponent scaledMountainousTerrain_ex = new Exponent(scaledMountainousTerrain_pe);
+		
+		  // 4: [Scaled-peak-modulation module]: This scale/bias module modifies the
+		  //    range of the output value from the peak-modulation module so that it
+		  //    can be used as the modulator for the peak-height-multiplier module.
+		  //    It is important that this output value is not much lower than 1.0.
+		static private Double SCALED_MOUNTAINOUS_TERRAIN_SB1_SCALE = 0.25;
+		static private Double SCALED_MOUNTAINOUS_TERRAIN_SB1_BIAS = 1.0;
+		static private ScaleBias scaledMountainousTerrain_sb1 = new ScaleBias(scaledMountainousTerrain_ex);
+		static{
+			scaledMountainousTerrain_sb0.setScale(SCALED_MOUNTAINOUS_TERRAIN_SB1_SCALE);
+			scaledMountainousTerrain_sb0.setBias(SCALED_MOUNTAINOUS_TERRAIN_SB1_BIAS);
+		}
+
+		  // 5: [Peak-height-multiplier module]: This multiplier module modulates the
+		  //    heights of the mountain peaks from the base-scaled-mountainous-terrain
+		  //    module using the output value from the scaled-peak-modulation module.
+		static private Multiply scaledMountainousTerrain_mu = new Multiply(scaledMountainousTerrain_sb0, scaledMountainousTerrain_sb1);
+		
+		// 6:
+		static private Cached scaledMountainousTerrain = new Cached(scaledMountainousTerrain_mu);
+		
+
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module group: scaled hilly terrain
+		  ////////////////////////////////////////////////////////////////////////////
+
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module subgroup: scaled hilly terrain (6 noise modules)
+		  //
+		  // This subgroup scales the output value from the hilly-terrain group so
+		  // that it can be added to the elevation defined by the continent-
+		  // definition group.  The scaling amount applied to the hills is one half of
+		  // the scaling amount applied to the scaled-mountainous-terrain group.
+		  //
+		  // This subgroup scales the output value such that it is almost always
+		  // positive.  This is done so that negative elevations are not applied to
+		  // the continent-definition group, preventing parts of the continent-
+		  // definition group from having negative terrain features "stamped" into it.
+		  //
+		  // The output value from this module subgroup is measured in planetary
+		  // elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
+		  // highest mountain peaks.)
+		  //
+
+		  // 1: [Base-scaled-hilly-terrain module]: This scale/bias module scales the
+		  //    output value from the hilly-terrain group so that this output value is
+		  //    measured in planetary elevation units 
+		static private Double SCALED_HILLY_TERRAIN_SB0_SCALE = 0.0625;
+		static private Double SCALED_HILLY_TERRAIN_SB0_BIAS = 0.0625;
+		static private ScaleBias  scaledHillyTerrain_sb0 = new ScaleBias(hillyTerrain);
+		static{
+			scaledHillyTerrain_sb0.setScale(SCALED_HILLY_TERRAIN_SB0_SCALE);
+			scaledHillyTerrain_sb0.setBias(SCALED_HILLY_TERRAIN_SB0_BIAS);
+		}
+		
+		  // 2: [Base-hilltop-modulation module]: At this stage, most hilltops have
+		  //    roughly the same elevation.  This Perlin-noise module generates some
+		  //    random values that will be used by subsequent noise modules to
+		  //    randomly change the elevations of the hilltops.
+		static private Double SCALED_HILLY_TERRAIN_PE_FREQUENCY = 13.5;
+		static private Double SCALED_HILLY_TERRAIN_PE_PERSISTENCE = 0.5;
+		static private Integer SCALED_HILLY_TERRAIN_PE_OCTAVE_COUNT = 6;
+		static private Perlin scaledHillyTerrain_pe = new Perlin();
+		static{
+			scaledHillyTerrain_pe.setSeed(CUR_SEED+120);
+			scaledHillyTerrain_pe.setFrequency(SCALED_HILLY_TERRAIN_PE_FREQUENCY);
+			scaledHillyTerrain_pe.setPersistence(SCALED_HILLY_TERRAIN_PE_PERSISTENCE);
+			scaledHillyTerrain_pe.setLacunarity(HILLS_LACUNARITY);
+			scaledHillyTerrain_pe.setOctaveCount(SCALED_HILLY_TERRAIN_PE_OCTAVE_COUNT);
+			scaledHillyTerrain_pe.setNoiseQuality(NoiseQuality.QUALITY_STD);
+		}
+		
+		  // 3: [Hilltop-modulation module]: This exponential-curve module applies an
+		  //    exponential curve to the output value from the base-hilltop-modulation
+		  //    module.  This produces a small number of high values and a much larger
+		  //    number of low values.  This means there will be a few hilltops with
+		  //    much higher elevations than the majority of the hilltops, making the
+		  //    terrain features more varied.
+		static private Double SCALED_HILLY_TERRAIN_EX_EXPONENT = 1.25;
+		static private Exponent scaledHillyTerrain_ex = new Exponent(scaledHillyTerrain_pe);
+		static{
+			scaledHillyTerrain_ex.setExponent(SCALED_HILLY_TERRAIN_EX_EXPONENT);
+		}
+		
+		  // 4: [Scaled-hilltop-modulation module]: This scale/bias module modifies
+		  //    the range of the output value from the hilltop-modulation module so
+		  //    that it can be used as the modulator for the hilltop-height-multiplier
+		  //    module.  It is important that this output value is not much lower than
+		  //    1.0.
+		static private Double SCALED_HILLY_TERRAIN_SB1_SCALE = 0.5;
+		static private Double SCALED_HILLY_TERRAIN_SB1_BIAS = 1.5;
+		static private ScaleBias  scaledHillyTerrain_sb1 = new ScaleBias(hillyTerrain);
+		static{
+			scaledHillyTerrain_sb1.setScale(SCALED_HILLY_TERRAIN_SB1_SCALE);
+			scaledHillyTerrain_sb1.setBias(SCALED_HILLY_TERRAIN_SB1_BIAS);
+		}
+
+		  // 5: [Hilltop-height-multiplier module]: This multiplier module modulates
+		  //    the heights of the hilltops from the base-scaled-hilly-terrain module
+		  //    using the output value from the scaled-hilltop-modulation module.
+		static private Multiply scaledHillyTerrain_mu = new Multiply(scaledHillyTerrain_sb0, scaledHillyTerrain_sb1);
+		
+		// 6:
+		static private Cached scaledHillyTerrain = new Cached(scaledHillyTerrain_mu);
+		
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module group: scaled plains terrain
+		  ////////////////////////////////////////////////////////////////////////////
+
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module subgroup: scaled plains terrain (2 noise modules)
+		  //
+		  // This subgroup scales the output value from the plains-terrain group so
+		  // that it can be added to the elevations defined by the continent-
+		  // definition group.
+		  //
+		  // This subgroup scales the output value such that it is almost always
+		  // positive.  This is done so that negative elevations are not applied to
+		  // the continent-definition group, preventing parts of the continent-
+		  // definition group from having negative terrain features "stamped" into it.
+		  //
+		  // The output value from this module subgroup is measured in planetary
+		  // elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
+		  // highest mountain peaks.)
+		  //
+
+		  // 1: [Scaled-plains-terrain module]: This scale/bias module greatly
+		  //    flattens the output value from the plains terrain.  This output value
+		  //    is measured in planetary elevation units 
+		static private Double SCALED_PLAINS_TERRAIN_SB_SCALE = 0.00390625;
+		static private Double SCALED_PLAINS_TERRAIN_SB_BIAS = 0.0078125;
+		static private ScaleBias scaledPlainsTerrain_sb = new ScaleBias(plainsTerrain);
+		static{
+			scaledPlainsTerrain_sb.setScale(SCALED_PLAINS_TERRAIN_SB_SCALE);
+			scaledPlainsTerrain_sb.setBias(SCALED_PLAINS_TERRAIN_SB_BIAS);
+		}
+		
+		// 2:
+		static private Cached scaledPlainsTerrain = new Cached(scaledPlainsTerrain_sb);
+		
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module group: scaled badlands terrain
+		  ////////////////////////////////////////////////////////////////////////////
+
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module subgroup: scaled badlands terrain (2 noise modules)
+		  //
+		  // This subgroup scales the output value from the badlands-terrain group so
+		  // that it can be added to the elevations defined by the continent-
+		  // definition group.
+		  //
+		  // This subgroup scales the output value such that it is almost always
+		  // positive.  This is done so that negative elevations are not applied to
+		  // the continent-definition group, preventing parts of the continent-
+		  // definition group from having negative terrain features "stamped" into it.
+		  //
+		  // The output value from this module subgroup is measured in planetary
+		  // elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
+		  // highest mountain peaks.)
+		  //
+
+		  // 1: [Scaled-badlands-terrain module]: This scale/bias module scales the
+		  //    output value from the badlands-terrain group so that it is measured
+		  //    in planetary elevation units 
+		static private Double SCALED_BADLANDS_TERRAIN_SCALE = 0.0625;
+		static private Double SCALED_BADLANDS_TERRAIN_BIAS = 0.0625;
+		static private ScaleBias scaledBadlandsTerrain_sb = new ScaleBias(badlandsTerrain);
+		static{
+			scaledBadlandsTerrain_sb.setScale(SCALED_BADLANDS_TERRAIN_SCALE);
+			scaledBadlandsTerrain_sb.setBias(SCALED_BADLANDS_TERRAIN_BIAS);
+		}
+		
+		// 2:
+		static private Cached scaledBadlandsTerrain = new Cached(scaledBadlandsTerrain_sb);
+		
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module group: final planet
+		  ////////////////////////////////////////////////////////////////////////////
+
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module subgroup: continental shelf (6 noise modules)
+		  //
+		  // This module subgroup creates the continental shelves.
+		  //
+		  // The output value from this module subgroup are measured in planetary
+		  // elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
+		  // highest mountain peaks.)
+		  //
+
+		  // 1: [Shelf-creator module]: This terracing module applies a terracing
+		  //    curve to the continent-definition group at the specified shelf level.
+		  //    This terrace becomes the continental shelf.  Note that this terracing
+		  //    module also places another terrace below the continental shelf near
+		  //    -1.0.  The bottom of this terrace is defined as the bottom of the
+		  //    ocean; subsequent noise modules will later add oceanic trenches to the
+		  //    bottom of the ocean.
+		static private Double CONTINENTAL_SHELF_TE_LOWEST_CONTROL_POINT = -1.0;
+		static private Double CONTINENTAL_SHELF_TE_LOW_CONTROL_POINT = -0.75;
+		static private Double CONTINENTAL_SHELF_TE_HIGH_CONTROL_POINT = 1.0;	
+		static private Terrace continentalShelf_te = new Terrace(continentDef);
+		static{
+			continentalShelf_te.addControlPoint(CONTINENTAL_SHELF_TE_LOWEST_CONTROL_POINT);
+			continentalShelf_te.addControlPoint(CONTINENTAL_SHELF_TE_LOW_CONTROL_POINT);
+			continentalShelf_te.addControlPoint(SHELF_LEVEL);
+			continentalShelf_te.addControlPoint(CONTINENTAL_SHELF_TE_HIGH_CONTROL_POINT);
+		}
+		
+		  // 2: [Oceanic-trench-basis module]: This ridged-multifractal-noise module
+		  //    generates some coherent noise that will be used to generate the
+		  //    oceanic trenches.  The ridges represent the bottom of the trenches.
+		static private Double CONTINENTAL_SHELF_FREQUENCY_SCALAR = 4.375;
+		static private Integer CONTINENTAL_SHELF_FREQUENCY_OCTAVE_COUNT = 16;
+		static private RidgedMulti continentalShelf_rm = new RidgedMulti();
+		static{
+			continentalShelf_rm.setSeed(CUR_SEED+130);
+			continentalShelf_rm.setFrequency(CONTINENT_FREQUENCY*CONTINENTAL_SHELF_FREQUENCY_SCALAR);
+			continentalShelf_rm.setLacunarity(CONTINENT_LACUNARITY);
+			continentalShelf_rm.setOctaveCount(CONTINENTAL_SHELF_FREQUENCY_OCTAVE_COUNT);
+			continentalShelf_rm.setNoiseQuality(NoiseQuality.QUALITY_BEST);
+		}
+		
+		  // 3: [Oceanic-trench module]: This scale/bias module inverts the ridges
+		  //    from the oceanic-trench-basis-module so that the ridges become
+		  //    trenches.  This noise module also reduces the depth of the trenches so
+		  //    that their depths are measured in planetary elevation units.
+		static private Double CONTINENTAL_SHELF_SB_SCALE = -0.125;
+		static private Double CONTINENTAL_SHELF_SB_BIAS = -0.125;
+		static private ScaleBias continentalShelf_sb = new ScaleBias(continentalShelf_rm);
+		static{
+			continentalShelf_sb.setScale(CONTINENTAL_SHELF_SB_SCALE);
+			continentalShelf_sb.setBias(CONTINENTAL_SHELF_SB_BIAS);
+		}
+		
+		  // 4: [Clamped-sea-bottom module]: This clamping module clamps the output
+		  //    value from the shelf-creator module so that its possible range is
+		  //    from the bottom of the ocean to sea level.  This is done because this
+		  //    subgroup is only concerned about the oceans.
+		static private Double CONTINENTAL_SHELF_CL_BOUNDS = -0.75;
+		static private Clamp continentalShelf_cl = new Clamp(continentalShelf_te);
+		static{
+			continentalShelf_cl.setBounds(CONTINENTAL_SHELF_CL_BOUNDS, SEA_LEVEL);
+		}
+		
+		  // 5: [Shelf-and-trenches module]: This addition module adds the oceanic
+		  //    trenches to the clamped-sea-bottom module.
+
+		static private Add continentalShelf_ad = new Add(continentalShelf_sb, continentalShelf_cl);
+		
+		// 6:
+		static private Cached continentalShelf = new Cached(continentalShelf_ad);
+		
 	/**
 	 * t e s t s     s t a r t    h e r e
 	 */
