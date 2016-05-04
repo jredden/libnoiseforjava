@@ -208,6 +208,24 @@ public class ComplexPlanetTest {
 	 static Double BADLANDS_LACUNARITY = 2.212890625;
 	// Specifies the "twistiness" of the badlands.
 	 static Double  BADLANDS_TWIST = 1.0;
+	  // Scaling to apply to the base continent elevations, in planetary elevation
+	  // units.
+	 static Double CONTINENT_HEIGHT_SCALE = (1.0 - SEA_LEVEL) / 4.0;
+	  // Determines the amount of mountainous terrain that appears on the
+	  // planet.  Values range from 0.0 (no mountains) to 1.0 (all terrain is
+	  // covered in mountains).  Mountainous terrain will overlap hilly terrain.
+	  // Because the badlands terrain may overlap parts of the mountainous
+	  // terrain, setting MOUNTAINS_AMOUNT to 1.0 may not completely cover the
+	  // terrain in mountains.
+	 static Double MOUNTAINS_AMOUNT = 0.5;
+	  // Determines the amount of hilly terrain that appears on the planet.
+	  // Values range from 0.0 (no hills) to 1.0 (all terrain is covered in
+	  // hills).  This value must be less than MOUNTAINS_AMOUNT.  Because the
+	  // mountainous terrain will overlap parts of the hilly terrain, and
+	  // the badlands terrain may overlap parts of the hilly terrain, setting
+	  // HILLS_AMOUNT to 1.0 may not completely cover the terrain in hills.
+	 static Double HILLS_AMOUNT =  (1.0 + MOUNTAINS_AMOUNT) / 2.0;
+	 
 	 
 	// 1: [Continent module]: This Perlin-noise module generates the continents.
 	// This noise module has a high number of octaves so that detail is
@@ -1689,6 +1707,150 @@ public class ComplexPlanetTest {
 		// 6:
 		static private Cached continentalShelf = new Cached(continentalShelf_ad);
 		
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module group: base continent elevations (3 noise modules)
+		  //
+		  // This subgroup generates the base elevations for the continents, before
+		  // terrain features are added.
+		  //
+		  // The output value from this module subgroup is measured in planetary
+		  // elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
+		  // highest mountain peaks.)
+		  //
+
+		  // 1: [Base-scaled-continent-elevations module]: This scale/bias module
+		  //    scales the output value from the continent-definition group so that it
+		  //    is measured in planetary elevation units 
+		static private Double BASE_CONTINENT_ELEV_SB_BIAS = 0.0;
+		static private ScaleBias baseContinentElev_sb = new ScaleBias(continentDef);
+		static{
+			baseContinentElev_sb.setScale(CONTINENT_HEIGHT_SCALE);
+			baseContinentElev_sb.setBias(BASE_CONTINENT_ELEV_SB_BIAS);
+		}
+		
+		  // 2: [Base-continent-with-oceans module]: This selector module applies the
+		  //    elevations of the continental shelves to the base elevations of the
+		  //    continent.  It does this by selecting the output value from the
+		  //    continental-shelf subgroup if the corresponding output value from the
+		  //    continent-definition group is below the shelf level.  Otherwise, it
+		  //    selects the output value from the base-scaled-continent-elevations
+		  //    module.
+		static private Double BASE_CONTINENT_ELEV_SE_BOUND_SCALAR = 1000.0;
+		static private Double BASE_CONTINENT_ELEV_SE_EDGE_FALLOFF = 0.03125;
+		static private Select baseContinentElev_se = new Select(baseContinentElev_sb, continentalShelf, continentDef);
+		static{
+			baseContinentElev_se.setBounds(SHELF_LEVEL-BASE_CONTINENT_ELEV_SE_BOUND_SCALAR, SHELF_LEVEL);
+			baseContinentElev_se.setEdgeFalloff(BASE_CONTINENT_ELEV_SE_EDGE_FALLOFF);
+		}
+		
+		// 3:
+		static private Cached baseContinentElev = new Cached(baseContinentElev_se);
+		
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module subgroup: continents with plains (2 noise modules)
+		  //
+		  // This subgroup applies the scaled-plains-terrain group to the base-
+		  // continent-elevation subgroup.
+		  //
+		  // The output value from this module subgroup is measured in planetary
+		  // elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
+		  // highest mountain peaks.)
+		  //
+
+		  // 1: [Continents-with-plains module]:  This addition module adds the
+		  //    scaled-plains-terrain group to the base-continent-elevation subgroup.
+		static private Add continentsWithPlains_ad = new Add(baseContinentElev, scaledPlainsTerrain);
+		
+		// 2:
+		static private Cached continentsWithPlains = new Cached(continentsWithPlains_ad);
+		
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module subgroup: continents with hills (3 noise modules)
+		  //
+		  // This subgroup applies the scaled-hilly-terrain group to the continents-
+		  // with-plains subgroup.
+		  //
+		  // The output value from this module subgroup is measured in planetary
+		  // elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
+		  // highest mountain peaks.)
+		  //
+
+		  // 1: [Continents-with-hills module]:  This addition module adds the scaled-
+		  //    hilly-terrain group to the base-continent-elevation subgroup.
+		static private Add continentsWithHills_ad = new Add(baseContinentElev, scaledHillyTerrain);
+		
+		  // 2: [Select-high-elevations module]: This selector module ensures that
+		  //    the hills only appear at higher elevations.  It does this by selecting
+		  //    the output value from the continent-with-hills module if the
+		  //    corresponding output value from the terrain-type-defintion group is
+		  //    above a certain value. Otherwise, it selects the output value from the
+		  //    continents-with-plains subgroup.
+		static private Double CONTINENTS_WITH_HILLS_BOUNDS_SCALAR0 = 1.0;
+		static private Double CONTINENTS_WITH_HILLS_BOUNDS_SCALAR1 = 1001.0;
+		static private Double CONTINENTS_WITH_HILLS_EDGE_FALLOFF = 0.25;
+		static private Select  continentsWithHills_se = new Select(continentsWithPlains, continentsWithHills_ad, terrainTypeDef);
+		static {
+			continentsWithHills_se.setBounds(CONTINENTS_WITH_HILLS_BOUNDS_SCALAR0-HILLS_AMOUNT, CONTINENTS_WITH_HILLS_BOUNDS_SCALAR1-HILLS_AMOUNT);
+			continentsWithHills_se.setEdgeFalloff(CONTINENTS_WITH_HILLS_EDGE_FALLOFF);
+		}
+		
+		// 3:
+		static private Cached continentsWithHills = new Cached(continentsWithHills_se);
+		
+		  ////////////////////////////////////////////////////////////////////////////
+		  // Module subgroup: continents with mountains (5 noise modules)
+		  //
+		  // This subgroup applies the scaled-mountainous-terrain group to the
+		  // continents-with-hills subgroup.
+		  //
+		  // The output value from this module subgroup is measured in planetary
+		  // elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
+		  // highest mountain peaks.)
+		  //
+
+		  // 1: [Continents-and-mountains module]:  This addition module adds the
+		  //    scaled-mountainous-terrain group to the base-continent-elevation
+		  //    subgroup.
+		static private Add continentsWithMountains_ad0 = new Add(baseContinentElev, scaledMountainousTerrain);
+		
+		  // 2: [Increase-mountain-heights module]:  This curve module applies a curve
+		  //    to the output value from the continent-definition group.  This
+		  //    modified output value is used by a subsequent noise module to add
+		  //    additional height to the mountains based on the current continent
+		  //    elevation.  The higher the continent elevation, the higher the
+		  //    mountains.
+		static private Curve  continentsWithMountains_cu = new Curve(continentDef);
+		static {
+			continentsWithMountains_cu.addControlPoint(-1.0, -0.0625);
+			continentsWithMountains_cu.addControlPoint( 0.0,  0.0000);
+			continentsWithMountains_cu.addControlPoint(1.0 - MOUNTAINS_AMOUNT, 0.0625);
+			continentsWithMountains_cu.addControlPoint(1.0, 0.2500);
+		}
+		
+		  // 3: [Add-increased-mountain-heights module]: This addition module adds
+		  //    the increased-mountain-heights module to the continents-and-
+		  //    mountains module.  The highest continent elevations now have the
+		  //    highest mountains.
+		static private Add continentsWithMountains_ad1 = new Add(continentsWithMountains_ad0, continentsWithMountains_cu);
+		
+		  // 4: [Select-high-elevations module]: This selector module ensures that
+		  //    mountains only appear at higher elevations.  It does this by selecting
+		  //    the output value from the continent-with-mountains module if the
+		  //    corresponding output value from the terrain-type-defintion group is
+		  //    above a certain value.  Otherwise, it selects the output value from
+		  //    the continents-with-hills subgroup.  Note that the continents-with-
+		  //    hills subgroup also contains the plains terrain.
+		static private Double CONTINENT_WITH_MOUNTAINS_BOUNDS_SCALAR0 = 1.0;
+		static private Double CONTINENT_WITH_MOUNTAINS_BOUNDS_SCALAR1 = 1001.0;
+		static private Double CONTINENT_WITH_MOUNTAINS_EDGE_FALLOFF = 0.25;
+		static private Select  continentsWithMountains_se = new Select(continentsWithHills, continentsWithMountains_ad1, terrainTypeDef);
+		static {
+			continentsWithMountains_se.setBounds(CONTINENT_WITH_MOUNTAINS_BOUNDS_SCALAR0 - MOUNTAINS_AMOUNT, CONTINENT_WITH_MOUNTAINS_BOUNDS_SCALAR1 - MOUNTAINS_AMOUNT);
+			continentsWithMountains_se.setEdgeFalloff(CONTINENT_WITH_MOUNTAINS_EDGE_FALLOFF);
+		}
+		
+		// 5:
+		static private Cached continentsWithMountains = new Cached(continentsWithMountains_se);
 	/**
 	 * t e s t s     s t a r t    h e r e
 	 */
