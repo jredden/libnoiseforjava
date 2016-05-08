@@ -124,10 +124,10 @@ public class ComplexPlanetTest {
 
 	// create a spherical-noise-map builder
 	private static NoiseMapBuilderSphere planet = new NoiseMapBuilderSphere();
-	private static NoiseMap elevGrid = new NoiseMap(GRID_HEIGHT, GRID_WIDTH);
+	private static NoiseMap elevGrid = new NoiseMap(GRID_WIDTH, GRID_HEIGHT);
 	static {
 		planet.setBounds(SOUTH_COORD, NORTH_COORD, WEST_COORD, EAST_COORD);
-		planet.setDestSize(100, 100);
+		planet.setDestSize(500, 250);
 
 	}
 
@@ -2071,7 +2071,7 @@ public class ComplexPlanetTest {
 	// output value is measured in meters.
 	static private ScaleBias finalPlanet_sb = new ScaleBias(unscaledPlanet);
 	static {
-		finalPlanet_sb.setScale(MAX_ELEV - MIN_ELEV / 2.0);
+		finalPlanet_sb.setScale((MAX_ELEV - MIN_ELEV) / 2.0);
 		finalPlanet_sb.setBias(MIN_ELEV + ((MAX_ELEV - MIN_ELEV) / 2.0));
 	}
 	// 2:
@@ -2398,6 +2398,76 @@ public class ComplexPlanetTest {
 
 	}
 	@Test
+	public void complexPlanetBaseContinentsWithPlainsSubTest() {
+		planet.setSourceModule(continentsWithPlains);
+		planet.setDestNoiseMap(elevGrid);
+		planet.build();
+		RenderImageParameter renderImageParameter = new RenderImageParameter(
+				gradientPointList, elevGrid, Boolean.TRUE, lightContrast,
+				lightBrightness);
+		ImageCafe imageCafe = Builder.buildRendererImage(renderImageParameter);
+		String uri = "images/" + Math.random()
+				+ "complextPlanetBaseContinentsWithPlainsSubTest_test.png";
+		Output.writer(imageCafe, uri);
+
+	}
+	@Test
+	public void complexPlanetBaseContinentsWithHillsSubTest() {
+		planet.setSourceModule(continentsWithHills);
+		planet.setDestNoiseMap(elevGrid);
+		planet.build();
+		RenderImageParameter renderImageParameter = new RenderImageParameter(
+				gradientPointList, elevGrid, Boolean.TRUE, lightContrast,
+				lightBrightness);
+		ImageCafe imageCafe = Builder.buildRendererImage(renderImageParameter);
+		String uri = "images/" + Math.random()
+				+ "complextPlanetBaseContinentsWithHillsSubTest_test.png";
+		Output.writer(imageCafe, uri);
+
+	}
+	@Test
+	public void complexPlanetBaseContinentsWithMountainsSubTest() {
+		planet.setSourceModule(continentsWithMountains);
+		planet.setDestNoiseMap(elevGrid);
+		planet.build();
+		RenderImageParameter renderImageParameter = new RenderImageParameter(
+				gradientPointList, elevGrid, Boolean.TRUE, lightContrast,
+				lightBrightness);
+		ImageCafe imageCafe = Builder.buildRendererImage(renderImageParameter);
+		String uri = "images/" + Math.random()
+				+ "complextPlanetBaseContinentsWithMountainsSubTest_test.png";
+		Output.writer(imageCafe, uri);
+
+	}
+	@Test
+	public void complexPlanetBaseContinentsWithBadlandsSubTest() {
+		planet.setSourceModule(continentsWithBadlands);
+		planet.setDestNoiseMap(elevGrid);
+		planet.build();
+		RenderImageParameter renderImageParameter = new RenderImageParameter(
+				gradientPointList, elevGrid, Boolean.TRUE, lightContrast,
+				lightBrightness);
+		ImageCafe imageCafe = Builder.buildRendererImage(renderImageParameter);
+		String uri = "images/" + Math.random()
+				+ "complextPlanetBaseContinentsWithBadlandsSubTest_test.png";
+		Output.writer(imageCafe, uri);
+
+	}
+	@Test
+	public void complexPlanetBaseContinentsWithRiversSubTest() {
+		planet.setSourceModule(continentsWithRivers);
+		planet.setDestNoiseMap(elevGrid);
+		planet.build();
+		RenderImageParameter renderImageParameter = new RenderImageParameter(
+				gradientPointList, elevGrid, Boolean.TRUE, lightContrast,
+				lightBrightness);
+		ImageCafe imageCafe = Builder.buildRendererImage(renderImageParameter);
+		String uri = "images/" + Math.random()
+				+ "complextPlanetBaseContinentsWithRiversSubTest_test.png";
+		Output.writer(imageCafe, uri);
+
+	}
+	@Test
 	public void complexUnscaledPlanetTest() {
 		planet.setSourceModule(unscaledPlanet);
 		planet.setDestNoiseMap(elevGrid);
@@ -2414,7 +2484,15 @@ public class ComplexPlanetTest {
 	
 	@Test
 	public void complexPlanetTest() {
-		planet.setSourceModule(finalPlanet);
+		NoiseMapBuilderSphere planet = new NoiseMapBuilderSphere();
+		NoiseMap elevGrid = new NoiseMap(GRID_WIDTH, GRID_HEIGHT);
+	
+			planet.setBounds(SOUTH_COORD, NORTH_COORD, WEST_COORD, EAST_COORD);
+			planet.setDestSize(500, 1000);
+
+	
+
+		planet.setSourceModule(finalPlanet_sb);
 		planet.setDestNoiseMap(elevGrid);
 		planet.build();
 		RenderImageParameter renderImageParameter = new RenderImageParameter(

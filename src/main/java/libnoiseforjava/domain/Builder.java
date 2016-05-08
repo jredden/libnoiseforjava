@@ -64,7 +64,7 @@ public class Builder {
 					gradientPointParameter.getColorCafe());
 		}
 		ImageCafe imageCafe = new ImageCafe(renderImageParameter.getNoiseMap()
-				.getHeight(), renderImageParameter.getNoiseMap().getWidth());
+				.getWidth(), renderImageParameter.getNoiseMap().getHeight());
 		renderer.setSourceNoiseMap(renderImageParameter.getNoiseMap());
 
 		renderer.setDestImage(imageCafe);
