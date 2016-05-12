@@ -131,6 +131,7 @@ public class ComplexPlanetOnlyTest {
 
 	}
 
+	// surface map
 	static List<GradientPointParameter> gradientPointList = new ArrayList<GradientPointParameter>();
 	static {
 		GradientPointParameter gradientPointParameter = new GradientPointParameter(
@@ -166,7 +167,30 @@ public class ComplexPlanetOnlyTest {
 
 	}
 
-	static Double lightContrast = new Double(3.0);
+	// image colored by elevation and artificial light source
+	static List<GradientPointParameter> gradientPointList2 = new ArrayList<GradientPointParameter>();
+	static {
+		GradientPointParameter gradientPointParameter = new GradientPointParameter(
+				-16384.0 + seaLevelInMeters, new ColorCafe(0, 0, 0, 255));
+		gradientPointParameter = new GradientPointParameter(-256.0 + seaLevelInMeters, new ColorCafe(6, 58, 127, 255));
+		gradientPointList2.add(gradientPointParameter);
+		gradientPointParameter = new GradientPointParameter(-1.0 + seaLevelInMeters, new ColorCafe( 14, 112, 192, 255));
+		gradientPointList2.add(gradientPointParameter);
+		gradientPointParameter = new GradientPointParameter(0.0 + seaLevelInMeters, new ColorCafe(  70, 120,  60, 255));
+		gradientPointList2.add(gradientPointParameter);
+		gradientPointParameter = new GradientPointParameter(1024.0 + seaLevelInMeters, new ColorCafe(110, 140,  75, 255));
+		gradientPointList2.add(gradientPointParameter);
+		gradientPointParameter = new GradientPointParameter(2048.0 + seaLevelInMeters, new ColorCafe(160, 140, 111, 255));	
+		gradientPointList2.add(gradientPointParameter);
+		gradientPointParameter = new GradientPointParameter(3072.0 + seaLevelInMeters, new ColorCafe(184, 163, 141, 255));
+		gradientPointList2.add(gradientPointParameter);
+		gradientPointParameter = new GradientPointParameter(4096.0 + seaLevelInMeters, new ColorCafe(255, 255, 255, 255));
+		gradientPointList2.add(gradientPointParameter);
+		gradientPointParameter = new GradientPointParameter(6144.0 + seaLevelInMeters, new ColorCafe(128, 255, 255, 255));
+		gradientPointList2.add(gradientPointParameter);
+		gradientPointParameter = new GradientPointParameter(16384.0 + seaLevelInMeters, new ColorCafe(0, 0, 255, 255));		
+	}
+
 	static Double lightBrightness = new Double(2.0);
 	static Double lightElevation = new Double(45.0);
 	static Double lightAzumith = new Double(135.0);
@@ -176,6 +200,8 @@ public class ComplexPlanetOnlyTest {
 	// double resInMeters = (degExtent / gridExtent) * metersPerDegree;
 	static Double resInMeters = (degExtent / gridExtent) * METERS_PER_DEGREE;
 	static Double INVERSE_RES_IN_METERS = 1.0 / resInMeters;
+	
+	static Double lightContrast = new Double(1.0/resInMeters);
 
 	// Specifies the level on the planet in which continental shelves appear.
 	// This value must be between -1.0 (minimum planet elevation) and +1.0
@@ -2094,12 +2120,35 @@ public class ComplexPlanetOnlyTest {
 		planet.setSourceModule(finalPlanet_sb);
 		planet.setDestNoiseMap(elevGrid);
 		planet.build();
-		RenderImageParameter renderImageParameter = new RenderImageParameter(
+		RenderImageSphereParameter renderImageParameter = new RenderImageSphereParameter(
 				gradientPointList, elevGrid, Boolean.TRUE, lightContrast,
-				lightBrightness);
+				lightBrightness, lightElevation, lightAzumith );
 		ImageCafe imageCafe = Builder.buildRendererImage(renderImageParameter);
 		String uri = "images/" + Math.random()
 				+ "complextPlanetCompleteOnly_test.png";
+		Output.writer(imageCafe, uri);
+
+	}
+	
+	@Test
+	public void complexPlanetTest2() {
+		NoiseMapBuilderSphere planet = new NoiseMapBuilderSphere();
+		NoiseMap elevGrid = new NoiseMap(GRID_WIDTH, GRID_HEIGHT);
+	
+			planet.setBounds(SOUTH_COORD, NORTH_COORD, WEST_COORD, EAST_COORD);
+			planet.setDestSize(GRID_WIDTH, GRID_HEIGHT);
+
+	
+
+		planet.setSourceModule(finalPlanet_sb);
+		planet.setDestNoiseMap(elevGrid);
+		planet.build();
+		RenderImageParameter renderImageParameter = new RenderImageParameter(
+				gradientPointList2, elevGrid, Boolean.FALSE, lightContrast,
+				lightBrightness);
+		ImageCafe imageCafe = Builder.buildRendererImage(renderImageParameter);
+		String uri = "images/" + Math.random()
+				+ "complextPlanetCompleteOnly_test2.png";
 		Output.writer(imageCafe, uri);
 
 	}
