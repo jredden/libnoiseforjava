@@ -13,7 +13,7 @@
 	</organization>
 
 	<repositories>
-		<repository>
+	  	<repository>
 			<id>JBossRepo</id>
 			<url>http://repository.jboss.com/maven2/</url>
 		</repository>
@@ -44,6 +44,11 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.zenred</groupId>
+			<artifactId>johntredden</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 
