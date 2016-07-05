@@ -7,11 +7,7 @@ import libnoiseforjava.module.ModuleBase;
 
 public class CurveBuilder {
 	
-	class ControlPoint{
-		public Double inputValue;
-		public Double outputValue;
-	}
-	
+
 	ModuleBase moduleBase;
 	Double medianValue;
 	List<ControlPoint> controlPoints;
@@ -23,7 +19,7 @@ public class CurveBuilder {
 		this.medianValue = medianValue;
 		this.controlPoints = controlPoints;
 		this.curve = new Curve(moduleBase);
-		for(ControlPoint controlPoint : controlPoints){
+		for(ControlPoint controlPoint : this.controlPoints){
 			this.curve.addControlPoint(controlPoint.inputValue + this.medianValue, controlPoint.outputValue + this.medianValue);
 		}
 		return this.curve;
