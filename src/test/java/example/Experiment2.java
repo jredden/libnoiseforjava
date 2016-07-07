@@ -286,7 +286,7 @@ public class Experiment2 {
 				NoiseQuality.QUALITY_STD);
 		baseContinentDef_cu = new CurveBuilder().builder(baseContinentDef_pe0, P_LEVEL, controlPoints);
 		baseContinentDef_pe1 = new PerlinBuilder().biuld(CUR_SEED, CONTINENT_FREQUENCY,
-				BASE_CONTINENT_DEF_PERSISTENCE_0, CONTINENT_LACUNARITY, BASE_CONTINENT_DEF_OCTAVE_COUNT_PE0,
+				BASE_CONTINENT_DEF_PERSISTENCE_1, CONTINENT_LACUNARITY, BASE_CONTINENT_DEF_OCTAVE_COUNT_PE1,
 				NoiseQuality.QUALITY_STD);
 		buildScaleBias();
 

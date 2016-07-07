@@ -17,6 +17,7 @@ import libnoiseforjava.domain.GradientPointParameter;
 import libnoiseforjava.domain.PerlinBuilder;
 import libnoiseforjava.domain.RenderImageParameter;
 import libnoiseforjava.domain.ScaleBiasBuilder;
+import libnoiseforjava.domain.SelectBuilder;
 import libnoiseforjava.domain.SpheresBuilder;
 import libnoiseforjava.domain.TurbulenceBuilder;
 import libnoiseforjava.domain.ControlPoint;
@@ -28,6 +29,7 @@ import libnoiseforjava.module.Min;
 import libnoiseforjava.module.ModuleBase;
 import libnoiseforjava.module.Perlin;
 import libnoiseforjava.module.ScaleBias;
+import libnoiseforjava.module.Select;
 import libnoiseforjava.module.Spheres;
 import libnoiseforjava.module.Turbulence;
 import libnoiseforjava.persistence.Output;
@@ -250,7 +252,10 @@ public class Experiment3 {
 
 	static private Double TU1_FREQUENCY = 97.25;
 	static private Double TU1_POWER_SCALAR = 833.75;
-	static private Integer TU1_ROUGHNESS = 66;
+	static private Integer TU1_ROUGHNESS = 5;
+	static private Double TU2_FREQUENCY = 95.25;
+	static private Double TU2_POWER_SCALAR = 1019.75;
+	static private Integer TU2_ROUGHNESS = 11;
 
 	
 	// 3: [Carver module]: This higher-frequency Perlin-noise module will be
@@ -261,6 +266,11 @@ public class Experiment3 {
 	// 4: [Scaled-carver module]: This scale/bias module scales the output
 	// value from the carver module such that it is usually near 1.0. This
 	// is required for step 5.
+	
+	private static Double CONTINENT_DEF_SE_LOWER_BOUNDS =  - 0.0375;
+	private static Double CONTINENT_DEF_SE_UPPER_BOUNDS =  2000.0375;
+	private static Double CONTINENT_DEF_SE_EDGE_FALLOFF = 0.0625;
+
 	
 	protected ScaleBias buildScaleBias(Perlin baseContinentDef_pe1){
 		ScaleBias scaleBias = new ScaleBiasBuilder().build(BASE_CONTINENT_DEF_SCALE, BASE_CONTINENT_DEF_BIAS, baseContinentDef_pe1);
@@ -295,52 +305,58 @@ public class Experiment3 {
 	
 	
 	private Cached baseContinentDef;  // must be a class variable.  
+	private Cached continentDef;
 
 
 	@Test
 	public void test() {
-		
+
 		// base continents
 		Perlin baseContinentDef_pe0 = new PerlinBuilder().biuld(CUR_SEED, CONTINENT_FREQUENCY,
 				BASE_CONTINENT_DEF_PERSISTENCE_0, CONTINENT_LACUNARITY, BASE_CONTINENT_DEF_OCTAVE_COUNT_PE0,
 				NoiseQuality.QUALITY_STD);
-		List<ControlPoint> controlPoints= buildControlPoints();
+		List<ControlPoint> controlPoints = buildControlPoints();
 		Curve baseContinentDef_cu = new CurveBuilder().builder(baseContinentDef_pe0, P_LEVEL, controlPoints);
 		Perlin baseContinentDef_pe1 = new PerlinBuilder().biuld(CUR_SEED, CONTINENT_FREQUENCY,
-				BASE_CONTINENT_DEF_PERSISTENCE_0, CONTINENT_LACUNARITY, BASE_CONTINENT_DEF_OCTAVE_COUNT_PE0,
+				BASE_CONTINENT_DEF_PERSISTENCE_1, CONTINENT_LACUNARITY, BASE_CONTINENT_DEF_OCTAVE_COUNT_PE1,
 				NoiseQuality.QUALITY_STD);
 		ScaleBias baseContinentDef_sb = buildScaleBias(baseContinentDef_pe1);
 
-		Min baseContinentDef_mi = new Min(baseContinentDef_sb,
-				baseContinentDef_cu);
+		Min baseContinentDef_mi = new Min(baseContinentDef_sb, baseContinentDef_cu);
 		Spheres pools = new SpheresBuilder().build(10.0);
 		Clamp baseContinentDef_cl = buildClamp(baseContinentDef_mi);
 		Add baseContinent_ad = new Add(pools, baseContinentDef_cl);
-		baseContinentDef = new Cached(baseContinent_ad);	
-		
+		baseContinentDef = new Cached(baseContinent_ad);
+
 		// next modify continents
 		Integer nextSeed = GenRandomRolls.Instance().getD1000();
 		TurbulenceBuilder turbulenceBuilder = new TurbulenceBuilder();
-		Turbulence continentDef_tu0 = turbulenceBuilder.build(nextSeed, TU0_FREQUENCY, TU0_POWER_SCALAR, TU0_ROUGHNESS, baseContinentDef );
-		Turbulence continentDef_tu1 = turbulenceBuilder.build(nextSeed, TU0_FREQUENCY, TU1_POWER_SCALAR, TU1_ROUGHNESS, continentDef_tu0 );
+		Turbulence continentDef_tu0 = turbulenceBuilder.build(nextSeed, TU0_FREQUENCY, TU0_POWER_SCALAR, TU0_ROUGHNESS,
+				baseContinentDef);
+		Turbulence continentDef_tu1 = turbulenceBuilder.build(nextSeed, TU1_FREQUENCY, TU1_POWER_SCALAR, TU1_ROUGHNESS,
+				continentDef_tu0);
 		Spheres morePools = new SpheresBuilder().build(20.0);
-		Turbulence continentDef_tu2 = turbulenceBuilder.build(nextSeed, TU0_FREQUENCY, TU1_POWER_SCALAR, TU1_ROUGHNESS, morePools );
-		
+		Add continentDef_tu1_add = new Add(morePools, continentDef_tu1);
+		Turbulence continentDef_tu2 = turbulenceBuilder.build(nextSeed, TU2_FREQUENCY, TU2_POWER_SCALAR, TU2_ROUGHNESS,
+				continentDef_tu1_add);
+
+		Select continentDef_se = new SelectBuilder().build(baseContinentDef, continentDef_tu2, baseContinentDef,
+				CONTINENT_DEF_SE_LOWER_BOUNDS, CONTINENT_DEF_SE_UPPER_BOUNDS, CONTINENT_DEF_SE_EDGE_FALLOFF);
+		continentDef = new Cached(continentDef_se);
+
 		NoiseMapBuilderSphere planet = new NoiseMapBuilderSphere();
 		NoiseMap elevGrid = new NoiseMap(GRID_WIDTH, GRID_HEIGHT);
-	
-			planet.setBounds(SOUTH_COORD, NORTH_COORD, WEST_COORD, EAST_COORD);
-			planet.setDestSize(GRID_WIDTH, GRID_HEIGHT);
 
-		planet.setSourceModule(baseContinentDef);
+		planet.setBounds(SOUTH_COORD, NORTH_COORD, WEST_COORD, EAST_COORD);
+		planet.setDestSize(GRID_WIDTH, GRID_HEIGHT);
+
+		planet.setSourceModule(continentDef);
 		planet.setDestNoiseMap(elevGrid);
 		planet.build();
-		RenderImageParameter renderImageParameter = new RenderImageParameter(
-				gradientPointList, elevGrid, Boolean.FALSE, LIGHT_CONTRAST,
-				LIGHT_CONTRAST);
+		RenderImageParameter renderImageParameter = new RenderImageParameter(gradientPointList, elevGrid, Boolean.FALSE,
+				LIGHT_CONTRAST, LIGHT_CONTRAST);
 		ImageCafe imageCafe = Builder.buildRendererImage(renderImageParameter);
-		String uri = "images/" + Math.random()
-				+ "Experiment3.png";
+		String uri = "images/" + Math.random() + "Experiment3.png";
 		Output.writer(imageCafe, uri);
 
 	}
