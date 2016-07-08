@@ -8,9 +8,12 @@ import libnoiseforjava.NoiseGen.NoiseQuality;
 import libnoiseforjava.domain.ControlPoint;
 import libnoiseforjava.domain.CurveBuilder;
 import libnoiseforjava.domain.PerlinBuilder;
+import libnoiseforjava.domain.ScaleBiasBuilder;
 import libnoiseforjava.module.Cached;
 import libnoiseforjava.module.Curve;
+import libnoiseforjava.module.Min;
 import libnoiseforjava.module.Perlin;
+import libnoiseforjava.module.ScaleBias;
 
 public class PlanarBaseContinent implements CachedIF {
 
@@ -25,6 +28,8 @@ public class PlanarBaseContinent implements CachedIF {
 	private Boolean genSpheres = Boolean.FALSE;
 	private NoiseQuality noiseQuality;
 	private Double p_level = new Double(0);
+	private Double base_continent_def_scale;
+	private Double base_continent_def_bias;
 	private Cached cache;
 
 	// no arg CTOR
@@ -40,10 +45,14 @@ public class PlanarBaseContinent implements CachedIF {
 	 * @param controlPoints
 	 * @param base_continent_persistence_1
 	 * @param base_continent_octive_count1
+	 * @param base_continent_def_scale
+	 * @param base_continent_def_bias
+	 * @param noiseQuality
 	 */
-	public PlanarBaseContinent(Double continent_frequency, Double base_continent_persistence_0,
+		public PlanarBaseContinent(Double continent_frequency, Double base_continent_persistence_0,
 			Double continent_lacunarity, Integer base_continent_octive_count0, List<ControlPoint> controlPoints,
-			Double base_continent_persistence_1, Integer base_continent_octive_count1, NoiseQuality noiseQuality) {
+			Double base_continent_persistence_1, Integer base_continent_octive_count1, Double base_continent_def_scale, 
+			Double base_continent_def_bias, NoiseQuality noiseQuality) {
 		super();
 		this.continent_frequency = continent_frequency;
 		this.base_continent_persistence_0 = base_continent_persistence_0;
@@ -52,6 +61,8 @@ public class PlanarBaseContinent implements CachedIF {
 		this.controlPoints = controlPoints;
 		this.base_continent_persistence_1 = base_continent_persistence_1;
 		this.base_continent_octive_count0 = base_continent_octive_count1;
+		this.base_continent_def_scale = base_continent_def_scale;
+		this.base_continent_def_bias = base_continent_def_bias;
 		this.noiseQuality = noiseQuality;
 
 	}
@@ -148,6 +159,34 @@ public class PlanarBaseContinent implements CachedIF {
 		p_level = p_Level;
 	}
 
+	public Double getP_level() {
+		return p_level;
+	}
+
+	public void setP_level(Double p_level) {
+		this.p_level = p_level;
+	}
+
+	public Double getBase_continent_def_scale() {
+		return base_continent_def_scale;
+	}
+
+	public void setBase_continent_def_scale(Double base_continent_def_scale) {
+		this.base_continent_def_scale = base_continent_def_scale;
+	}
+
+	public Double getBase_continent_def_bias() {
+		return base_continent_def_bias;
+	}
+
+	public void setBase_continent_def_bias(Double base_continent_def_bias) {
+		this.base_continent_def_bias = base_continent_def_bias;
+	}
+
+	public void setCache(Cached cache) {
+		this.cache = cache;
+	}
+
 	public Cached build() {
 		Integer currSeed = GenRandomRolls.Instance().getD1000();
 		Perlin baseContinentDef_pe0 = new PerlinBuilder().biuld(currSeed, continent_frequency,
@@ -155,7 +194,11 @@ public class PlanarBaseContinent implements CachedIF {
 		Curve baseContinentDef_cu = new CurveBuilder().builder(baseContinentDef_pe0, p_level, controlPoints);
 		Perlin baseContinentDef_pe1 = new PerlinBuilder().biuld(currSeed, continent_frequency,
 				base_continent_persistence_1, continent_lacunarity, base_continent_octive_count1, noiseQuality);
-		
+		ScaleBias scaleBias = new ScaleBiasBuilder().build(base_continent_def_scale, base_continent_def_bias, baseContinentDef_pe1);
+		Min baseContinentDef_mi = new Min(scaleBias, baseContinentDef_cu);
+		if(genSpheres){
+			
+		}
 		return null;
 	}
 
@@ -166,7 +209,8 @@ public class PlanarBaseContinent implements CachedIF {
 				+ ", continent_lacunarity=" + continent_lacunarity + ", base_continent_octive_count0="
 				+ base_continent_octive_count0 + ", base_continent_octive_count1=" + base_continent_octive_count1
 				+ ", controlPoints=" + controlPoints + ", spheres_scalar=" + spheres_scalar + ", genSpheres="
-				+ genSpheres + ", noiseQuality=" + noiseQuality + ",P_Level=" + p_level + "]";
+				+ genSpheres + ", noiseQuality=" + noiseQuality + ", p_level=" + p_level + ", base_continent_def_scale="
+				+ base_continent_def_scale + ", base_continent_def_bias=" + base_continent_def_bias + "]";
 	}
 
 }
