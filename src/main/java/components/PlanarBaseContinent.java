@@ -5,15 +5,20 @@ import java.util.List;
 import com.zenred.util.GenRandomRolls;
 
 import libnoiseforjava.NoiseGen.NoiseQuality;
+import libnoiseforjava.domain.ClampBuilder;
 import libnoiseforjava.domain.ControlPoint;
 import libnoiseforjava.domain.CurveBuilder;
 import libnoiseforjava.domain.PerlinBuilder;
 import libnoiseforjava.domain.ScaleBiasBuilder;
+import libnoiseforjava.domain.SpheresBuilder;
+import libnoiseforjava.module.Add;
 import libnoiseforjava.module.Cached;
+import libnoiseforjava.module.Clamp;
 import libnoiseforjava.module.Curve;
 import libnoiseforjava.module.Min;
 import libnoiseforjava.module.Perlin;
 import libnoiseforjava.module.ScaleBias;
+import libnoiseforjava.module.Spheres;
 
 public class PlanarBaseContinent implements CachedIF {
 
@@ -24,12 +29,14 @@ public class PlanarBaseContinent implements CachedIF {
 	private Integer base_continent_octive_count0;
 	private Integer base_continent_octive_count1;
 	private List<ControlPoint> controlPoints;
-	private Integer spheres_scalar;
+	private Double spheres_scalar;
 	private Boolean genSpheres = Boolean.FALSE;
 	private NoiseQuality noiseQuality;
 	private Double p_level = new Double(0);
 	private Double base_continent_def_scale;
 	private Double base_continent_def_bias;
+	private Double base_contenent_def_lower_bound;
+	private Double base_contenent_def_upper_bound;
 	private Cached cache;
 
 	// no arg CTOR
@@ -49,10 +56,11 @@ public class PlanarBaseContinent implements CachedIF {
 	 * @param base_continent_def_bias
 	 * @param noiseQuality
 	 */
-		public PlanarBaseContinent(Double continent_frequency, Double base_continent_persistence_0,
+	public PlanarBaseContinent(Double continent_frequency, Double base_continent_persistence_0,
 			Double continent_lacunarity, Integer base_continent_octive_count0, List<ControlPoint> controlPoints,
-			Double base_continent_persistence_1, Integer base_continent_octive_count1, Double base_continent_def_scale, 
-			Double base_continent_def_bias, NoiseQuality noiseQuality) {
+			Double base_continent_persistence_1, Integer base_continent_octive_count1, Double base_continent_def_scale,
+			Double base_continent_def_bias, Double base_contenent_def_lower_bound,
+			Double base_contenent_def_upper_bound, NoiseQuality noiseQuality) {
 		super();
 		this.continent_frequency = continent_frequency;
 		this.base_continent_persistence_0 = base_continent_persistence_0;
@@ -63,6 +71,8 @@ public class PlanarBaseContinent implements CachedIF {
 		this.base_continent_octive_count0 = base_continent_octive_count1;
 		this.base_continent_def_scale = base_continent_def_scale;
 		this.base_continent_def_bias = base_continent_def_bias;
+		this.base_contenent_def_lower_bound = base_contenent_def_lower_bound;
+		this.base_contenent_def_upper_bound = base_contenent_def_upper_bound;
 		this.noiseQuality = noiseQuality;
 
 	}
@@ -91,7 +101,7 @@ public class PlanarBaseContinent implements CachedIF {
 		this.controlPoints = controlPoints;
 	}
 
-	public void setSpheres_scalar(Integer spheres_scalar) {
+	public void setSpheres_scalar(Double spheres_scalar) {
 		this.spheres_scalar = spheres_scalar;
 	}
 
@@ -119,7 +129,7 @@ public class PlanarBaseContinent implements CachedIF {
 		return controlPoints;
 	}
 
-	public Integer getSpheres_scalar() {
+	public Double getSpheres_scalar() {
 		return spheres_scalar;
 	}
 
@@ -183,6 +193,22 @@ public class PlanarBaseContinent implements CachedIF {
 		this.base_continent_def_bias = base_continent_def_bias;
 	}
 
+	public Double getBase_contenent_def_lower_bound() {
+		return base_contenent_def_lower_bound;
+	}
+
+	public void setBase_contenent_def_lower_bound(Double base_contenent_def_lower_bound) {
+		this.base_contenent_def_lower_bound = base_contenent_def_lower_bound;
+	}
+
+	public Double getBase_contenent_def_upper_bound() {
+		return base_contenent_def_upper_bound;
+	}
+
+	public void setBase_contenent_def_upper_bound(Double base_contenent_def_upper_bound) {
+		this.base_contenent_def_upper_bound = base_contenent_def_upper_bound;
+	}
+
 	public void setCache(Cached cache) {
 		this.cache = cache;
 	}
@@ -195,11 +221,21 @@ public class PlanarBaseContinent implements CachedIF {
 		Perlin baseContinentDef_pe1 = new PerlinBuilder().biuld(currSeed, continent_frequency,
 				base_continent_persistence_1, continent_lacunarity, base_continent_octive_count1, noiseQuality);
 		ScaleBias scaleBias = new ScaleBiasBuilder().build(base_continent_def_scale, base_continent_def_bias, baseContinentDef_pe1);
+		Cached baseContinentDef = null;
 		Min baseContinentDef_mi = new Min(scaleBias, baseContinentDef_cu);
+		Clamp baseContinentDef_cl = new ClampBuilder().build(baseContinentDef_mi, base_contenent_def_lower_bound,
+				base_contenent_def_upper_bound);
+
 		if(genSpheres){
-			
+			Spheres pools = new SpheresBuilder().build(spheres_scalar);
+			Add baseContinent_ad = new Add(pools, baseContinentDef_cl);
+			baseContinentDef = new Cached(baseContinent_ad);
+
 		}
-		return null;
+		else{
+			baseContinentDef = new Cached(baseContinentDef_cl);
+		}
+		return baseContinentDef;
 	}
 
 	@Override
@@ -210,7 +246,9 @@ public class PlanarBaseContinent implements CachedIF {
 				+ base_continent_octive_count0 + ", base_continent_octive_count1=" + base_continent_octive_count1
 				+ ", controlPoints=" + controlPoints + ", spheres_scalar=" + spheres_scalar + ", genSpheres="
 				+ genSpheres + ", noiseQuality=" + noiseQuality + ", p_level=" + p_level + ", base_continent_def_scale="
-				+ base_continent_def_scale + ", base_continent_def_bias=" + base_continent_def_bias + "]";
+				+ base_continent_def_scale + ", base_continent_def_bias=" + base_continent_def_bias
+				+ ", base_contenent_def_lower_bound=" + base_contenent_def_lower_bound
+				+ ", base_contenent_def_upper_bound=" + base_contenent_def_upper_bound + "]";
 	}
 
 }
