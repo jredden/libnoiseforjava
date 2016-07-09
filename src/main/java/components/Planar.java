@@ -16,221 +16,221 @@ public abstract class Planar {
 	/*
 	 * default constants
 	 */
-	private static Double CONTINENT_FREQUENCY = 1.0;
-	// The persistence value controls the roughness of the Perlin noise,
+	private static Double continent_frequency = 1.0;
+	// the persistence value controls the roughness of the perlin noise,
 	// normally between 0.0 and 1.0
-	private static Double BASE_CONTINENT_DEF_PERSISTENCE_0 = 0.5;
-	private static Double BASE_CONTINENT_DEF_PERSISTENCE_1 = 0.5;
-	// Lacunarity. from Latin meaning gap, or fill space
-	// Lacunarity of the planet's continents. Changing this value produces
-	// slightly different continents. For the best results, this value should
+	private static Double base_continent_def_persistence_0 = 0.5;
+	private static Double base_continent_def_persistence_1 = 0.5;
+	// lacunarity. from latin meaning gap, or fill space
+	// lacunarity of the planet's continents. changing this value produces
+	// slightly different continents. for the best results, this value should
 	// be random, but close to 2.0.
-	private static Double CONTINENT_LACUNARITY = 2.208984375;
-	// Octave count determines the amount of Perlin noise, the higher the count,
+	private static Double continent_lacunarity = 2.208984375;
+	// octave count determines the amount of perlin noise, the higher the count,
 	// the more detail
-	private static Integer BASE_CONTINENT_DEF_OCTAVE_COUNT_PE0 = 14;
-	private static Integer BASE_CONTINENT_DEF_OCTAVE_COUNT_PE1 = 11;
-	// Specifies the planet's sea level. This value must be between -1.0
+	private static Integer base_continent_def_octave_count_pe0 = 14;
+	private static Integer base_continent_def_octave_count_pe1 = 11;
+	// specifies the planet's sea level. this value must be between -1.0
 	// (minimum planet elevation) and +1.0 (maximum planet elevation.)
-	private static Double SEA_LEVEL = 0.0;
-	// / Sets the bias to apply to the scaled output value from the source
+	private static Double sea_level = 0.0;
+	// / sets the bias to apply to the scaled output value from the source
 	// / module.
-	private static Double DEEP_SEA_LEVEL = -256.0;
-	private static Double BASE_CONTINENT_DEF_BIAS = 0.625;
-	// / Sets the scaling factor to apply to the output value from the
+	private static Double deep_sea_level = -256.0;
+	private static Double base_continent_def_bias = 0.625;
+	// / sets the scaling factor to apply to the output value from the
 	// / source module.
-	private static Double BASE_CONTINENT_DEF_SCALE = 0.375;
+	private static Double base_continent_def_scale = 0.375;
 	// noise clamping bounds
-	private static Double BASE_CONTINENT_DEF_CLAMP_LOWER_BOUND = -1.0;
-	private static Double BASE_CONTINENT_DEF_CLAMP_UPPER_BOUND = 1.0;
-	// Minimum elevation on the planet, in meters. This value is approximate.
-	private static Double MIN_ELEV = -8192.0;
-	// Maximum elevation on the planet, in meters. This value is approximate.
-	private static Double MAX_ELEV = 8192.0;
+	private static Double base_continent_def_clamp_lower_bound = -1.0;
+	private static Double base_continent_def_clamp_upper_bound = 1.0;
+	// minimum elevation on the planet, in meters. this value is approximate.
+	private static Double min_elev = -8192.0;
+	// maximum elevation on the planet, in meters. this value is approximate.
+	private static Double max_elev = 8192.0;
 	// sea level calculation parameters
-	private static Double PARAMETER0 = 1.0;
-	private static Double PARAMETER1 = 2.0;
-	// Calculate the sea level, in meters
-	private static Double seaLevelInMeters = (((SEA_LEVEL + PARAMETER0) / PARAMETER1) * (MAX_ELEV - MIN_ELEV))
-			+ MIN_ELEV;
-	// Southernmost coordinate of elevation grid.
-	private static Double SOUTH_COORD = -90.0;
-	// Northernmost coordinate of elevation grid.
-	private static Double NORTH_COORD = 90.0;
-	// Westernmost coordinate of elevation grid.
-	private static Double WEST_COORD = -180.0;
-	// Easternmost coordinate of elevation grid.
-	private static Double EAST_COORD = 180.0;
-	// Width of elevation grid, in points
-	private static Integer GRID_WIDTH = 4096;
-	// Height of elevation grid, in points
-	private static Integer GRID_HEIGHT = 2048;
+	private static Double parameter0 = 1.0;
+	private static Double parameter1 = 2.0;
+	// calculate the sea level, in meters
+	private static Double sealevelinmeters = (((sea_level + parameter0) / parameter1) * (max_elev - min_elev))
+			+ min_elev;
+	// southernmost coordinate of elevation grid.
+	private static Double south_coord = -90.0;
+	// northernmost coordinate of elevation grid.
+	private static Double north_coord = 90.0;
+	// westernmost coordinate of elevation grid.
+	private static Double west_coord = -180.0;
+	// easternmost coordinate of elevation grid.
+	private static Double east_coord = 180.0;
+	// width of elevation grid, in points
+	private static Integer grid_width = 4096;
+	// height of elevation grid, in points
+	private static Integer grid_height = 2048;
 
-	private static Double PLANET_CIRCUMFERENCE = 44236800.0;
-	private static Double METERS_PER_DEGREE = PLANET_CIRCUMFERENCE / 360.0;
+	private static Double planet_circumference = 44236800.0;
+	private static Double meters_per_degree = planet_circumference / 360.0;
 
-	// Offset to apply to the terrain type definition. Low values (< 1.0) cause
-	// the rough areas to appear only at high elevations. High values (> 2.0)
-	// cause the rough areas to appear at any elevation. The percentage of
+	// offset to apply to the terrain type definition. low values (< 1.0) cause
+	// the rough areas to appear only at high elevations. high values (> 2.0)
+	// cause the rough areas to appear at any elevation. the percentage of
 	// rough areas on the planet are independent of this value.
-	private static Double TERRAIN_OFFSET = 1.0;
+	private static Double terrain_offset = 1.0;
 
 
-	protected static Double lightBrightness = new Double(2.0);
-	protected static Double lightElevation = new Double(45.0);
-	protected static Double lightAzumith = new Double(135.0);
+	protected static Double lightbrightness = new Double(2.0);
+	protected static Double lightelevation = new Double(45.0);
+	protected static Double lightazumith = new Double(135.0);
 
-	protected static Double degExtent = EAST_COORD - WEST_COORD;
-	protected static Double gridExtent = new Double(GRID_WIDTH);
+	protected static Double degextent = east_coord - west_coord;
+	protected static Double gridextent = new Double(grid_width);
 	
-	// double resInMeters = (degExtent / gridExtent) * metersPerDegree;
-	protected static Double resInMeters = (degExtent / gridExtent) * METERS_PER_DEGREE;
-	protected static Double INVERSE_RES_IN_METERS = 1.0 / resInMeters;
+	// Double resinmeters = (degextent / gridextent) * metersperdegree;
+	protected static Double resinmeters = (degextent / gridextent) * meters_per_degree;
+	protected static Double inverse_res_in_meters = 1.0 / resinmeters;
 	
-	protected static Double lightContrast = new Double(1.0/resInMeters);
+	protected static Double lightcontrast = new Double(1.0/resinmeters);
 
-	// Specifies the level on the planet in which continental shelves appear.
-	// This value must be between -1.0 (minimum planet elevation) and +1.0
-	// (maximum planet elevation), and must be less than SEA_LEVEL.
-	protected static Double SHELF_LEVEL = -0.375;
+	// specifies the level on the planet in which continental shelves appear.
+	// this value must be between -1.0 (minimum planet elevation) and +1.0
+	// (maximum planet elevation), and must be less than sea_level.
+	protected static Double shelf_level = -0.375;
 
-	// Lacunarity of the planet's mountains. Changing this value produces
-	// slightly different mountains. For the best results, this value should
+	// lacunarity of the planet's mountains. changing this value produces
+	// slightly different mountains. for the best results, this value should
 	// be random, but close to 2.0.
-	protected static Double MOUNTAIN_LACUNARITY = 2.142578125;
+	protected static Double mountain_lacunarity = 2.142578125;
 
-	// Specifies the "twistiness" of the mountains.
-	protected  static Double MOUNTAINS_TWIST = 1.0;
-	// Specifies the amount of "glaciation" on the mountains. This value
+	// specifies the "twistiness" of the mountains.
+	protected  static Double mountains_twist = 1.0;
+	// specifies the amount of "glaciation" on the mountains. this value
 	// should be close to 1.0 and greater than 1.0.
-	protected static Double MOUNTAIN_GLACIATION = 1.375;
-	// Lacunarity of the planet's hills. Changing this value produces slightly
-	// different hills. For the best results, this value should be random, but
+	protected static Double mountain_glaciation = 1.375;
+	// lacunarity of the planet's hills. changing this value produces slightly
+	// different hills. for the best results, this value should be random, but
 	// close to 2.0.
-	protected static Double HILLS_LACUNARITY = 2.162109375;
-	// Specifies the "twistiness" of the hills
-	protected static Double HILLS_TWIST = 1.0;
-	// Lacunarity of the planet's plains. Changing this value produces slightly
-	// different plains. For the best results, this value should be random, but
+	protected static Double hills_lacunarity = 2.162109375;
+	// specifies the "twistiness" of the hills
+	protected static Double hills_twist = 1.0;
+	// lacunarity of the planet's plains. changing this value produces slightly
+	// different plains. for the best results, this value should be random, but
 	// close to 2.0.
-	protected static Double PLAINS_LACUNARITY = 2.314453125;
-	// Lacunarity of the planet's badlands. Changing this value produces
-	// slightly different badlands. For the best results, this value should be
+	protected static Double plains_lacunarity = 2.314453125;
+	// lacunarity of the planet's badlands. changing this value produces
+	// slightly different badlands. for the best results, this value should be
 	// random, but close to 2.0.
-	protected static Double BADLANDS_LACUNARITY = 2.212890625;
-	// Specifies the "twistiness" of the badlands.
-	protected static Double BADLANDS_TWIST = 1.0;
-	// Scaling to apply to the base continent elevations, in planetary elevation
+	protected static Double badlands_lacunarity = 2.212890625;
+	// specifies the "twistiness" of the badlands.
+	protected static Double badlands_twist = 1.0;
+	// scaling to apply to the base continent elevations, in planetary elevation
 	// units.
-	protected static Double CONTINENT_HEIGHT_SCALE = (1.0 - SEA_LEVEL) / 4.0;
-	// Determines the amount of mountainous terrain that appears on the
-	// planet. Values range from 0.0 (no mountains) to 1.0 (all terrain is
-	// covered in mountains). Mountainous terrain will overlap hilly terrain.
-	// Because the badlands terrain may overlap parts of the mountainous
-	// terrain, setting MOUNTAINS_AMOUNT to 1.0 may not completely cover the
+	protected static Double continent_height_scale = (1.0 - sea_level) / 4.0;
+	// determines the amount of mountainous terrain that appears on the
+	// planet. values range from 0.0 (no mountains) to 1.0 (all terrain is
+	// covered in mountains). mountainous terrain will overlap hilly terrain.
+	// because the badlands terrain may overlap parts of the mountainous
+	// terrain, setting mountains_amount to 1.0 may not completely cover the
 	// terrain in mountains.
-	protected static Double MOUNTAINS_AMOUNT = 0.5;
-	// Determines the amount of hilly terrain that appears on the planet.
-	// Values range from 0.0 (no hills) to 1.0 (all terrain is covered in
-	// hills). This value must be less than MOUNTAINS_AMOUNT. Because the
+	protected static Double mountains_amount = 0.5;
+	// determines the amount of hilly terrain that appears on the planet.
+	// values range from 0.0 (no hills) to 1.0 (all terrain is covered in
+	// hills). this value must be less than mountains_amount. because the
 	// mountainous terrain will overlap parts of the hilly terrain, and
 	// the badlands terrain may overlap parts of the hilly terrain, setting
-	// HILLS_AMOUNT to 1.0 may not completely cover the terrain in hills.
-	protected static Double HILLS_AMOUNT = (1.0 + MOUNTAINS_AMOUNT) / 2.0;
-	// Determines the amount of badlands terrain that covers the planet.
-	// Values range from 0.0 (no badlands) to 1.0 (all terrain is covered in
-	// badlands.) Badlands terrain will overlap any other type of terrain.
-	protected static Double BADLANDS_AMOUNT = 0.03125;
-	// Maximum depth of the rivers, in planetary elevation units.
-	protected static Double RIVER_DEPTH = 0.0234375;
+	// hills_amount to 1.0 may not completely cover the terrain in hills.
+	protected static Double hills_amount = (1.0 + mountains_amount) / 2.0;
+	// determines the amount of badlands terrain that covers the planet.
+	// values range from 0.0 (no badlands) to 1.0 (all terrain is covered in
+	// badlands.) badlands terrain will overlap any other type of terrain.
+	protected static Double badlands_amount = 0.03125;
+	// maximum depth of the rivers, in planetary elevation units.
+	protected static Double river_depth = 0.0234375;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: continent definition (5 noise modules)
+	// module subgroup: continent definition (5 noise modules)
 	//
-	// This subgroup warps the output value from the the base-continent-
+	// this subgroup warps the output value from the the base-continent-
 	// definition subgroup, producing more realistic terrain.
 	//
-	// Warping the base continent definition produces lumpier terrain with
+	// warping the base continent definition produces lumpier terrain with
 	// cliffs and rifts.
 	//
 	// -1.0 represents the lowest elevations and +1.0 represents the highest
 	// elevations.
 	//
 
-	// 1: [Coarse-turbulence module]: This turbulence module warps the output
+	// 1: [coarse-turbulence module]: this turbulence module warps the output
 	// value from the base-continent-definition subgroup, adding some coarse
 	// detail to it.
-	static private Double TU0_FREQUENCY = 15.25;
-	// / The frequency of the turbulence determines how rapidly the
+	static private Double tu0_frequency = 15.25;
+	// / the frequency of the turbulence determines how rapidly the
 	// / displacement amount changes.
-	static private Double TU0_POWER_SCALAR = 113.75;
-	// / The power of the turbulence determines the scaling factor that is
+	static private Double tu0_power_scalar = 113.75;
+	// / the power of the turbulence determines the scaling factor that is
 	// / applied to the displacement amount.
-	static private Integer TU0_ROUGHNESS = 13;
-	// / The roughness of the turbulence determines the roughness of the
-	// / changes to the displacement amount. Low values smoothly change
-	// / the displacement amount. High values roughly change the
+	static private Integer tu0_roughness = 13;
+	// / the roughness of the turbulence determines the roughness of the
+	// / changes to the displacement amount. low values smoothly change
+	// / the displacement amount. high values roughly change the
 	// / displacement amount, which produces more "kinky" changes.
 	// /
-	// / Internally, there are three Perlin noise modules
+	// / internally, there are three perlin noise modules
 	// / that displace the input value; one for the @a x, one for the @a y,
-	// / and one for the @a z coordinate. The roughness value is equal to
-	// / the number of octaves used by the noise::module::Perlin noise
+	// / and one for the @a z coordinate. the roughness value is equal to
+	// / the number of octaves used by the noise::module::perlin noise
 	// / modules.
-	// 2: [Intermediate-turbulence module]: This turbulence module warps the
-	// output value from the coarse-turbulence module. This turbulence has
+	// 2: [intermediate-turbulence module]: this turbulence module warps the
+	// output value from the coarse-turbulence module. this turbulence has
 	// a higher frequency, but lower power, than the coarse-turbulence
 	// module, adding some intermediate detail to it.
 
-	static private Double TU1_FREQUENCY = 47.25;
-	static private Double TU1_POWER_SCALAR = 433.75;
-	static private Integer TU1_ROUGHNESS = 12;
+	static private Double tu1_frequency = 47.25;
+	static private Double tu1_power_scalar = 433.75;
+	static private Integer tu1_roughness = 12;
 
-	// 3: [Warped-base-continent-definition module]: This turbulence module
-	// warps the output value from the intermediate-turbulence module. This
+	// 3: [warped-base-continent-definition module]: this turbulence module
+	// warps the output value from the intermediate-turbulence module. this
 	// turbulence has a higher frequency, but lower power, than the
 	// intermediate-turbulence module, adding some fine detail to it.
 
-	static private Double TU2_FREQUENCY = 95.25;
-	static private Double TU2_POWER_SCALAR = 1019.75;
-	static private Integer TU2_ROUGHNESS = 11;
+	static private Double tu2_frequency = 95.25;
+	static private Double tu2_power_scalar = 1019.75;
+	static private Integer tu2_roughness = 11;
 
-	// 4: [Select-turbulence module]: At this stage, the turbulence is applied
+	// 4: [select-turbulence module]: at this stage, the turbulence is applied
 	// to the entire base-continent-definition subgroup, producing some very
-	// rugged, unrealistic coastlines. This selector module selects the
+	// rugged, unrealistic coastlines. this selector module selects the
 	// output values from the (unwarped) base-continent-definition subgroup
 	// and the warped-base-continent-definition module, based on the output
-	// value from the (unwarped) base-continent-definition subgroup. The
+	// value from the (unwarped) base-continent-definition subgroup. the
 	// selection boundary is near sea level and has a relatively smooth
-	// transition. In effect, only the higher areas of the base-continent-
+	// transition. in effect, only the higher areas of the base-continent-
 	// definition subgroup become warped; the underwater and coastal areas
 	// remain unaffected.
 
-	// / The control module (baseContinentDef) determines the output value to
-	// select. If the
+	// / the control module (basecontinentdef) determines the output value to
+	// select. if the
 	// / output value from the control module is within a range of values
-	// / known as the <i>selection range</i>, the getValue() method outputs
+	// / known as the <i>selection range</i>, the getvalue() method outputs
 	// / the value from the source module with an index value of 1.
-	// / Otherwise, this method outputs the value from the source module
+	// / otherwise, this method outputs the value from the source module
 	// / with an index value of 0.
 	// /
-	// / This method assigns the control module an index value of 2.
-	// / Passing the control module to this method produces the same
-	// / results as passing the control module to the setSourceModule()
+	// / this method assigns the control module an index value of 2.
+	// / passing the control module to this method produces the same
+	// / results as passing the control module to the setsourcemodule()
 	// / method while assigning that noise module an index value of 2.
 	// /
-	// / This control module must exist throughout the lifetime of this
+	// / this control module must exist throughout the lifetime of this
 	// / noise module unless another control module replaces that control
 	// / module.
 
-	private static Double CONTINENT_DEF_SE_LOWER_BOUNDS = SEA_LEVEL - 0.0375;
-	private static Double CONTINENT_DEF_SE_UPPER_BOUNDS = SEA_LEVEL + 1000.0375;
-	private static Double CONTINENT_DEF_SE_EDGE_FALLOFF = 0.0625;
-	// / By default, there is an abrupt transition between the values from
+	private static Double continent_def_se_lower_bounds = sea_level - 0.0375;
+	private static Double continent_def_se_upper_bounds = sea_level + 1000.0375;
+	private static Double continent_def_se_edge_falloff = 0.0625;
+	// / by default, there is an abrupt transition between the values from
 	// / the two source modules at the boundaries of the selection range.
 	// /
-	// / For example, if the selection range is 0.5 to 0.8, and the edge
-	// / falloff value is 0.1, then the getValue() method outputs:
+	// / for example, if the selection range is 0.5 to 0.8, and the edge
+	// / falloff value is 0.1, then the getvalue() method outputs:
 	// / - the output value from the source module with an index value of 0
 	// / if the output value from the control module is less than 0.4
 	// / ( = 0.5 - 0.1).
@@ -248,169 +248,169 @@ public abstract class Planar {
 	// / ( = 0.8 + 0.1).
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module group: terrain type definition
+	// module group: terrain type definition
 	// //////////////////////////////////////////////////////////////////////////
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: terrain type definition (3 noise modules)
+	// module subgroup: terrain type definition (3 noise modules)
 	//
-	// This subgroup defines the positions of the terrain types on the planet.
+	// this subgroup defines the positions of the terrain types on the planet.
 	//
-	// Terrain types include, in order of increasing roughness, plains, hills,
+	// terrain types include, in order of increasing roughness, plains, hills,
 	// and mountains.
 	//
-	// This subgroup's output value is based on the output value from the
-	// continent-definition group. Rougher terrain mainly appears at higher
+	// this subgroup's output value is based on the output value from the
+	// continent-definition group. rougher terrain mainly appears at higher
 	// elevations.
 	//
 	// -1.0 represents the smoothest terrain types (plains and underwater) and
 	// +1.0 represents the roughest terrain types (mountains).
 	//
 
-	// 1: [Warped-continent module]: This turbulence module slightly warps the
-	// output value from the continent-definition group. This prevents the
+	// 1: [warped-continent module]: this turbulence module slightly warps the
+	// output value from the continent-definition group. this prevents the
 	// rougher terrain from appearing exclusively at higher elevations.
-	// Rough areas may now appear in the the ocean, creating rocky islands
+	// rough areas may now appear in the the ocean, creating rocky islands
 	// and fjords.
 
-	static private Double TERRAIN_TYPE_TU_FREQUENCY = 18.125;
-	static private Double TERRAIN_TYPE_TU_POWER = 20.59375;
-	static private Integer TERRAIN_TYPE_TU_ROUGHNESS = 3;
+	static private Double terrain_type_tu_frequency = 18.125;
+	static private Double terrain_type_tu_power = 20.59375;
+	static private Integer terrain_type_tu_roughness = 3;
 
-	// 2: [Roughness-probability-shift module]: This terracing module sharpens
+	// 2: [roughness-probability-shift module]: this terracing module sharpens
 	// the edges of the warped-continent module near sea level and lowers
-	// the slope towards the higher-elevation areas. This shrinks the areas
+	// the slope towards the higher-elevation areas. this shrinks the areas
 	// in which the rough terrain appears, increasing the "rarity" of rough
 	// terrain.
-	static private Double TERRAIN_TYPE_DEF_LOW_CONTROL_POINT = -1.00;
-	static private Double TERRAIN_TYPE_DEF_MID_CONTROL_POINT_SCALAR = 2.00;
-	static private Double TERRAIN_TYPE_DEF_HIGH_CONTROL_POINT = 1.00;
+	static private Double terrain_type_def_low_control_point = -1.00;
+	static private Double terrain_type_def_mid_control_point_scalar = 2.00;
+	static private Double terrain_type_def_high_control_point = 1.00;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module group: mountainous terrain
+	// module group: mountainous terrain
 	// //////////////////////////////////////////////////////////////////////////
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: mountain base definition (9 noise modules)
+	// module subgroup: mountain base definition (9 noise modules)
 	//
-	// This subgroup generates the base-mountain elevations. Other subgroups
+	// this subgroup generates the base-mountain elevations. other subgroups
 	// will add the ridges and low areas to the base elevations.
 	//
 	// -1.0 represents low mountainous terrain and +1.0 represents high
 	// mountainous terrain.
 	//
 
-	// 1: [Mountain-ridge module]: This ridged-multifractal-noise module
+	// 1: [mountain-ridge module]: this ridged-multifractal-noise module
 	// generates the mountain ridges.
-	static private Double MOUNTAIN_BASE_DEF_RM0_FREQUENCY = 1723.0;
-	static private Integer MOUNTAIN_BASE_DEF_RM0_OCTAVE_COUNT = 4;
+	static private Double mountain_base_def_rm0_frequency = 1723.0;
+	static private Integer mountain_base_def_rm0_octave_count = 4;
 
-	// 2: [Scaled-mountain-ridge module]: Next, a scale/bias module scales the
+	// 2: [scaled-mountain-ridge module]: next, a scale/bias module scales the
 	// output value from the mountain-ridge module so that its ridges are not
-	// too high. The reason for this is that another subgroup adds actual
+	// too high. the reason for this is that another subgroup adds actual
 	// mountainous terrain to these ridges.
-	static private Double MOUNTAIN_BASE_DEF_SB0_SCALE = 0.5;
-	static private Double MOUNTAIN_BASE_DEF_SB0_BIAS = 0.375;
+	static private Double mountain_base_def_sb0_scale = 0.5;
+	static private Double mountain_base_def_sb0_bias = 0.375;
 
-	// 3: [River-valley module]: This ridged-multifractal-noise module generates
-	// the river valleys. It has a much lower frequency than the mountain-
+	// 3: [river-valley module]: this ridged-multifractal-noise module generates
+	// the river valleys. it has a much lower frequency than the mountain-
 	// ridge module so that more mountain ridges will appear outside of the
-	// valleys. Note that this noise module generates ridged-multifractal
+	// valleys. note that this noise module generates ridged-multifractal
 	// noise using only one octave; this information will be important in the
 	// next step.
-	static private Double MOUNTAIN_BASE_DEF_RM1_FREQUENCY = 367.0;
-	static private Integer MOUNTAIN_BASE_DEF_RM1_OCTAVE_COUNT = 1;
+	static private Double mountain_base_def_rm1_frequency = 367.0;
+	static private Integer mountain_base_def_rm1_octave_count = 1;
 
-	// 4: [Scaled-river-valley module]: Next, a scale/bias module applies a
+	// 4: [scaled-river-valley module]: next, a scale/bias module applies a
 	// scaling factor of -2.0 to the output value from the river-valley
-	// module. This stretches the possible elevation values because one-
+	// module. this stretches the possible elevation values because one-
 	// octave ridged-multifractal noise has a lower range of output values
-	// than multiple-octave ridged-multifractal noise. The negative scaling
+	// than multiple-octave ridged-multifractal noise. the negative scaling
 	// factor inverts the range of the output value, turning the ridges from
 	// the river-valley module into valleys.
-	static private Double MOUNTAIN_BASE_DEF_SB1_SCALE = -2.0;
-	static private Double MOUNTAIN_BASE_DEF_SB1_BIAS = -0.5;
+	static private Double mountain_base_def_sb1_scale = -2.0;
+	static private Double mountain_base_def_sb1_bias = -0.5;
 
-	// 7: [Coarse-turbulence module]: This turbulence module warps the output
+	// 7: [coarse-turbulence module]: this turbulence module warps the output
 	// value from the mountain-and-valleys module, adding some coarse detail
 	// to it.
-	static private Double MOUNTAIN_BASE_DEF_TU0_FREQUENCY = 1337.0;
-	static private Double MOUNTAIN_BASE_DEF_TU0_POWER_SCALAR0 = 1.0;
-	static private Double MOUNTAIN_BASE_DEF_TU0_POWER_SCALAR1 = 6730.0 * MOUNTAINS_TWIST;
-	static private Integer MOUNTAIN_BASE_DEF_TU0_ROUGHNESS = 4;
+	static private Double mountain_base_def_tu0_frequency = 1337.0;
+	static private Double mountain_base_def_tu0_power_scalar0 = 1.0;
+	static private Double mountain_base_def_tu0_power_scalar1 = 6730.0 * mountains_twist;
+	static private Integer mountain_base_def_tu0_roughness = 4;
 
-	// 8: [Warped-mountains-and-valleys module]: This turbulence module warps
-	// the output value from the coarse-turbulence module. This turbulence
+	// 8: [warped-mountains-and-valleys module]: this turbulence module warps
+	// the output value from the coarse-turbulence module. this turbulence
 	// has a higher frequency, but lower power, than the coarse-turbulence
 	// module, adding some fine detail to it.
-	static private Double MOUNTAIN_BASE_DEF_TU1_FREQUENCY = 21221.0;
-	static private Double MOUNTAIN_BASE_DEF_TU1_POWER_SCALAR0 = 1.0;
-	static private Double MOUNTAIN_BASE_DEF_TU1_POWER_SCALAR1 = 120157.0 * MOUNTAINS_TWIST;
-	static private Integer MOUNTAIN_BASE_DEF_TU1_ROUGHNESS = 6;
+	static private Double mountain_base_def_tu1_frequency = 21221.0;
+	static private Double mountain_base_def_tu1_power_scalar0 = 1.0;
+	static private Double mountain_base_def_tu1_power_scalar1 = 120157.0 * mountains_twist;
+	static private Integer mountain_base_def_tu1_roughness = 6;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: high mountainous terrain (5 noise modules)
+	// module subgroup: high mountainous terrain (5 noise modules)
 	//
-	// This subgroup generates the mountainous terrain that appears at high
+	// this subgroup generates the mountainous terrain that appears at high
 	// elevations within the mountain ridges.
 	//
 	// -1.0 represents the lowest elevations and +1.0 represents the highest
 	// elevations.
 	//
 
-	// 1: [Mountain-basis-0 module]: This ridged-multifractal-noise module,
+	// 1: [mountain-basis-0 module]: this ridged-multifractal-noise module,
 	// along with the mountain-basis-1 module, generates the individual
 	// mountains.
-	static private Double MOUNTAINOUS_HIGH_RM0_FREQUENCY = 2371.0;
-	static private Double MOUNTAINOUS_HIGH_RM0_LACUNARITY = MOUNTAIN_LACUNARITY;
-	static private Integer MOUNTAINOUS_HIGH_RM0_OCTAVE_COUNT = 3;
-	static private RidgedMulti mountainousHigh_rm0 = new RidgedMulti();
+	static private Double mountainous_high_rm0_frequency = 2371.0;
+	static private Double mountainous_high_rm0_lacunarity = mountain_lacunarity;
+	static private Integer mountainous_high_rm0_octave_count = 3;
+	static private ridgedmulti mountainoushigh_rm0 = new ridgedmulti();
 
-	// 2: [Mountain-basis-1 module]: This ridged-multifractal-noise module,
+	// 2: [mountain-basis-1 module]: this ridged-multifractal-noise module,
 	// along with the mountain-basis-0 module, generates the individual
 	// mountains.
-	static private Double MOUNTAINOUS_HIGH_RM1_FREQUENCY = 2341.0;
-	static private Double MOUNTAINOUS_HIGH_RM1_LACUNARITY = MOUNTAIN_LACUNARITY;
-	static private Integer MOUNTAINOUS_HIGH_RM1_OCTAVE_COUNT = 3;
+	static private Double mountainous_high_rm1_frequency = 2341.0;
+	static private Double mountainous_high_rm1_lacunarity = mountain_lacunarity;
+	static private Integer mountainous_high_rm1_octave_count = 3;
 
-	// 4: [Warped-high-mountains module]: This turbulence module warps the
+	// 4: [warped-high-mountains module]: this turbulence module warps the
 	// output value from the high-mountains module, adding some detail to it.
-	static private Double MOUNTAINOUS_HIGH_TU_FREQUENCY = 31511.0;
-	static private Double MOUNTAINOUS_HIGH_TU_SCALAR1 = 1.0;
-	static private Double MOUNTAINOUS_HIGH_TU_SCALAR2 = 180371.0;
-	static private Double MOUNTAINOUS_HIGH_TU_POWER = MOUNTAINOUS_HIGH_TU_SCALAR1
-			/ MOUNTAINOUS_HIGH_TU_SCALAR2 * MOUNTAINS_TWIST;
-	static private Integer MOUNTAINOUS_HIGH_TU_ROUGHNESS = 4;
+	static private Double mountainous_high_tu_frequency = 31511.0;
+	static private Double mountainous_high_tu_scalar1 = 1.0;
+	static private Double mountainous_high_tu_scalar2 = 180371.0;
+	static private Double mountainous_high_tu_power = mountainous_high_tu_scalar1
+			/ mountainous_high_tu_scalar2 * mountains_twist;
+	static private Integer mountainous_high_tu_roughness = 4;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: low mountainous terrain (4 noise modules)
+	// module subgroup: low mountainous terrain (4 noise modules)
 	//
-	// This subgroup generates the mountainous terrain that appears at low
+	// this subgroup generates the mountainous terrain that appears at low
 	// elevations within the river valleys.
 	//
 	// -1.0 represents the lowest elevations and +1.0 represents the highest
 	// elevations.
 	//
 
-	// 1: [Lowland-basis-0 module]: This ridged-multifractal-noise module,
+	// 1: [lowland-basis-0 module]: this ridged-multifractal-noise module,
 	// along with the lowland-basis-1 module, produces the low mountainous
 	// terrain.
 
-	static private Double MOUNTAINOUS_LOW_RM0_FREQUENCY = 1381.0;
-	static private Double MOUNTAINOUS_LOW_RM0_LACUNARITY = MOUNTAIN_LACUNARITY;
-	static private Integer MOUNTAINOUS_LOW_RM0_OCTAVE_COUNT = 8;
+	static private Double mountainous_low_rm0_frequency = 1381.0;
+	static private Double mountainous_low_rm0_lacunarity = mountain_lacunarity;
+	static private Integer mountainous_low_rm0_octave_count = 8;
 
-	// 1: [Lowland-basis-1 module]: This ridged-multifractal-noise module,
+	// 1: [lowland-basis-1 module]: this ridged-multifractal-noise module,
 	// along with the lowland-basis-0 module, produces the low mountainous
 	// terrain.
-	static private Double MOUNTAINOUS_LOW_RM1_FREQUENCY = 1427.0;
-	static private Double MOUNTAINOUS_LOW_RM1_LACUNARITY = MOUNTAIN_LACUNARITY;
-	static private Integer MOUNTAINOUS_LOW_RM1_OCTAVE_COUNT = 8;
+	static private Double mountainous_low_rm1_frequency = 1427.0;
+	static private Double mountainous_low_rm1_lacunarity = mountain_lacunarity;
+	static private Integer mountainous_low_rm1_octave_count = 8;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: mountainous terrain (7 noise modules)
+	// module subgroup: mountainous terrain (7 noise modules)
 	//
-	// This subgroup generates the final mountainous terrain by combining the
+	// this subgroup generates the final mountainous terrain by combining the
 	// high-mountainous-terrain subgroup with the low-mountainous-terrain
 	// subgroup.
 	//
@@ -418,117 +418,117 @@ public abstract class Planar {
 	// elevations.
 	//
 
-	// 1: [Scaled-low-mountainous-terrain module]: First, this scale/bias module
+	// 1: [scaled-low-mountainous-terrain module]: first, this scale/bias module
 	// scales the output value from the low-mountainous-terrain subgroup to a
-	// very low value and biases it towards -1.0. This results in the low
+	// very low value and biases it towards -1.0. this results in the low
 	// mountainous areas becoming more-or-less flat with little variation.
-	// This will also result in the low mountainous areas appearing at the
+	// this will also result in the low mountainous areas appearing at the
 	// lowest elevations in this subgroup.
-	static private Double MOUNTAINOUS_TERRAIN_SB0_SCALE = 0.03125;
-	static private Double MOUNTAINOUS_TERRAIN_SB0_BIAS = -0.96875;
+	static private Double mountainous_terrain_sb0_scale = 0.03125;
+	static private Double mountainous_terrain_sb0_bias = -0.96875;
 
-	// 2: [Scaled-high-mountainous-terrain module]: Next, this scale/bias module
+	// 2: [scaled-high-mountainous-terrain module]: next, this scale/bias module
 	// scales the output value from the high-mountainous-terrain subgroup to
 	// 1/4 of its initial value and biases it so that its output value is
 	// usually positive.
-	static private Double MOUNTAINOUS_TERRAIN_SB1_SCALE = 0.25;
-	static private Double MOUNTAINOUS_TERRAIN_SB1_BIAS = 0.25;
+	static private Double mountainous_terrain_sb1_scale = 0.25;
+	static private Double mountainous_terrain_sb1_bias = 0.25;
 
-	// 4: [Combined-mountainous-terrain module]: Note that at this point, the
+	// 4: [combined-mountainous-terrain module]: note that at this point, the
 	// entire terrain is covered in high mountainous terrain, even at the low
-	// elevations. To make sure the mountains only appear at the higher
+	// elevations. to make sure the mountains only appear at the higher
 	// elevations, this selector module causes low mountainous terrain to
 	// appear at the low elevations (within the valleys) and the high
 	// mountainous terrain to appear at the high elevations (within the
-	// ridges.) To do this, this noise module selects the output value from
+	// ridges.) to do this, this noise module selects the output value from
 	// the added-high-mountainous-terrain module if the output value from the
 	// mountain-base-definition subgroup is higher than a set amount.
-	// Otherwise, this noise module selects the output value from the scaled-
+	// otherwise, this noise module selects the output value from the scaled-
 	// low-mountainous-terrain module.
 
-	// / Sets the lower and upper bounds of the selection range.
-	static private Double MOUNTAINOUS_TERRAIN_SE_BOUNDS_PARAM_0 = -0.5;
-	static private Double MOUNTAINOUS_TERRAIN_SE_BOUNDS_PARAM_1 = 999.5;
-	// / Sets the falloff value at the edge transition.
-	static private Double MOUNTAINOUS_TERRAIN_SE_EDGE_FALLOFF = 0.5;
+	// / sets the lower and upper bounds of the selection range.
+	static private Double mountainous_terrain_se_bounds_param_0 = -0.5;
+	static private Double mountainous_terrain_se_bounds_param_1 = 999.5;
+	// / sets the falloff value at the edge transition.
+	static private Double mountainous_terrain_se_edge_falloff = 0.5;
 
-	// 5: [Scaled-mountainous-terrain-module]: This scale/bias module slightly
+	// 5: [scaled-mountainous-terrain-module]: this scale/bias module slightly
 	// reduces the range of the output value from the combined-mountainous-
 	// terrain module, decreasing the heights of the mountain peaks.
-	static private Double MOUNTAINOUS_TERRAIN_SB2_SCALE = 0.8;
-	static private Double MOUNTAINOUS_TERRAIN_SB2_BIAS = 0.0;
+	static private Double mountainous_terrain_sb2_scale = 0.8;
+	static private Double mountainous_terrain_sb2_bias = 0.0;
 
-	private static Double HILLY_TERRAIN_BI_FREQUENCY = 1663.0;
-	private static Double HILLY_TERRAIN_BI_PERSISTENCE = 0.5;
-	private static Integer HILLY_TERRAIN_BI_OCTAVE_COUNT = 6;
+	private static Double hilly_terrain_bi_frequency = 1663.0;
+	private static Double hilly_terrain_bi_persistence = 0.5;
+	private static Integer hilly_terrain_bi_octave_count = 6;
 
-	// 2: [Scaled-hills module]: Next, a scale/bias module scales the output
+	// 2: [scaled-hills module]: next, a scale/bias module scales the output
 	// value from the hills module so that its hilltops are not too high.
-	// The reason for this is that these hills are eventually added to the
+	// the reason for this is that these hills are eventually added to the
 	// river valleys (see below.)
-	static private Double HILLY_TERRAIN_SB0_SCALE = 0.5;
-	static private Double HILLY_TERRAIN_SB0_BIAS = 0.5;
+	static private Double hilly_terrain_sb0_scale = 0.5;
+	static private Double hilly_terrain_sb0_bias = 0.5;
 
-	// 3: [River-valley module]: This ridged-multifractal-noise module generates
-	// the river valleys. It has a much lower frequency so that more hills
-	// will appear in between the valleys. Note that this noise module
+	// 3: [river-valley module]: this ridged-multifractal-noise module generates
+	// the river valleys. it has a much lower frequency so that more hills
+	// will appear in between the valleys. note that this noise module
 	// generates ridged-multifractal noise using only one octave; this
 	// information will be important in the next step.
-	static private Double HILLY_TERRAIN_RM_FREQUENCY = 367.5;
-	static private Integer HILLY_TERRAIN_RM_OCTAVE_COUNT = 1;
+	static private Double hilly_terrain_rm_frequency = 367.5;
+	static private Integer hilly_terrain_rm_octave_count = 1;
 
-	// 4: [Scaled-river-valley module]: Next, a scale/bias module applies a
+	// 4: [scaled-river-valley module]: next, a scale/bias module applies a
 	// scaling factor of -2.0 to the output value from the river-valley
-	// module. This stretches the possible elevation values because one-
+	// module. this stretches the possible elevation values because one-
 	// octave ridged-multifractal noise has a lower range of output values
-	// than multiple-octave ridged-multifractal noise. The negative scaling
+	// than multiple-octave ridged-multifractal noise. the negative scaling
 	// factor inverts the range of the output value, turning the ridges from
 	// the river-valley module into valleys.
-	static private Double HILLY_TERRAIN_SB1_SCALE = -2.0;
-	static private Double HILLY_TERRAIN_SB1_BIAS = -0.5;
+	static private Double hilly_terrain_sb1_scale = -2.0;
+	static private Double hilly_terrain_sb1_bias = -0.5;
 
-	// 7: [Scaled-hills-and-valleys module]: This scale/bias module slightly
+	// 7: [scaled-hills-and-valleys module]: this scale/bias module slightly
 	// reduces the range of the output value from the hills-and-valleys
 	// module, decreasing the heights of the hilltops.
 
-	static private Double HILLY_TERRAIN_SB2_SCALE = 0.75;
-	static private Double HILLY_TERRAIN_SB2_BIAS = -0.25;
+	static private Double hilly_terrain_sb2_scale = 0.75;
+	static private Double hilly_terrain_sb2_bias = -0.25;
 
-	// 8: [Increased-slope-hilly-terrain module]: To increase the hill slopes at
+	// 8: [increased-slope-hilly-terrain module]: to increase the hill slopes at
 	// higher elevations, this exponential-curve module applies an
 	// exponential curve to the output value the scaled-hills-and-valleys
-	// module. This exponential-curve module expects the input value to
+	// module. this exponential-curve module expects the input value to
 	// range from -1.0 to 1.0.
-	static private Double HILLY_TERRAIN_EX = 1.375;
+	static private Double hilly_terrain_ex = 1.375;
 
-	// 9: [Coarse-turbulence module]: This turbulence module warps the output
+	// 9: [coarse-turbulence module]: this turbulence module warps the output
 	// value from the increased-slope-hilly-terrain module, adding some
 	// coarse detail to it.
-	static private Double HILLY_TERRAIN_TU0_FREQUENCY = 1531.0;
-	static private Double HILLY_TERRAIN_TU0_SCALAR0 = 1.0;
-	static private Double HILLY_TERRAIN_TU0_SCALAR1 = 16921.0;
-	static private Integer HILLY_TERRAIN_TU0_ROUGHNESS = 4;
+	static private Double hilly_terrain_tu0_frequency = 1531.0;
+	static private Double hilly_terrain_tu0_scalar0 = 1.0;
+	static private Double hilly_terrain_tu0_scalar1 = 16921.0;
+	static private Integer hilly_terrain_tu0_roughness = 4;
 
-	// 10: [Warped-hilly-terrain module]: This turbulence module warps the
-	// output value from the coarse-turbulence module. This turbulence has
+	// 10: [warped-hilly-terrain module]: this turbulence module warps the
+	// output value from the coarse-turbulence module. this turbulence has
 	// a higher frequency, but lower power, than the coarse-turbulence
 	// module, adding some fine detail to it.
 
-	static private Double HILLY_TERRAIN_TU1_FREQUENCY = 21617.0;
-	static private Double HILLY_TERRAIN_TU1_SCALAR0 = 1.0;
-	static private Double HILLY_TERRAIN_TU1_SCALAR1 = 117529.0;
-	static private Integer HILLY_TERRAIN_TU1_ROUGHNESS = 6;
+	static private Double hilly_terrain_tu1_frequency = 21617.0;
+	static private Double hilly_terrain_tu1_scalar0 = 1.0;
+	static private Double hilly_terrain_tu1_scalar1 = 117529.0;
+	static private Integer hilly_terrain_tu1_roughness = 6;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module group: plains terrain
+	// module group: plains terrain
 	// //////////////////////////////////////////////////////////////////////////
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: plains terrain (7 noise modules)
+	// module subgroup: plains terrain (7 noise modules)
 	//
-	// This subgroup generates the plains terrain.
+	// this subgroup generates the plains terrain.
 	//
-	// Because this subgroup will eventually be flattened considerably, the
+	// because this subgroup will eventually be flattened considerably, the
 	// types and combinations of noise modules that generate the plains are not
 	// really that important; they only need to "look" interesting.
 	//
@@ -536,465 +536,465 @@ public abstract class Planar {
 	// elevations.
 	//
 
-	// 1: [Plains-basis-0 module]: This billow-noise module, along with the
+	// 1: [plains-basis-0 module]: this billow-noise module, along with the
 	// plains-basis-1 module, produces the plains.
-	private static Double PLAINS_TERRAIN_BI0_FREQUENCY = 1097.0;
-	private static Double PLAINS_TERRAIN_BI0_PERSISTENCE = 0.5;
-	private static Integer PLAINS_TERRAIN_BI0_OCTAVE_COUNT = 8;
+	private static Double plains_terrain_bi0_frequency = 1097.0;
+	private static Double plains_terrain_bi0_persistence = 0.5;
+	private static Integer plains_terrain_bi0_octave_count = 8;
 
-	// 2: [Positive-plains-basis-0 module]: This scale/bias module makes the
+	// 2: [positive-plains-basis-0 module]: this scale/bias module makes the
 	// output value from the plains-basis-0 module positive since this output
 	// value will be multiplied together with the positive-plains-basis-1
 	// module.
-	static private Double PLAINS_TERRAIN_SB0_SCALE = 0.5;
-	static private Double PLAINS_TERRAIN_SB0_BIAS = 0.5;
+	static private Double plains_terrain_sb0_scale = 0.5;
+	static private Double plains_terrain_sb0_bias = 0.5;
 
-	// 3: [Plains-basis-1 module]: This billow-noise module, along with the
+	// 3: [plains-basis-1 module]: this billow-noise module, along with the
 	// plains-basis-2 module, produces the plains.
 
-	private static Double PLAINS_TERRAIN_BI1_FREQUENCY = 1319.0;
-	private static Double PLAINS_TERRAIN_BI1_PERSISTENCE = 0.5;
-	private static Integer PLAINS_TERRAIN_BI1_OCTAVE_COUNT = 8;
+	private static Double plains_terrain_bi1_frequency = 1319.0;
+	private static Double plains_terrain_bi1_persistence = 0.5;
+	private static Integer plains_terrain_bi1_octave_count = 8;
 
-	// 4: [Positive-plains-basis-1 module]: This scale/bias module makes the
+	// 4: [positive-plains-basis-1 module]: this scale/bias module makes the
 	// output value from the plains-basis-1 module positive since this output
 	// value will be multiplied together with the positive-plains-basis-0
 	// module.
-	static private Double PLAINS_TERRAIN_SB1_SCALE = 0.5;
-	static private Double PLAINS_TERRAIN_SB1_BIAS = 0.5;
+	static private Double plains_terrain_sb1_scale = 0.5;
+	static private Double plains_terrain_sb1_bias = 0.5;
 
-	// 6: [Rescaled-plains-basis module]: This scale/bias module maps the output
+	// 6: [rescaled-plains-basis module]: this scale/bias module maps the output
 	// value that ranges from 0.0 to 1.0 back to a value that ranges from
 	// -1.0 to +1.0.
-	static private Double PLAINS_TERRAIN_SB2_SCALE = 2.0;
-	static private Double PLAINS_TERRAIN_SB2_BIAS = -1.0;
+	static private Double plains_terrain_sb2_scale = 2.0;
+	static private Double plains_terrain_sb2_bias = -1.0;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module group: badlands terrain
+	// module group: badlands terrain
 	// //////////////////////////////////////////////////////////////////////////
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: badlands sand (6 noise modules)
+	// module subgroup: badlands sand (6 noise modules)
 	//
-	// This subgroup generates the sandy terrain for the badlands.
+	// this subgroup generates the sandy terrain for the badlands.
 	//
 	// -1.0 represents the lowest elevations and +1.0 represents the highest
 	// elevations.
 	//
 
-	// 1: [Sand-dunes module]: This ridged-multifractal-noise module generates
-	// sand dunes. This ridged-multifractal noise is generated with a single
+	// 1: [sand-dunes module]: this ridged-multifractal-noise module generates
+	// sand dunes. this ridged-multifractal noise is generated with a single
 	// octave, which makes very smooth dunes.
-	static private Double BADLANDS_SAND_RM_FREQUENCY = 6163.5;
-	static private Integer BADLANDS_SAND_RM_OCTAVE_COUNT = 1;
+	static private Double badlands_sand_rm_frequency = 6163.5;
+	static private Integer badlands_sand_rm_octave_count = 1;
 
-	// 2: [Scaled-sand-dunes module]: This scale/bias module shrinks the dune
-	// heights by a small amount. This is necessary so that the subsequent
+	// 2: [scaled-sand-dunes module]: this scale/bias module shrinks the dune
+	// heights by a small amount. this is necessary so that the subsequent
 	// noise modules in this subgroup can add some detail to the dunes.
 
-	static private Double BADLANDS_SAND_SB0_SCALE = 0.875;
-	static private Double BADLANDS_SAND_SB0_BIAS = 0.0;
+	static private Double badlands_sand_sb0_scale = 0.875;
+	static private Double badlands_sand_sb0_bias = 0.0;
 
-	// 3: [Dune-detail module]: This noise module uses Voronoi polygons to
-	// generate the detail to add to the dunes. By enabling the distance
+	// 3: [dune-detail module]: this noise module uses voronoi polygons to
+	// generate the detail to add to the dunes. by enabling the distance
 	// algorithm, small polygonal pits are generated; the edges of the pits
 	// are joined to the edges of nearby pits.
 
-	// / The frequency determines the size of the Voronoi cells and the
+	// / the frequency determines the size of the voronoi cells and the
 	// / distance between these cells.
-	static private Double BADLANDS_SAND_VO_FREQUENCY = 16183.25;
-	// / This noise module assigns each Voronoi cell with a random constant
-	// / value from a coherent-noise function. The <i>displacement
+	static private Double badlands_sand_vo_frequency = 16183.25;
+	// / this noise module assigns each voronoi cell with a random constant
+	// / value from a coherent-noise function. the <i>displacement
 	// / value</i> controls the range of random values to assign to each
-	// / cell. The range of random values is +/- the displacement value.
-	static private Double BADLANDS_SAND_VO_DISPLACEMWNT = 0.0;
+	// / cell. the range of random values is +/- the displacement value.
+	static private Double badlands_sand_vo_displacemwnt = 0.0;
 
-	// 4: [Scaled-dune-detail module]: This scale/bias module shrinks the dune
-	// details by a large amount. This is necessary so that the subsequent
+	// 4: [scaled-dune-detail module]: this scale/bias module shrinks the dune
+	// details by a large amount. this is necessary so that the subsequent
 	// noise modules in this subgroup can add this detail to the sand-dunes
 	// module.
-	static private Double BADLANDS_SAND_SB1_SCALE = 0.25;
-	static private Double BADLANDS_SAND_SB1_BIAS = 0.25;
+	static private Double badlands_sand_sb1_scale = 0.25;
+	static private Double badlands_sand_sb1_bias = 0.25;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: badlands cliffs (7 noise modules)
+	// module subgroup: badlands cliffs (7 noise modules)
 	//
-	// This subgroup generates the cliffs for the badlands.
+	// this subgroup generates the cliffs for the badlands.
 	//
 	// -1.0 represents the lowest elevations and +1.0 represents the highest
 	// elevations.
 	//
 
-	// 1: [Cliff-basis module]: This Perlin-noise module generates some coherent
+	// 1: [cliff-basis module]: this perlin-noise module generates some coherent
 	// noise that will be used to generate the cliffs.
-	static private Double BADLANDS_CLIFFS_PE_FREQUENCY = CONTINENT_FREQUENCY * 839;
-	static private Double BADLANDS_CLIFFS_PE_PERSISTENCE = 0.5;
-	static private Integer BADLANDS_CLIFFS_PE_OCTAVE_COUNT = 6;
+	static private Double badlands_cliffs_pe_frequency = continent_frequency * 839;
+	static private Double badlands_cliffs_pe_persistence = 0.5;
+	static private Integer badlands_cliffs_pe_octave_count = 6;
 
-	// 5: [Coarse-turbulence module]: This turbulence module warps the output
+	// 5: [coarse-turbulence module]: this turbulence module warps the output
 	// value from the terraced-cliffs module, adding some coarse detail to
 	// it.
-	static private Double BADLANDS_CLIFFS_TU0_FREQUENCY = 16111.0;
-	static private Double BADLANDS_CLIFFS_TU0_SCALAR0 = 1.0;
-	static private Double BADLANDS_CLIFFS_TU0_SCALAR1 = 141539.0;
-	static private Integer BADLANDS_CLIFFS_TU0_ROUGHNESS = 3;
+	static private Double badlands_cliffs_tu0_frequency = 16111.0;
+	static private Double badlands_cliffs_tu0_scalar0 = 1.0;
+	static private Double badlands_cliffs_tu0_scalar1 = 141539.0;
+	static private Integer badlands_cliffs_tu0_roughness = 3;
 
-	// 6: [Warped-cliffs module]: This turbulence module warps the output value
-	// from the coarse-turbulence module. This turbulence has a higher
+	// 6: [warped-cliffs module]: this turbulence module warps the output value
+	// from the coarse-turbulence module. this turbulence has a higher
 	// frequency, but lower power, than the coarse-turbulence module, adding
 	// some fine detail to it.
-	static private Double BADLANDS_CLIFFS_TU1_FREQUENCY = 36107.0;
-	static private Double BADLANDS_CLIFFS_TU1_SCALAR0 = 1.0;
-	static private Double BADLANDS_CLIFFS_TU1_SCALAR1 = 211543.0;
-	static private Integer BADLANDS_CLIFFS_TU1_ROUGHNESS = 3;
+	static private Double badlands_cliffs_tu1_frequency = 36107.0;
+	static private Double badlands_cliffs_tu1_scalar0 = 1.0;
+	static private Double badlands_cliffs_tu1_scalar1 = 211543.0;
+	static private Integer badlands_cliffs_tu1_roughness = 3;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: badlands terrain (3 noise modules)
+	// module subgroup: badlands terrain (3 noise modules)
 	//
-	// Generates the final badlands terrain.
+	// generates the final badlands terrain.
 	//
-	// Using a scale/bias module, the badlands sand is flattened considerably,
-	// then the sand elevations are lowered to around -1.0. The maximum value
+	// using a scale/bias module, the badlands sand is flattened considerably,
+	// then the sand elevations are lowered to around -1.0. the maximum value
 	// from the flattened sand module and the cliff module contributes to the
-	// final elevation. This causes sand to appear at the low elevations since
+	// final elevation. this causes sand to appear at the low elevations since
 	// the sand is slightly higher than the cliff base.
 	//
 	// -1.0 represents the lowest elevations and +1.0 represents the highest
 	// elevations.
 	//
 
-	// 1: [Scaled-sand-dunes module]: This scale/bias module considerably
+	// 1: [scaled-sand-dunes module]: this scale/bias module considerably
 	// flattens the output value from the badlands-sands subgroup and lowers
 	// this value to near -1.0.
-	static private Double BADLANDS_TERRAIN_SB_SCALE = 0.25;
-	static private Double BADLANDS_TERRAIN_SB_BIAS = -0.75;
+	static private Double badlands_terrain_sb_scale = 0.25;
+	static private Double badlands_terrain_sb_bias = -0.75;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module group: river positions
+	// module group: river positions
 	// //////////////////////////////////////////////////////////////////////////
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: river positions (7 noise modules)
+	// module subgroup: river positions (7 noise modules)
 	//
-	// This subgroup generates the river positions.
+	// this subgroup generates the river positions.
 	//
 	// -1.0 represents the lowest elevations and +1.0 represents the highest
 	// elevations.
 	//
 
-	// 1: [Large-river-basis module]: This ridged-multifractal-noise module
+	// 1: [large-river-basis module]: this ridged-multifractal-noise module
 	// creates the large, deep rivers.
-	static private Double RIVER_POSITIONS_RM0_FREQUENCY = 18.75;
-	static private Integer RIVER_POSITIONS_RM0_OCTAVE_COUNT = 1;
+	static private Double river_positions_rm0_frequency = 18.75;
+	static private Integer river_positions_rm0_octave_count = 1;
 
-	// / 3: [Small-river-basis module]: This ridged-multifractal-noise module
+	// / 3: [small-river-basis module]: this ridged-multifractal-noise module
 	// creates the small, shallow rivers.
-	static private Double RIVER_POSITIONS_RM1_FREQUENCY = 43.25;
-	static private Integer RIVER_POSITIONS_RM1_OCTAVE_COUNT = 1;
+	static private Double river_positions_rm1_frequency = 43.25;
+	static private Integer river_positions_rm1_octave_count = 1;
 
-	// 6: [Warped-rivers module]: This turbulence module warps the output value
-	// from the combined-rivers module, which twists the rivers. The high
+	// 6: [warped-rivers module]: this turbulence module warps the output value
+	// from the combined-rivers module, which twists the rivers. the high
 	// roughness produces less-smooth rivers.
-	static private Double RIVER_POSITIONS_TU_FREQUENCY = 9.25;
-	static private Double RIVER_POSITIONS_TU_SCALAR0 = 1.0;
-	static private Double RIVER_POSITIONS_TU_SCALAR1 = 57.75;
-	static private Integer RIVER_POSITIONS_TU_ROUGHNESS = 6;
+	static private Double river_positions_tu_frequency = 9.25;
+	static private Double river_positions_tu_scalar0 = 1.0;
+	static private Double river_positions_tu_scalar1 = 57.75;
+	static private Integer river_positions_tu_roughness = 6;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module group: scaled mountainous terrain
+	// module group: scaled mountainous terrain
 	// //////////////////////////////////////////////////////////////////////////
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: scaled mountainous terrain (6 noise modules)
+	// module subgroup: scaled mountainous terrain (6 noise modules)
 	//
-	// This subgroup scales the output value from the mountainous-terrain group
+	// this subgroup scales the output value from the mountainous-terrain group
 	// so that it can be added to the elevation defined by the continent-
 	// definition group.
 	//
-	// This subgroup scales the output value such that it is almost always
-	// positive. This is done so that a negative elevation does not get applied
+	// this subgroup scales the output value such that it is almost always
+	// positive. this is done so that a negative elevation does not get applied
 	// to the continent-definition group, preventing parts of that group from
 	// having negative terrain features "stamped" into it.
 	//
-	// The output value from this module subgroup is measured in planetary
+	// the output value from this module subgroup is measured in planetary
 	// elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
 	// highest mountain peaks.)
 	//
 
-	// 1: [Base-scaled-mountainous-terrain module]: This scale/bias module
+	// 1: [base-scaled-mountainous-terrain module]: this scale/bias module
 	// scales the output value from the mountainous-terrain group so that the
 	// output value is measured in planetary elevation units.
-	static private Double SCALED_MOUNTAINOUS_TERRAIN_SB0_SCALE = 0.125;
-	static private Double SCALED_MOUNTAINOUS_TERRAIN_SB0_BIAS = 0.125;
+	static private Double scaled_mountainous_terrain_sb0_scale = 0.125;
+	static private Double scaled_mountainous_terrain_sb0_bias = 0.125;
 
-	// 2: [Base-peak-modulation module]: At this stage, most mountain peaks have
-	// roughly the same elevation. This Perlin-noise module generates some
+	// 2: [base-peak-modulation module]: at this stage, most mountain peaks have
+	// roughly the same elevation. this perlin-noise module generates some
 	// random values that will be used by subsequent noise modules to
 	// randomly change the elevations of the mountain peaks.
-	static private Double SCALED_MOUNTAINOUS_TERRAIN_PE_FREQUENCY = 14.5;
-	static private Double SCALED_MOUNTAINOUS_TERRAIN_PE_PERSISTENCE = 0.5;
-	static private Integer SCALED_MOUNTAINOUS_TERRAIN_PE_OCTAVE_COUNT = 6;
+	static private Double scaled_mountainous_terrain_pe_frequency = 14.5;
+	static private Double scaled_mountainous_terrain_pe_persistence = 0.5;
+	static private Integer scaled_mountainous_terrain_pe_octave_count = 6;
 
-	// 3: [Peak-modulation module]: This exponential-curve module applies an
+	// 3: [peak-modulation module]: this exponential-curve module applies an
 	// exponential curve to the output value from the base-peak-modulation
-	// module. This produces a small number of high values and a much larger
-	// number of low values. This means there will be a few peaks with much
+	// module. this produces a small number of high values and a much larger
+	// number of low values. this means there will be a few peaks with much
 	// higher elevations than the majority of the peaks, making the terrain
 	// features more varied.
-	static private Double SCALED_MOUNTAINOUS_TERRAIN_EX_EXPONENT = 1.25;
+	static private Double scaled_mountainous_terrain_ex_exponent = 1.25;
 
-	// 4: [Scaled-peak-modulation module]: This scale/bias module modifies the
+	// 4: [scaled-peak-modulation module]: this scale/bias module modifies the
 	// range of the output value from the peak-modulation module so that it
 	// can be used as the modulator for the peak-height-multiplier module.
-	// It is important that this output value is not much lower than 1.0.
-	static private Double SCALED_MOUNTAINOUS_TERRAIN_SB1_SCALE = 0.25;
-	static private Double SCALED_MOUNTAINOUS_TERRAIN_SB1_BIAS = 1.0;
+	// it is important that this output value is not much lower than 1.0.
+	static private Double scaled_mountainous_terrain_sb1_scale = 0.25;
+	static private Double scaled_mountainous_terrain_sb1_bias = 1.0;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module group: scaled hilly terrain
+	// module group: scaled hilly terrain
 	// //////////////////////////////////////////////////////////////////////////
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: scaled hilly terrain (6 noise modules)
+	// module subgroup: scaled hilly terrain (6 noise modules)
 	//
-	// This subgroup scales the output value from the hilly-terrain group so
+	// this subgroup scales the output value from the hilly-terrain group so
 	// that it can be added to the elevation defined by the continent-
-	// definition group. The scaling amount applied to the hills is one half of
+	// definition group. the scaling amount applied to the hills is one half of
 	// the scaling amount applied to the scaled-mountainous-terrain group.
 	//
-	// This subgroup scales the output value such that it is almost always
-	// positive. This is done so that negative elevations are not applied to
+	// this subgroup scales the output value such that it is almost always
+	// positive. this is done so that negative elevations are not applied to
 	// the continent-definition group, preventing parts of the continent-
 	// definition group from having negative terrain features "stamped" into it.
 	//
-	// The output value from this module subgroup is measured in planetary
+	// the output value from this module subgroup is measured in planetary
 	// elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
 	// highest mountain peaks.)
 	//
 
-	// 1: [Base-scaled-hilly-terrain module]: This scale/bias module scales the
+	// 1: [base-scaled-hilly-terrain module]: this scale/bias module scales the
 	// output value from the hilly-terrain group so that this output value is
 	// measured in planetary elevation units
-	static private Double SCALED_HILLY_TERRAIN_SB0_SCALE = 0.0625;
-	static private Double SCALED_HILLY_TERRAIN_SB0_BIAS = 0.0625;
+	static private Double scaled_hilly_terrain_sb0_scale = 0.0625;
+	static private Double scaled_hilly_terrain_sb0_bias = 0.0625;
 
-	// 2: [Base-hilltop-modulation module]: At this stage, most hilltops have
-	// roughly the same elevation. This Perlin-noise module generates some
+	// 2: [base-hilltop-modulation module]: at this stage, most hilltops have
+	// roughly the same elevation. this perlin-noise module generates some
 	// random values that will be used by subsequent noise modules to
 	// randomly change the elevations of the hilltops.
-	static private Double SCALED_HILLY_TERRAIN_PE_FREQUENCY = 13.5;
-	static private Double SCALED_HILLY_TERRAIN_PE_PERSISTENCE = 0.5;
-	static private Integer SCALED_HILLY_TERRAIN_PE_OCTAVE_COUNT = 6;
+	static private Double scaled_hilly_terrain_pe_frequency = 13.5;
+	static private Double scaled_hilly_terrain_pe_persistence = 0.5;
+	static private Integer scaled_hilly_terrain_pe_octave_count = 6;
 
-	// 3: [Hilltop-modulation module]: This exponential-curve module applies an
+	// 3: [hilltop-modulation module]: this exponential-curve module applies an
 	// exponential curve to the output value from the base-hilltop-modulation
-	// module. This produces a small number of high values and a much larger
-	// number of low values. This means there will be a few hilltops with
+	// module. this produces a small number of high values and a much larger
+	// number of low values. this means there will be a few hilltops with
 	// much higher elevations than the majority of the hilltops, making the
 	// terrain features more varied.
-	static private Double SCALED_HILLY_TERRAIN_EX_EXPONENT = 1.25;
+	static private Double scaled_hilly_terrain_ex_exponent = 1.25;
 
-	// 4: [Scaled-hilltop-modulation module]: This scale/bias module modifies
+	// 4: [scaled-hilltop-modulation module]: this scale/bias module modifies
 	// the range of the output value from the hilltop-modulation module so
 	// that it can be used as the modulator for the hilltop-height-multiplier
-	// module. It is important that this output value is not much lower than
+	// module. it is important that this output value is not much lower than
 	// 1.0.
-	static private Double SCALED_HILLY_TERRAIN_SB1_SCALE = 0.5;
-	static private Double SCALED_HILLY_TERRAIN_SB1_BIAS = 1.5;
+	static private Double scaled_hilly_terrain_sb1_scale = 0.5;
+	static private Double scaled_hilly_terrain_sb1_bias = 1.5;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module group: scaled plains terrain
+	// module group: scaled plains terrain
 	// //////////////////////////////////////////////////////////////////////////
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: scaled plains terrain (2 noise modules)
+	// module subgroup: scaled plains terrain (2 noise modules)
 	//
-	// This subgroup scales the output value from the plains-terrain group so
+	// this subgroup scales the output value from the plains-terrain group so
 	// that it can be added to the elevations defined by the continent-
 	// definition group.
 	//
-	// This subgroup scales the output value such that it is almost always
-	// positive. This is done so that negative elevations are not applied to
+	// this subgroup scales the output value such that it is almost always
+	// positive. this is done so that negative elevations are not applied to
 	// the continent-definition group, preventing parts of the continent-
 	// definition group from having negative terrain features "stamped" into it.
 	//
-	// The output value from this module subgroup is measured in planetary
+	// the output value from this module subgroup is measured in planetary
 	// elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
 	// highest mountain peaks.)
 	//
 
-	// 1: [Scaled-plains-terrain module]: This scale/bias module greatly
-	// flattens the output value from the plains terrain. This output value
+	// 1: [scaled-plains-terrain module]: this scale/bias module greatly
+	// flattens the output value from the plains terrain. this output value
 	// is measured in planetary elevation units
-	static private Double SCALED_PLAINS_TERRAIN_SB_SCALE = 0.00390625;
-	static private Double SCALED_PLAINS_TERRAIN_SB_BIAS = 0.0078125;
+	static private Double scaled_plains_terrain_sb_scale = 0.00390625;
+	static private Double scaled_plains_terrain_sb_bias = 0.0078125;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module group: scaled badlands terrain
+	// module group: scaled badlands terrain
 	// //////////////////////////////////////////////////////////////////////////
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: scaled badlands terrain (2 noise modules)
+	// module subgroup: scaled badlands terrain (2 noise modules)
 	//
-	// This subgroup scales the output value from the badlands-terrain group so
+	// this subgroup scales the output value from the badlands-terrain group so
 	// that it can be added to the elevations defined by the continent-
 	// definition group.
 	//
-	// This subgroup scales the output value such that it is almost always
-	// positive. This is done so that negative elevations are not applied to
+	// this subgroup scales the output value such that it is almost always
+	// positive. this is done so that negative elevations are not applied to
 	// the continent-definition group, preventing parts of the continent-
 	// definition group from having negative terrain features "stamped" into it.
 	//
-	// The output value from this module subgroup is measured in planetary
+	// the output value from this module subgroup is measured in planetary
 	// elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
 	// highest mountain peaks.)
 	//
 
-	// 1: [Scaled-badlands-terrain module]: This scale/bias module scales the
+	// 1: [scaled-badlands-terrain module]: this scale/bias module scales the
 	// output value from the badlands-terrain group so that it is measured
 	// in planetary elevation units
-	static private Double SCALED_BADLANDS_TERRAIN_SCALE = 0.0625;
-	static private Double SCALED_BADLANDS_TERRAIN_BIAS = 0.0625;
+	static private Double scaled_badlands_terrain_scale = 0.0625;
+	static private Double scaled_badlands_terrain_bias = 0.0625;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module group: final planet
+	// module group: final planet
 	// //////////////////////////////////////////////////////////////////////////
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: continental shelf (6 noise modules)
+	// module subgroup: continental shelf (6 noise modules)
 	//
-	// This module subgroup creates the continental shelves.
+	// this module subgroup creates the continental shelves.
 	//
-	// The output value from this module subgroup are measured in planetary
+	// the output value from this module subgroup are measured in planetary
 	// elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
 	// highest mountain peaks.)
 	//
 
-	// 1: [Shelf-creator module]: This terracing module applies a terracing
+	// 1: [shelf-creator module]: this terracing module applies a terracing
 	// curve to the continent-definition group at the specified shelf level.
-	// This terrace becomes the continental shelf. Note that this terracing
+	// this terrace becomes the continental shelf. note that this terracing
 	// module also places another terrace below the continental shelf near
-	// -1.0. The bottom of this terrace is defined as the bottom of the
+	// -1.0. the bottom of this terrace is defined as the bottom of the
 	// ocean; subsequent noise modules will later add oceanic trenches to the
 	// bottom of the ocean.
-	static private Double CONTINENTAL_SHELF_TE_LOWEST_CONTROL_POINT = -1.0;
-	static private Double CONTINENTAL_SHELF_TE_LOW_CONTROL_POINT = -0.75;
-	static private Double CONTINENTAL_SHELF_TE_HIGH_CONTROL_POINT = 1.0;
+	static private Double continental_shelf_te_lowest_control_point = -1.0;
+	static private Double continental_shelf_te_low_control_point = -0.75;
+	static private Double continental_shelf_te_high_control_point = 1.0;
 
-	// 2: [Oceanic-trench-basis module]: This ridged-multifractal-noise module
+	// 2: [oceanic-trench-basis module]: this ridged-multifractal-noise module
 	// generates some coherent noise that will be used to generate the
-	// oceanic trenches. The ridges represent the bottom of the trenches.
-	static private Double CONTINENTAL_SHELF_FREQUENCY_SCALAR = 4.375;
-	static private Integer CONTINENTAL_SHELF_FREQUENCY_OCTAVE_COUNT = 16;
+	// oceanic trenches. the ridges represent the bottom of the trenches.
+	static private Double continental_shelf_frequency_scalar = 4.375;
+	static private Integer continental_shelf_frequency_octave_count = 16;
 
-	// 3: [Oceanic-trench module]: This scale/bias module inverts the ridges
+	// 3: [oceanic-trench module]: this scale/bias module inverts the ridges
 	// from the oceanic-trench-basis-module so that the ridges become
-	// trenches. This noise module also reduces the depth of the trenches so
+	// trenches. this noise module also reduces the depth of the trenches so
 	// that their depths are measured in planetary elevation units.
-	static private Double CONTINENTAL_SHELF_SB_SCALE = -0.125;
-	static private Double CONTINENTAL_SHELF_SB_BIAS = -0.125;
+	static private Double continental_shelf_sb_scale = -0.125;
+	static private Double continental_shelf_sb_bias = -0.125;
 
-	// 4: [Clamped-sea-bottom module]: This clamping module clamps the output
+	// 4: [clamped-sea-bottom module]: this clamping module clamps the output
 	// value from the shelf-creator module so that its possible range is
-	// from the bottom of the ocean to sea level. This is done because this
+	// from the bottom of the ocean to sea level. this is done because this
 	// subgroup is only concerned about the oceans.
-	static private Double CONTINENTAL_SHELF_CL_BOUNDS = -0.75;
+	static private Double continental_shelf_cl_bounds = -0.75;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module group: base continent elevations (3 noise modules)
+	// module group: base continent elevations (3 noise modules)
 	//
-	// This subgroup generates the base elevations for the continents, before
+	// this subgroup generates the base elevations for the continents, before
 	// terrain features are added.
 	//
-	// The output value from this module subgroup is measured in planetary
+	// the output value from this module subgroup is measured in planetary
 	// elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
 	// highest mountain peaks.)
 	//
 
-	// 1: [Base-scaled-continent-elevations module]: This scale/bias module
+	// 1: [base-scaled-continent-elevations module]: this scale/bias module
 	// scales the output value from the continent-definition group so that it
 	// is measured in planetary elevation units
-	static private Double BASE_CONTINENT_ELEV_SB_BIAS = 0.0;
+	static private Double base_continent_elev_sb_bias = 0.0;
 
-	// 2: [Base-continent-with-oceans module]: This selector module applies the
+	// 2: [base-continent-with-oceans module]: this selector module applies the
 	// elevations of the continental shelves to the base elevations of the
-	// continent. It does this by selecting the output value from the
+	// continent. it does this by selecting the output value from the
 	// continental-shelf subgroup if the corresponding output value from the
-	// continent-definition group is below the shelf level. Otherwise, it
+	// continent-definition group is below the shelf level. otherwise, it
 	// selects the output value from the base-scaled-continent-elevations
 	// module.
-	static private Double BASE_CONTINENT_ELEV_SE_BOUND_SCALAR = 1000.0;
-	static private Double BASE_CONTINENT_ELEV_SE_EDGE_FALLOFF = 0.03125;
+	static private Double base_continent_elev_se_bound_scalar = 1000.0;
+	static private Double base_continent_elev_se_edge_falloff = 0.03125;
 
-	// 2: [Select-high-elevations module]: This selector module ensures that
-	// the hills only appear at higher elevations. It does this by selecting
+	// 2: [select-high-elevations module]: this selector module ensures that
+	// the hills only appear at higher elevations. it does this by selecting
 	// the output value from the continent-with-hills module if the
 	// corresponding output value from the terrain-type-defintion group is
-	// above a certain value. Otherwise, it selects the output value from the
+	// above a certain value. otherwise, it selects the output value from the
 	// continents-with-plains subgroup.
-	static private Double CONTINENTS_WITH_HILLS_BOUNDS_SCALAR0 = 1.0;
-	static private Double CONTINENTS_WITH_HILLS_BOUNDS_SCALAR1 = 1001.0;
-	static private Double CONTINENTS_WITH_HILLS_EDGE_FALLOFF = 0.25;
+	static private Double continents_with_hills_bounds_scalar0 = 1.0;
+	static private Double continents_with_hills_bounds_scalar1 = 1001.0;
+	static private Double continents_with_hills_edge_falloff = 0.25;
 
-	// 4: [Select-high-elevations module]: This selector module ensures that
-	// mountains only appear at higher elevations. It does this by selecting
+	// 4: [select-high-elevations module]: this selector module ensures that
+	// mountains only appear at higher elevations. it does this by selecting
 	// the output value from the continent-with-mountains module if the
 	// corresponding output value from the terrain-type-defintion group is
-	// above a certain value. Otherwise, it selects the output value from
-	// the continents-with-hills subgroup. Note that the continents-with-
+	// above a certain value. otherwise, it selects the output value from
+	// the continents-with-hills subgroup. note that the continents-with-
 	// hills subgroup also contains the plains terrain.
-	static private Double CONTINENT_WITH_MOUNTAINS_BOUNDS_SCALAR0 = 1.0;
-	static private Double CONTINENT_WITH_MOUNTAINS_BOUNDS_SCALAR1 = 1001.0;
-	static private Double CONTINENT_WITH_MOUNTAINS_EDGE_FALLOFF = 0.25;
+	static private Double continent_with_mountains_bounds_scalar0 = 1.0;
+	static private Double continent_with_mountains_bounds_scalar1 = 1001.0;
+	static private Double continent_with_mountains_edge_falloff = 0.25;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: continents with badlands (5 noise modules)
+	// module subgroup: continents with badlands (5 noise modules)
 	//
-	// This subgroup applies the scaled-badlands-terrain group to the
+	// this subgroup applies the scaled-badlands-terrain group to the
 	// continents-with-mountains subgroup.
 	//
-	// The output value from this module subgroup is measured in planetary
+	// the output value from this module subgroup is measured in planetary
 	// elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
 	// highest mountain peaks.)
 	//
 
-	// 1: [Badlands-positions module]: This Perlin-noise module generates some
+	// 1: [badlands-positions module]: this perlin-noise module generates some
 	// random noise, which is used by subsequent noise modules to specify the
 	// locations of the badlands.
-	static private Double CONTINENTS_WITH_BADLANDS_PE_FREQUENCY = 16.5;
-	static private Double CONTINENTS_WITH_BADLANDS_PE_PERSISTENCE = 0.5;
-	static private Integer CONTINENTS_WITH_BADLANDS_PE_OCTAVE_COUNT = 2;
+	static private Double continents_with_badlands_pe_frequency = 16.5;
+	static private Double continents_with_badlands_pe_persistence = 0.5;
+	static private Integer continents_with_badlands_pe_octave_count = 2;
 
-	// 3: [Select-badlands-positions module]: This selector module places
-	// badlands at random spots on the continents based on the Perlin noise
-	// generated by the badlands-positions module. To do this, it selects
+	// 3: [select-badlands-positions module]: this selector module places
+	// badlands at random spots on the continents based on the perlin noise
+	// generated by the badlands-positions module. to do this, it selects
 	// the output value from the continents-and-badlands module if the
 	// corresponding output value from the badlands-position module is
-	// greater than a specified value. Otherwise, this selector module
+	// greater than a specified value. otherwise, this selector module
 	// selects the output value from the continents-with-mountains subgroup.
-	// There is also a wide transition between these two noise modules so
+	// there is also a wide transition between these two noise modules so
 	// that the badlands can blend into the rest of the terrain on the
 	// continents.
-	static private Double CONTINENTS_WITH_BADLANDS_SE_BOUNDS_PARAM0 = 1.0;
-	static private Double CONTINENTS_WITH_BADLANDS_SE_BOUNDS_PARAM1 = 1001.0;
-	static private Double CONTINENTS_WITH_BADLANDS_SE_EDGE_FALLOFF = 0.25;
+	static private Double continents_with_badlands_se_bounds_param0 = 1.0;
+	static private Double continents_with_badlands_se_bounds_param1 = 1001.0;
+	static private Double continents_with_badlands_se_edge_falloff = 0.25;
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Module subgroup: continents with rivers (4 noise modules)
+	// module subgroup: continents with rivers (4 noise modules)
 	//
-	// This subgroup applies the river-positions group to the continents-with-
+	// this subgroup applies the river-positions group to the continents-with-
 	// badlands subgroup.
 	//
-	// The output value from this module subgroup is measured in planetary
+	// the output value from this module subgroup is measured in planetary
 	// elevation units (-1.0 for the lowest underwater trenches and +1.0 for the
 	// highest mountain peaks.)
 	//
 
-	// 1: [Scaled-rivers module]: This scale/bias module scales the output value
+	// 1: [scaled-rivers module]: this scale/bias module scales the output value
 	// from the river-positions group so that it is measured in planetary
 	// elevation units and is negative; this is required for step 2.
-	static private Double CONTINENTS_WITH_RIVERS_SB_SCALAR0 = 2.0;
-	static private Double CONTINENTS_WITH_RIVERS_SB_SCALAR1 = 2.0;
+	static private Double continents_with_rivers_sb_scalar0 = 2.0;
+	static private Double continents_with_rivers_sb_scalar1 = 2.0;
 
 	
 }
