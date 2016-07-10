@@ -68,7 +68,7 @@ public class PlanarBaseContinent implements CachedIF {
 		this.base_continent_octive_count0 = base_continent_octive_count0;
 		this.controlPoints = controlPoints;
 		this.base_continent_persistence_1 = base_continent_persistence_1;
-		this.base_continent_octive_count0 = base_continent_octive_count1;
+		this.base_continent_octive_count1 = base_continent_octive_count1;
 		this.base_continent_def_scale = base_continent_def_scale;
 		this.base_continent_def_bias = base_continent_def_bias;
 		this.base_contenent_def_lower_bound = base_contenent_def_lower_bound;
