@@ -34,7 +34,8 @@ public class PlanarContinent implements  CachedIF {
 	public PlanarContinent(Double spheres_scalar, Boolean genSpheres, Double turbulenceFrequency_0,
 			Double turbulenceFrequency_1, Double turbulenceFrequency_2, Double turbulencePowerScalar_0,
 			Double turbulencePowerScalar_1, Double turbulencePowerScalar_2, Integer turbulenceRoughness_0,
-			Integer turbulenceRoughness_1, Integer turbulenceRoughness_2, Double continent_def_lower_bounds, Double continent_def_upper_bounds, Double continent_def_edge_falloff, Cached baseContinentDef) {
+			Integer turbulenceRoughness_1, Integer turbulenceRoughness_2, Double continent_def_lower_bounds,
+			Double continent_def_upper_bounds, Double continent_def_edge_falloff, Cached baseContinentDef) {
 		super();
 		this.spheres_scalar = spheres_scalar;
 		this.genSpheres = genSpheres;

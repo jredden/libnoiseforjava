@@ -15,47 +15,48 @@ import libnoiseforjava.util.NoiseMap;
 import libnoiseforjava.util.NoiseMapBuilderSphere;
 
 public class TerranPlanar extends Planar {
-	
+
 	protected static Double planet_circumference = 44236800.0;
-	
+	protected static Double meters_per_degree = planet_circumference / 360.0;
+	protected static Double resinmeters = (degextent / gridextent) * meters_per_degree;
+	protected static Double inverse_res_in_meters = 1.0 / resinmeters;
+
+	protected static Double lightcontrast = new Double(1.0 / resinmeters);
+
 	// surface map
 	static List<GradientPointParameter> gradientPointList = new ArrayList<GradientPointParameter>();
 	static {
-		GradientPointParameter gradientPointParameter = new GradientPointParameter(
-				-16384.0 + seaLevelInMeters, new ColorCafe(3, 29, 63, 255));
+		GradientPointParameter gradientPointParameter = new GradientPointParameter(-16384.0 + seaLevelInMeters,
+				new ColorCafe(3, 29, 63, 255));
 		gradientPointList.add(gradientPointParameter);
-		gradientPointParameter = new GradientPointParameter(deep_sea_level
-				+ seaLevelInMeters, new ColorCafe(3, 29, 63, 255));
+		gradientPointParameter = new GradientPointParameter(deep_sea_level + seaLevelInMeters,
+				new ColorCafe(3, 29, 63, 255));
 		gradientPointList.add(gradientPointParameter);
-		gradientPointParameter = new GradientPointParameter(-1.0
-				+ seaLevelInMeters, new ColorCafe(7, 106, 127, 255));
+		gradientPointParameter = new GradientPointParameter(-1.0 + seaLevelInMeters, new ColorCafe(7, 106, 127, 255));
 		gradientPointList.add(gradientPointParameter);
-		gradientPointParameter = new GradientPointParameter(
-				0.0 + seaLevelInMeters, new ColorCafe(62, 86, 30, 255));
+		gradientPointParameter = new GradientPointParameter(0.0 + seaLevelInMeters, new ColorCafe(62, 86, 30, 255));
 		gradientPointList.add(gradientPointParameter);
-		gradientPointParameter = new GradientPointParameter(
-				1024.0 + seaLevelInMeters, new ColorCafe(84, 96, 50, 255));
+		gradientPointParameter = new GradientPointParameter(1024.0 + seaLevelInMeters, new ColorCafe(84, 96, 50, 255));
 		gradientPointList.add(gradientPointParameter);
-		gradientPointParameter = new GradientPointParameter(
-				2048.0 + seaLevelInMeters, new ColorCafe(130, 127, 97, 255));
+		gradientPointParameter = new GradientPointParameter(2048.0 + seaLevelInMeters,
+				new ColorCafe(130, 127, 97, 255));
 		gradientPointList.add(gradientPointParameter);
-		gradientPointParameter = new GradientPointParameter(
-				3072.0 + seaLevelInMeters, new ColorCafe(184, 163, 141, 255));
+		gradientPointParameter = new GradientPointParameter(3072.0 + seaLevelInMeters,
+				new ColorCafe(184, 163, 141, 255));
 		gradientPointList.add(gradientPointParameter);
-		gradientPointParameter = new GradientPointParameter(
-				4096.0 + seaLevelInMeters, new ColorCafe(255, 255, 255, 255));
+		gradientPointParameter = new GradientPointParameter(4096.0 + seaLevelInMeters,
+				new ColorCafe(255, 255, 255, 255));
 		gradientPointList.add(gradientPointParameter);
-		gradientPointParameter = new GradientPointParameter(
-				6144.0 + seaLevelInMeters, new ColorCafe(128, 255, 255, 255));
+		gradientPointParameter = new GradientPointParameter(6144.0 + seaLevelInMeters,
+				new ColorCafe(128, 255, 255, 255));
 		gradientPointList.add(gradientPointParameter);
-		gradientPointParameter = new GradientPointParameter(
-				16384.0 + seaLevelInMeters, new ColorCafe(0, 0, 255, 255));
+		gradientPointParameter = new GradientPointParameter(16384.0 + seaLevelInMeters, new ColorCafe(0, 0, 255, 255));
 		gradientPointList.add(gradientPointParameter);
 
 	}
 
 	static List<ControlPoint> controlPoints = new ArrayList<ControlPoint>();
-	static{
+	static {
 		ControlPoint controlPoint = new ControlPoint();
 		controlPoint.inputValue = -2.0000;
 		controlPoint.outputValue = -1.625;
@@ -98,7 +99,7 @@ public class TerranPlanar extends Planar {
 		controlPoints.add(controlPoint);
 
 	}
-	
+
 	public ImageCafe build() {
 
 		PlanarBaseContinent planarBaseContinent = new PlanarBaseContinent(continent_frequency,
@@ -112,6 +113,11 @@ public class TerranPlanar extends Planar {
 				tu2_roughness, continent_def_se_lower_bounds, continent_def_se_upper_bounds,
 				continent_def_se_edge_falloff, baseContinent);
 		Cached continent = planarContinent.build();
+
+		PlanarTerrainType planarTerrainType = new PlanarTerrainType(continent, terrain_type_tu_frequency,
+				terrain_type_tu_power, terrain_type_tu_roughness, terrain_type_def_low_control_point,
+				terrain_type_def_mid_control_point_scalar, terrain_type_def_high_control_point, shelf_level, sea_level);
+		Cached terrainType = planarTerrainType.build();
 		
 		NoiseMapBuilderSphere planet = new NoiseMapBuilderSphere();
 		NoiseMap elevGrid = new NoiseMap(grid_width, grid_height);
@@ -119,7 +125,7 @@ public class TerranPlanar extends Planar {
 		planet.setBounds(south_coord, north_coord, west_coord, east_coord);
 		planet.setDestSize(grid_width, grid_height);
 
-		planet.setSourceModule(continent);
+		planet.setSourceModule(terrainType);
 		planet.setDestNoiseMap(elevGrid);
 		planet.build();
 		RenderImageParameter renderImageParameter = new RenderImageParameter(gradientPointList, elevGrid, Boolean.FALSE,
