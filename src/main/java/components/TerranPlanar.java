@@ -100,7 +100,7 @@ public class TerranPlanar extends Planar {
 
 	}
 
-	public ImageCafe build() {
+	public ImageCafe build(Boolean renderParameter) {
 
 		PlanarBaseContinent planarBaseContinent = new PlanarBaseContinent(continent_frequency,
 				base_continent_def_persistence_0, continent_lacunarity, base_continent_def_octave_count_pe0,
@@ -119,6 +119,33 @@ public class TerranPlanar extends Planar {
 				terrain_type_def_mid_control_point_scalar, terrain_type_def_high_control_point, shelf_level, sea_level);
 		Cached terrainType = planarTerrainType.build();
 		
+		PlanarMountanType planarMountanType = new PlanarMountanType(mountain_base_def_tu0_frequency,
+				mountain_base_def_rm0_octave_count, NoiseQuality.QUALITY_STD, inverse_res_in_meters,
+				mountain_base_def_sb0_scale, mountain_base_def_sb0_bias, mountain_base_def_sb1_scale,
+				mountain_base_def_sb1_bias, mountain_base_def_rm1_frequency, mountain_base_def_rm1_octave_count,
+				NoiseQuality.QUALITY_BEST, mountain_base_def_tu0_frequency, mountain_base_def_tu1_frequency,
+				mountain_base_def_tu0_power_scalar0, mountain_base_def_tu1_power_scalar1,
+				mountain_base_def_tu0_roughness, mountain_base_def_tu1_roughness, -1.0);
+		
+		Cached baseMountain = planarMountanType.build();
+		
+		PlanarHighMountainType planarHighMountainType = new PlanarHighMountainType(mountainous_high_rm0_frequency,
+				mountainous_high_rm0_octave_count, mountainous_high_rm1_frequency, mountainous_high_rm1_octave_count,
+				NoiseQuality.QUALITY_BEST, mountainous_high_rm0_lacunarity, mountainous_high_tu_frequency, mountainous_high_tu_scalar1,
+				mountainous_high_tu_scalar2, mountainous_high_tu_roughness, mountains_twist);
+		
+		Cached highMountain = planarHighMountainType.build();
+		
+		PlanarLowMountainType planarLowMountainType = new PlanarLowMountainType(mountainous_low_rm0_frequency,
+				mountainous_low_rm0_octave_count, mountainous_low_rm1_frequency, mountainous_low_rm1_octave_count,
+				mountainous_low_rm0_lacunarity, NoiseQuality.QUALITY_BEST);
+		
+		Cached lowMountain = planarLowMountainType.build();
+		
+		/**
+		 * build the planet
+		 */
+
 		NoiseMapBuilderSphere planet = new NoiseMapBuilderSphere();
 		NoiseMap elevGrid = new NoiseMap(grid_width, grid_height);
 
@@ -128,7 +155,7 @@ public class TerranPlanar extends Planar {
 		planet.setSourceModule(terrainType);
 		planet.setDestNoiseMap(elevGrid);
 		planet.build();
-		RenderImageParameter renderImageParameter = new RenderImageParameter(gradientPointList, elevGrid, Boolean.FALSE,
+		RenderImageParameter renderImageParameter = new RenderImageParameter(gradientPointList, elevGrid, renderParameter,
 				lightcontrast, lightcontrast);
 		ImageCafe imageCafe = Builder.buildRendererImage(renderImageParameter);
 
