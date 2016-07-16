@@ -142,13 +142,23 @@ public class TerranPlanar extends Planar {
 		
 		Cached lowMountain = planarLowMountainType.build();
 		
-		MountainTerrainType mountainTerrainType = new MountainTerrainType(mountainous_terrain_sb0_scale,
+		PlanarMountainTerrainType mountainTerrainType = new PlanarMountainTerrainType(mountainous_terrain_sb0_scale,
 				mountainous_terrain_sb0_bias, mountainous_terrain_sb1_scale, mountainous_terrain_sb1_bias,
 				mountainous_terrain_sb2_scale, mountainous_terrain_sb2_bias, lowMountain, highMountain, baseMountain,
 				mountainous_terrain_se_bounds_param_0, mountainous_terrain_se_bounds_param_1,
 				mountainous_terrain_se_edge_falloff, mountain_glaciation);
 		
 		Cached mountainTerrain = mountainTerrainType.build();
+		
+		PlanarHillType planarHillType = new PlanarHillType(hilly_terrain_bi_frequency, inverse_res_in_meters,
+				inverse_res_in_meters, hilly_terrain_bi_octave_count, inverse_res_in_meters, inverse_res_in_meters,
+				inverse_res_in_meters, hilly_terrain_rm_octave_count, NoiseQuality.QUALITY_BEST, inverse_res_in_meters,
+				inverse_res_in_meters, -1.0, inverse_res_in_meters, inverse_res_in_meters,
+				inverse_res_in_meters, inverse_res_in_meters, inverse_res_in_meters, resinmeters,
+				hilly_terrain_tu0_roughness, planet_circumference, meters_per_degree, lightcontrast,
+				inverse_res_in_meters, hilly_terrain_tu1_roughness);
+		
+		Cached hillTerrain = planarHillType.build();
 		
 		/**
 		 * build the planet

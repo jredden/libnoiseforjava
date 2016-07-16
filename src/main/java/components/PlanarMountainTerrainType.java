@@ -9,7 +9,7 @@ import libnoiseforjava.module.Exponent;
 import libnoiseforjava.module.ScaleBias;
 import libnoiseforjava.module.Select;
 
-public class MountainTerrainType implements CachedIF {
+public class PlanarMountainTerrainType implements CachedIF {
 
 	private Double mountain_terrain_scale_0;
 	private Double mountain_terrain_bias_0;
@@ -26,7 +26,7 @@ public class MountainTerrainType implements CachedIF {
 	private Double glaciation;
 	private Cached mountain_terrain;
 
-	public MountainTerrainType(Double mountain_terrain_scale_0, Double mountain_terrain_bias_0,
+	public PlanarMountainTerrainType(Double mountain_terrain_scale_0, Double mountain_terrain_bias_0,
 			Double mountain_terrain_scale_1, Double mountain_terrain_bias_1, Double mountain_terrain_scale_2,
 			Double mountain_terrain_bias_2, Cached low_mountain_def, Cached high_mountain_def, Cached base_mountain_def,
 			Double terrain_bounds_param_0, Double terrain_bounds_param_1, Double edge_falloff, Double glaciation) {
