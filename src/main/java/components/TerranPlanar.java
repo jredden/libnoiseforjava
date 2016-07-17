@@ -160,6 +160,21 @@ public class TerranPlanar extends Planar {
 		
 		Cached hillTerrain = planarHillType.build();
 		
+		PlanarPlainsType planarPlainsType = new PlanarPlainsType(plains_lacunarity, plains_terrain_bi0_frequency,
+				plains_terrain_bi0_persistence, plains_terrain_bi0_octave_count, NoiseQuality.QUALITY_BEST,
+				plains_terrain_sb0_bias, plains_terrain_sb0_scale, plains_terrain_bi1_frequency,
+				plains_terrain_bi1_persistence, plains_terrain_bi1_octave_count, plains_terrain_sb1_bias,
+				plains_terrain_sb1_scale, plains_terrain_sb2_bias, plains_terrain_sb2_scale);
+		
+		Cached plainsTerrain = planarPlainsType.build();
+		
+		PlanarBadlandSandType planarBadlandSandType = new PlanarBadlandSandType(badlands_lacunarity,
+				NoiseQuality.QUALITY_BEST, badlands_sand_rm_frequency, badlands_sand_rm_octave_count,
+				badlands_sand_sb0_scale, badlands_sand_sb0_bias, badlands_sand_vo_frequency,
+				badlands_sand_vo_displacemwnt, Boolean.TRUE, badlands_sand_sb1_scale, badlands_sand_sb1_bias);
+
+		Cached badlandSand = planarBadlandSandType.build();
+
 		/**
 		 * build the planet
 		 */
