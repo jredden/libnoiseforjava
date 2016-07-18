@@ -1,5 +1,8 @@
 package libnoiseforjava.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import libnoiseforjava.module.ModuleBase;
 import libnoiseforjava.module.Terrace;
 
@@ -10,6 +13,8 @@ public class TerraceBuilder {
 	Double high_control_point_scalar;
 	Double p_level;
 	Double shelf_level;
+	
+	List<Double> controlPoints;
 	ModuleBase sourceModule;
 	Terrace terrace;
 	
@@ -22,9 +27,22 @@ public class TerraceBuilder {
 		this.shelf_level = shelf_level;
 		this.sourceModule = moduleBase;
 		this.terrace = new Terrace(this.sourceModule);
+		this.controlPoints = new ArrayList<Double>();
 		this.terrace.addControlPoint(low_control_point_scalar);
+		this.controlPoints.add(low_control_point_scalar);
 		this.terrace.addControlPoint(shelf_level + p_level/mid_control_point_scalar);
+		this.controlPoints.add(shelf_level + p_level/mid_control_point_scalar);
 		this.terrace.addControlPoint(high_control_point_scalar);
+		this.controlPoints.add(high_control_point_scalar);
+		return this.terrace;
+	}
+	
+	public Terrace build(List<Double> controlPoints, ModuleBase moduleBase){
+		this.terrace = new Terrace(this.sourceModule);
+		this.controlPoints = controlPoints;
+		for (Double controlPoint : controlPoints){
+			this.terrace.addControlPoint(controlPoint);
+		}
 		return this.terrace;
 	}
 
@@ -67,12 +85,20 @@ public class TerraceBuilder {
 	public void setShelf_level(Double shelf_level) {
 		this.shelf_level = shelf_level;
 	}
+	
+	public List<Double> getControlPoints() {
+		return controlPoints;
+	}
+
+	public void setControlPoints(List<Double> controlPoints) {
+		this.controlPoints = controlPoints;
+	}
 
 	@Override
 	public String toString() {
 		return "TerraceBuilder [low_control_point_scalar=" + low_control_point_scalar + ", mid_control_point_scalar="
 				+ mid_control_point_scalar + ", high_control_point_scalar=" + high_control_point_scalar + ", p_level="
-				+ p_level + ", shelf_level=" + shelf_level + "]";
+				+ p_level + ", shelf_level=" + shelf_level + ", controlPoints=" + controlPoints + "]";
 	}
 	
 	

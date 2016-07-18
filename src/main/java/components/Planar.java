@@ -646,6 +646,10 @@ public abstract class Planar {
 	static protected Double badlands_cliffs_tu1_scalar0 = 1.0;
 	static protected Double badlands_cliffs_tu1_scalar1 = 211543.0;
 	static protected Integer badlands_cliffs_tu1_roughness = 3;
+	
+	static protected Double badlands_cliffs_cl_lower_bound = -999.125;
+	static protected Double badlands_cliffs_cl_upper_bound = 0.875;
+	
 
 	// //////////////////////////////////////////////////////////////////////////
 	// module subgroup: badlands terrain (3 noise modules)

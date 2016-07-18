@@ -99,6 +99,41 @@ public class TerranPlanar extends Planar {
 		controlPoints.add(controlPoint);
 
 	}
+	
+	
+	static List<ControlPoint> badLandCLiffsControlPoints = new ArrayList<ControlPoint>();
+	static{
+		ControlPoint controlPoint = new ControlPoint();
+		controlPoint.inputValue = -2.0000;
+		controlPoint.outputValue = -2.0000;
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = -1.0000;
+		controlPoint.outputValue = -1.2500;
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = -0.0000;
+		controlPoint.outputValue = -0.7500;
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = 0.5000;
+		controlPoint.outputValue = -0.2500;
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = 0.6250;
+		controlPoint.outputValue = 0.8750;
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = 0.7500;
+		controlPoint.outputValue = 1.0000;
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = 2.0000;
+		controlPoint.outputValue = 1.2500;
+	}
+	
+	static List<Double> badLandsTerraceControlPoints = new ArrayList<Double>();
+	static{
+		badLandsTerraceControlPoints.add(-1.0000);
+		badLandsTerraceControlPoints.add(-0.8750);
+		badLandsTerraceControlPoints.add(-0.7500);
+		badLandsTerraceControlPoints.add(-0.5000);
+		badLandsTerraceControlPoints.add(1.0000);
+	}
 
 	public ImageCafe build(Boolean renderParameter) {
 
@@ -174,6 +209,18 @@ public class TerranPlanar extends Planar {
 				badlands_sand_vo_displacemwnt, Boolean.TRUE, badlands_sand_sb1_scale, badlands_sand_sb1_bias);
 
 		Cached badlandSand = planarBadlandSandType.build();
+		
+		PlanarBadlandCliffType planarBadlandCliffType = new PlanarBadlandCliffType(badlands_lacunarity, badlands_twist,
+				badlands_cliffs_pe_frequency, continent_frequency, badlands_cliffs_pe_persistence,
+				badlands_cliffs_pe_octave_count, badlands_cliffs_cl_lower_bound, badlands_cliffs_cl_upper_bound,
+				badlands_cliffs_tu0_frequency, badlands_cliffs_tu0_scalar0, badlands_cliffs_tu0_scalar1,
+				badlands_cliffs_tu0_roughness, badlands_cliffs_tu1_frequency, badlands_cliffs_tu1_scalar0,
+				badlands_cliffs_tu1_scalar1, badlands_cliffs_tu1_roughness, badLandCLiffsControlPoints,
+				badLandsTerraceControlPoints, NoiseQuality.QUALITY_BEST);
+		
+		Cached badlandCliffs = planarBadlandSandType.build();
+		
+		PlanarBadlandsDunesType planarBadlandsDunesType = new PlanarBadlandsDunesType(badlands_terrain_sb_scale, badlands_terrain_sb_bias, badlandSand);
 
 		/**
 		 * build the planet
