@@ -106,24 +106,31 @@ public class TerranPlanar extends Planar {
 		ControlPoint controlPoint = new ControlPoint();
 		controlPoint.inputValue = -2.0000;
 		controlPoint.outputValue = -2.0000;
+		badLandCLiffsControlPoints.add(controlPoint);
 		controlPoint = new ControlPoint();
 		controlPoint.inputValue = -1.0000;
 		controlPoint.outputValue = -1.2500;
+		badLandCLiffsControlPoints.add(controlPoint);
 		controlPoint = new ControlPoint();
 		controlPoint.inputValue = -0.0000;
 		controlPoint.outputValue = -0.7500;
+		badLandCLiffsControlPoints.add(controlPoint);
 		controlPoint = new ControlPoint();
 		controlPoint.inputValue = 0.5000;
 		controlPoint.outputValue = -0.2500;
+		badLandCLiffsControlPoints.add(controlPoint);
 		controlPoint = new ControlPoint();
 		controlPoint.inputValue = 0.6250;
 		controlPoint.outputValue = 0.8750;
+		badLandCLiffsControlPoints.add(controlPoint);
 		controlPoint = new ControlPoint();
 		controlPoint.inputValue = 0.7500;
 		controlPoint.outputValue = 1.0000;
+		badLandCLiffsControlPoints.add(controlPoint);
 		controlPoint = new ControlPoint();
 		controlPoint.inputValue = 2.0000;
 		controlPoint.outputValue = 1.2500;
+		badLandCLiffsControlPoints.add(controlPoint);
 	}
 	
 	static List<Double> badLandsTerraceControlPoints = new ArrayList<Double>();
@@ -134,6 +141,71 @@ public class TerranPlanar extends Planar {
 		badLandsTerraceControlPoints.add(-0.5000);
 		badLandsTerraceControlPoints.add(1.0000);
 	}
+	
+	
+	static List<ControlPoint> riverPositionControlPoints0 = new ArrayList<ControlPoint>();
+	static{
+		ControlPoint controlPoint = new ControlPoint();
+		controlPoint.inputValue = -2.0000;
+		controlPoint.outputValue = 2.0000;
+		riverPositionControlPoints0.add(controlPoint);
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = -1.0000;
+		controlPoint.outputValue = 1.0000;
+		riverPositionControlPoints0.add(controlPoint);
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = -0.1250;
+		controlPoint.outputValue = 0.785;
+		riverPositionControlPoints0.add(controlPoint);
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = 0.0000;
+		controlPoint.outputValue = 1.0000;
+		riverPositionControlPoints0.add(controlPoint);
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = 1.0000;
+		controlPoint.outputValue = -1.5000;
+		riverPositionControlPoints0.add(controlPoint);
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = 2.0000;
+		controlPoint.outputValue = -2.0000;
+		riverPositionControlPoints0.add(controlPoint);
+	}
+	
+	static List<ControlPoint> riverPositionControlPoints1 = new ArrayList<ControlPoint>();
+	static{
+		ControlPoint controlPoint = new ControlPoint();
+		controlPoint.inputValue = -2.0000;
+		controlPoint.outputValue = 2.0000;
+		riverPositionControlPoints1.add(controlPoint);
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = -1.0000;
+		controlPoint.outputValue = 1.5000;
+		riverPositionControlPoints1.add(controlPoint);
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = -0.1250;
+		controlPoint.outputValue = 0.4375;
+		riverPositionControlPoints1.add(controlPoint);
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = 0.0000;
+		controlPoint.outputValue = 0.5000;
+		riverPositionControlPoints1.add(controlPoint);
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = 1.0000;
+		controlPoint.outputValue = 0.2500;
+		riverPositionControlPoints1.add(controlPoint);
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = 2.0000;
+		controlPoint.outputValue = 0.0000;
+		riverPositionControlPoints1.add(controlPoint);
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @param renderParameter
+	 * @return
+	 */
 
 	public ImageCafe build(Boolean renderParameter) {
 
@@ -220,7 +292,27 @@ public class TerranPlanar extends Planar {
 		
 		Cached badlandCliffs = planarBadlandSandType.build();
 		
-		PlanarBadlandsDunesType planarBadlandsDunesType = new PlanarBadlandsDunesType(badlands_terrain_sb_scale, badlands_terrain_sb_bias, badlandSand);
+		PlanarBadlandsDunesType planarBadlandsDunesType = new PlanarBadlandsDunesType(badlands_terrain_sb_scale,
+				badlands_terrain_sb_bias, badlandSand);
+
+		Cached badlandDunes = planarBadlandsDunesType.build();
+
+		PlanarRiverPositionsType planarRiverPositionsType = new PlanarRiverPositionsType(river_positions_rm0_frequency,
+				river_positions_rm0_octave_count, river_positions_rm1_frequency, river_positions_rm1_octave_count,
+				river_positions_tu_frequency, river_positions_tu_scalar0, river_positions_tu_scalar1,
+				river_positions_tu_roughness, continent_lacunarity, NoiseQuality.QUALITY_BEST,
+				riverPositionControlPoints0, riverPositionControlPoints1);
+
+		Cached riverPositions = planarRiverPositionsType.build();
+		
+		PlanarScaledMountainTerrain planarScaledMountainTerrain = new PlanarScaledMountainTerrain(
+				scaled_mountainous_terrain_sb0_scale, scaled_mountainous_terrain_sb0_bias,
+				scaled_mountainous_terrain_sb1_scale, scaled_mountainous_terrain_sb1_bias, mountainTerrain,
+				scaled_mountainous_terrain_pe_frequency, scaled_mountainous_terrain_pe_persistence, mountain_lacunarity,
+				scaled_mountainous_terrain_pe_octave_count, NoiseQuality.QUALITY_STD,
+				scaled_mountainous_terrain_ex_exponent);
+		
+		Cached scaledMountainTerrain = planarScaledMountainTerrain.build();
 
 		/**
 		 * build the planet
