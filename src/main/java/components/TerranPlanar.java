@@ -313,7 +313,14 @@ public class TerranPlanar extends Planar {
 				scaled_mountainous_terrain_ex_exponent);
 		
 		Cached scaledMountainTerrain = planarScaledMountainTerrain.build();
-
+		
+		PlanarScaledHillTerrain planarScaledHillTerrain = new PlanarScaledHillTerrain(scaled_hilly_terrain_sb0_scale,
+				scaled_hilly_terrain_sb0_bias, scaled_hilly_terrain_sb1_scale, scaled_hilly_terrain_sb1_bias,
+				hillTerrain, scaled_hilly_terrain_pe_frequency, scaled_hilly_terrain_pe_persistence, hills_lacunarity,
+				scaled_hilly_terrain_pe_octave_count, NoiseQuality.QUALITY_STD, scaled_hilly_terrain_ex_exponent);
+		
+		Cached scaledHillTerrain = planarScaledHillTerrain.build();
+		
 		/**
 		 * build the planet
 		 */
