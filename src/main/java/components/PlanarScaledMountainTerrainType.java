@@ -10,7 +10,7 @@ import libnoiseforjava.module.Multiply;
 import libnoiseforjava.module.Perlin;
 import libnoiseforjava.module.ScaleBias;
 
-public class PlanarScaledMountainTerrain implements CachedIF {
+public class PlanarScaledMountainTerrainType implements CachedIF {
 	
 	Double scaled_mountainous_terrain_sb0_scale;
 	Double scaled_mountainous_terrain_sb0_bias;
@@ -31,7 +31,7 @@ public class PlanarScaledMountainTerrain implements CachedIF {
 	
 	
 
-	public PlanarScaledMountainTerrain(Double scaled_mountainous_terrain_sb0_scale,
+	public PlanarScaledMountainTerrainType(Double scaled_mountainous_terrain_sb0_scale,
 			Double scaled_mountainous_terrain_sb0_bias, Double scaled_mountainous_terrain_sb1_scale,
 			Double scaled_mountainous_terrain_sb1_bias, Cached mountainous_terrain,
 			Double scaled_mountainous_terrain_pe_frequency, Double scaled_mountainous_terrain_pe_persistence,

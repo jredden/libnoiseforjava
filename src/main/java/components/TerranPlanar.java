@@ -305,7 +305,7 @@ public class TerranPlanar extends Planar {
 
 		Cached riverPositions = planarRiverPositionsType.build();
 		
-		PlanarScaledMountainTerrain planarScaledMountainTerrain = new PlanarScaledMountainTerrain(
+		PlanarScaledMountainTerrainType planarScaledMountainTerrain = new PlanarScaledMountainTerrainType(
 				scaled_mountainous_terrain_sb0_scale, scaled_mountainous_terrain_sb0_bias,
 				scaled_mountainous_terrain_sb1_scale, scaled_mountainous_terrain_sb1_bias, mountainTerrain,
 				scaled_mountainous_terrain_pe_frequency, scaled_mountainous_terrain_pe_persistence, mountain_lacunarity,
@@ -314,12 +314,36 @@ public class TerranPlanar extends Planar {
 		
 		Cached scaledMountainTerrain = planarScaledMountainTerrain.build();
 		
-		PlanarScaledHillTerrain planarScaledHillTerrain = new PlanarScaledHillTerrain(scaled_hilly_terrain_sb0_scale,
+		PlanarScaledHillTerrainType planarScaledHillTerrain = new PlanarScaledHillTerrainType(scaled_hilly_terrain_sb0_scale,
 				scaled_hilly_terrain_sb0_bias, scaled_hilly_terrain_sb1_scale, scaled_hilly_terrain_sb1_bias,
 				hillTerrain, scaled_hilly_terrain_pe_frequency, scaled_hilly_terrain_pe_persistence, hills_lacunarity,
 				scaled_hilly_terrain_pe_octave_count, NoiseQuality.QUALITY_STD, scaled_hilly_terrain_ex_exponent);
 		
 		Cached scaledHillTerrain = planarScaledHillTerrain.build();
+		
+		PlanarScaledPlainsTerrainType planarScaledPlainsTerrain = new PlanarScaledPlainsTerrainType(plainsTerrain,
+				scaled_plains_terrain_sb_scale, scaled_plains_terrain_sb_bias);
+
+		Cached scaledPlainsTerrain = planarScaledPlainsTerrain.build();
+		
+		PlanarScaledBadlandsTerrainType planarScaledBadlandsTerrain = new PlanarScaledBadlandsTerrainType(badlandDunes,
+				badlands_terrain_sb_scale, badlands_terrain_sb_bias);	
+		
+		Cached scaledBadlandsTerrain = planarScaledBadlandsTerrain.build();
+		
+		PlanarContinentalShelfType planarContinentalShelfType = new PlanarContinentalShelfType(
+				continental_shelf_te_lowest_control_point, continental_shelf_te_low_control_point,
+				continental_shelf_te_high_control_point, shelf_level, continent, continental_shelf_frequency_scalar,
+				continent_lacunarity, continental_shelf_frequency_octave_count, NoiseQuality.QUALITY_BEST,
+				continental_shelf_sb_scale, continental_shelf_sb_bias, continental_shelf_cl_bounds, sea_level);
+		
+		Cached continentalShelf = planarContinentalShelfType.build();
+		
+		PlanarBaseContinentElevationType planarBaseContinentElevationType = new PlanarBaseContinentElevationType(
+				base_continent_elev_sb_bias, continent_height_scale, base_continent_elev_se_bound_scalar,
+				base_continent_elev_se_edge_falloff, shelf_level, continentalShelf, continent);
+		
+		Cached baseContinentElevation = planarBaseContinentElevationType.build();
 		
 		/**
 		 * build the planet
