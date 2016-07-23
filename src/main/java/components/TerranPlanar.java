@@ -382,6 +382,15 @@ public class TerranPlanar extends Planar {
 		
 		Cached continentsWithMountains = planarContinentsWithMountainsType.build();
 		
+		PlanarContinentsWithBadlandsType planarContinentsWithBadlandsType = new PlanarContinentsWithBadlandsType(
+				continents_with_badlands_pe_frequency, continents_with_badlands_pe_persistence,
+				continents_with_badlands_pe_octave_count, NoiseQuality.QUALITY_STD, continent_lacunarity,
+				baseContinentElevation, scaledBadlandsTerrain, continents_with_badlands_se_bounds_param0,
+				continents_with_badlands_se_bounds_param1, continents_with_badlands_se_edge_falloff,
+				continentsWithMountains, badlands_amount);	
+		
+		Cached continentsWithBadlands = planarContinentsWithBadlandsType.build();
+		
 		/**
 		 * build the planet
 		 */
