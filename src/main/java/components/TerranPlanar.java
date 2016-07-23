@@ -345,6 +345,17 @@ public class TerranPlanar extends Planar {
 		
 		Cached baseContinentElevation = planarBaseContinentElevationType.build();
 		
+		PlanarContinentsWithPlainsType planarContinentsWithPlainsType = new PlanarContinentsWithPlainsType(baseContinentElevation, scaledPlainsTerrain);
+		
+		Cached continentsWithPlains = planarContinentsWithPlainsType.build();
+		
+		PlanarContinentsWithHillsType planarContinentsWithHillsType = new PlanarContinentsWithHillsType(
+				baseContinentElevation, scaledHillTerrain, continents_with_hills_bounds_scalar0,
+				continents_with_hills_bounds_scalar1, hills_amount, continents_with_hills_edge_falloff,
+				continentsWithPlains, terrainType);
+		
+		Cached continentsWithHills = *planarContinentsWithHillsType.build();
+		
 		/**
 		 * build the planet
 		 */
