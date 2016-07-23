@@ -199,6 +199,25 @@ public class TerranPlanar extends Planar {
 		riverPositionControlPoints1.add(controlPoint);
 	}
 	
+	static List<ControlPoint> continentsMountainsControlPoints = new ArrayList<ControlPoint>();
+	static{
+		ControlPoint controlPoint = new ControlPoint();
+		controlPoint.inputValue = -1.0000;
+		controlPoint.outputValue = -0.0625;
+		continentsMountainsControlPoints.add(controlPoint);
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = 0.0000;
+		controlPoint.outputValue = 0.0000;
+		continentsMountainsControlPoints.add(controlPoint);
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = 1.0 - mountains_amount;
+		controlPoint.outputValue = 0.0625;
+		continentsMountainsControlPoints.add(controlPoint);	
+		controlPoint = new ControlPoint();
+		controlPoint.inputValue = 1.0000;
+		controlPoint.outputValue = 0.2500;
+		continentsMountainsControlPoints.add(controlPoint);
+		}
 	
 	
 	/**
@@ -354,7 +373,14 @@ public class TerranPlanar extends Planar {
 				continents_with_hills_bounds_scalar1, hills_amount, continents_with_hills_edge_falloff,
 				continentsWithPlains, terrainType);
 		
-		Cached continentsWithHills = *planarContinentsWithHillsType.build();
+		Cached continentsWithHills = planarContinentsWithHillsType.build();
+		
+		PlanarContinentsWithMountainsType planarContinentsWithMountainsType = new PlanarContinentsWithMountainsType(
+				baseContinentElevation, scaledMountainTerrain, continent, continentsMountainsControlPoints,
+				continent_with_mountains_bounds_scalar0, continent_with_mountains_bounds_scalar1,
+				continent_with_mountains_edge_falloff, continentsWithHills, terrainType, mountains_amount);
+		
+		Cached continentsWithMountains = planarContinentsWithMountainsType.build();
 		
 		/**
 		 * build the planet
