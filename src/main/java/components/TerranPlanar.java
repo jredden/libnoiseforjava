@@ -391,6 +391,8 @@ public class TerranPlanar extends Planar {
 		
 		Cached continentsWithBadlands = planarContinentsWithBadlandsType.build();
 		
+		
+		
 		/**
 		 * build the planet
 		 */
