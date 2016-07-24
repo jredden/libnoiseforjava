@@ -25,10 +25,13 @@
 
 package libnoiseforjava.module;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.exception.ExceptionInvalidParam;
 
 public class Add extends ModuleBase
 {
+	private static Logger logger = Logger.getLogger(Add.class);
    /// Noise module that outputs the additive value of the output value from
    /// two source modules.
    ///
@@ -45,9 +48,11 @@ public class Add extends ModuleBase
    {
       assert (sourceModules[0] != null);
       assert (sourceModules[1] != null);
+      
+      logger.info("Add:"+x+":"+y+":"+z);
 
       return sourceModules[0].getValue (x, y, z)
       + sourceModules[1].getValue (x, y, z);
-   }
+    }
 
 }

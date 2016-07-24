@@ -25,10 +25,13 @@
 
 package libnoiseforjava.module;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.NoiseGen;
 
 public class Voronoi extends ModuleBase
 {
+	private static Logger logger = Logger.getLogger(Voronoi.class);
 
    /// Noise module that outputs Voronoi cells.
    ///
@@ -167,6 +170,8 @@ public class Voronoi extends ModuleBase
          value = 0.0;
       }
 
+      logger.info(this.toString());
+      
       // Return the calculated distance with the displacement value applied.
       return value + (displacement * (double)NoiseGen.ValueNoise3D (
             (int)(Math.floor (xCandidate)),
@@ -279,5 +284,11 @@ public class Voronoi extends ModuleBase
    {
       this.seed = seed;
    }
+
+@Override
+public String toString() {
+	return "Voronoi [displacement=" + displacement + ", enableDistance=" + enableDistance + ", frequency=" + frequency
+			+ ", seed=" + seed + "]";
+}
 
 }

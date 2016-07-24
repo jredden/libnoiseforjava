@@ -11,8 +11,8 @@ import libnoiseforjava.module.Cached;
 public class PlanarBadlandsTerrain extends PlanarBadlandsDunesType{
 
 	public PlanarBadlandsTerrain(Double badlands_terrain_sb_scale, Double badlands_terrain_sb_bias,
-			Cached badlands_sand) {
-		super(badlands_terrain_sb_scale, badlands_terrain_sb_bias, badlands_sand);
+			Cached badlands_sand, Cached badlands_cliffs) {
+		super(badlands_terrain_sb_scale, badlands_terrain_sb_bias, badlands_sand, badlands_cliffs);
 	}
 	
 }

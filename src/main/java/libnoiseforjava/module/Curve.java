@@ -25,12 +25,17 @@
 
 package libnoiseforjava.module;
 
+import java.util.Arrays;
+
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.Interp;
 import libnoiseforjava.Misc;
 import libnoiseforjava.exception.ExceptionInvalidParam;
 
 public class Curve extends ModuleBase
 {
+	private static Logger logger = Logger.getLogger(Curve.class);
    /// Noise module that maps the output value from a source module onto an
    /// arbitrary function curve.
    ///
@@ -171,7 +176,16 @@ public class Curve extends ModuleBase
       // the new control point.
       controlPoints[insertionPos].inputValue  = inputValue;
       controlPoints[insertionPos].outputValue = outputValue;
+      
+      logger.info(this.toString());
    }
+
+@Override
+public String toString() {
+	return "Curve [controlPointCount=" + controlPointCount + ", controlPoints=" + Arrays.toString(controlPoints) + "]";
+}
+   
+   
 }
 
 

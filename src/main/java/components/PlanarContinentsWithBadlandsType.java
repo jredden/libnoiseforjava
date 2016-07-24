@@ -1,5 +1,7 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.NoiseGen.NoiseQuality;
 import libnoiseforjava.domain.PerlinBuilder;
 import libnoiseforjava.domain.SelectBuilder;
@@ -10,6 +12,8 @@ import libnoiseforjava.module.Perlin;
 import libnoiseforjava.module.Select;
 
 public class PlanarContinentsWithBadlandsType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarContinentsWithBadlandsType.class);
 	
 	Double continents_with_badlands_pe_freqeuncy;
 	Double continents_with_badlands_pe_persistence;
@@ -61,6 +65,7 @@ public class PlanarContinentsWithBadlandsType implements CachedIF {
 				continents_with_badlands_edge_falloff);
 		Max continentsWithBadlands_ma = new Max(continentsWithMountains, select);
 		this.continentsWithBadlands = new Cached(continentsWithBadlands_ma);
+		logger.info(this.toString());
 		return this.continentsWithBadlands;
 	}
 

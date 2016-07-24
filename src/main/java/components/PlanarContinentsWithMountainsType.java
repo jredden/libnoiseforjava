@@ -2,6 +2,8 @@ package components;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.domain.ControlPoint;
 import libnoiseforjava.domain.CurveBuilder;
 import libnoiseforjava.domain.SelectBuilder;
@@ -11,6 +13,8 @@ import libnoiseforjava.module.Curve;
 import libnoiseforjava.module.Select;
 
 public class PlanarContinentsWithMountainsType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarContinentsWithMountainsType.class);
 	
 	Cached baseContinentElev; 
 	Cached scaledMountainousTerrain;
@@ -58,6 +62,7 @@ public class PlanarContinentsWithMountainsType implements CachedIF {
 				continent_with_mountains_bounds_scalar0, continent_with_mountains_bounds_scalar1,
 				continent_with_mountains_edge_falloff);
 		this.continentsWithMountains = new Cached(select);
+		logger.info(this.toString());
 		return this.continentsWithMountains;
 	}
 

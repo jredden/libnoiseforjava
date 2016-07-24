@@ -1,5 +1,7 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.NoiseGen.NoiseQuality;
 import libnoiseforjava.domain.BillowBuilder;
 import libnoiseforjava.domain.ScaleBiasBuilder;
@@ -9,6 +11,8 @@ import libnoiseforjava.module.Multiply;
 import libnoiseforjava.module.ScaleBias;
 
 public class PlanarPlainsType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarPlainsType.class);
 	
 	Double plains_lacunarity;
 	
@@ -70,6 +74,7 @@ public class PlanarPlainsType implements CachedIF {
 		ScaleBias scaleBias2 = new ScaleBiasBuilder().build(plains_terrain_sb2_scale, plains_terrain_sb2_bias,
 				plainsTerrain_mu);
 		this.plainsTerrain = new Cached(scaleBias2);
+		logger.info(this.toString());
 		return this.plainsTerrain;
 	}
 

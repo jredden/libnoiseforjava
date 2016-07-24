@@ -3,6 +3,8 @@ package components;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.NoiseGen.NoiseQuality;
 import libnoiseforjava.domain.ClampBuilder;
 import libnoiseforjava.domain.ControlPoint;
@@ -18,6 +20,8 @@ import libnoiseforjava.module.Terrace;
 import libnoiseforjava.module.Turbulence;
 
 public class PlanarBadlandCliffType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarBadlandCliffType.class);
 	
 	Double badlands_lucanarity;
 	Double badlands_twist;
@@ -88,7 +92,7 @@ public class PlanarBadlandCliffType implements CachedIF {
 		Perlin perlin = new PerlinBuilder().biuld(badlands_cliffs_pe_frequency, badlands_cliffs_pe_persistence,
 				badlands_lucanarity, badlands_cliffs_pe_octave_count, noiseQuality);
 		Curve curve_0 = new CurveBuilder().builder(perlin, 0.0, badlands_cliffs_control_points);
-		Clamp clamp = new ClampBuilder().build(curve_0, badlands_cliffs_cl_lower_bound, badlands_cliffs_cl_lower_bound);
+		Clamp clamp = new ClampBuilder().build(curve_0, badlands_cliffs_cl_lower_bound, badlands_cliffs_cl_upper_bound);
 		Terrace terrace = new TerraceBuilder().build(badlands_terrace_control_points, clamp);
 		Turbulence turbulence_0 = new TurbulenceBuilder().build(badlands_cliffs_tu0_frequency,
 				badlands_cliffs_tu0_scalar0 / badlands_cliffs_tu0_scalar1 * badlands_twist,
@@ -97,6 +101,7 @@ public class PlanarBadlandCliffType implements CachedIF {
 				badlands_cliffs_tu1_scalar0 / badlands_cliffs_tu1_scalar1 * badlands_twist,
 				badlands_cliffs_tu1_roughness, turbulence_0);
 		this.badlandCliffs = new Cached(turbulence_1);
+		logger.info(this.toString());
 		return this.badlandCliffs;
 	}
 

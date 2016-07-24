@@ -2,6 +2,8 @@ package components;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.NoiseGen.NoiseQuality;
 import libnoiseforjava.domain.ControlPoint;
 import libnoiseforjava.domain.CurveBuilder;
@@ -14,6 +16,8 @@ import libnoiseforjava.module.RidgedMulti;
 import libnoiseforjava.module.Turbulence;
 
 public class PlanarRiverPositionsType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarRiverPositionsType.class);
 	
 	Double river_positions_rm0_frequency;
 	Integer river_positions_rm0_octave_count;
@@ -68,6 +72,7 @@ public class PlanarRiverPositionsType implements CachedIF {
 				river_positions_tu_scalar0 / river_positions_tu_scalar1, river_positions_tu_roughness,
 				riverPositions_mi);
 		this.riverPositions = new Cached(turbulence);
+		logger.info(this.toString());
 		return this.riverPositions;
 	}
 

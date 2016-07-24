@@ -2,6 +2,8 @@ package components;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.zenred.util.GenRandomRolls;
 
 import libnoiseforjava.NoiseGen.NoiseQuality;
@@ -21,6 +23,8 @@ import libnoiseforjava.module.ScaleBias;
 import libnoiseforjava.module.Spheres;
 
 public class PlanarBaseContinent implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarBaseContinent.class);
 
 	private Double continent_frequency;
 	private Double base_continent_persistence_0;
@@ -235,6 +239,7 @@ public class PlanarBaseContinent implements CachedIF {
 		else{
 			baseContinentDef = new Cached(baseContinentDef_cl);
 		}
+		logger.info(this.toString());
 		return baseContinentDef;
 	}
 

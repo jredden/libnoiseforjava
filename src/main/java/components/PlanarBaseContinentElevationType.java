@@ -1,5 +1,7 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.domain.ScaleBiasBuilder;
 import libnoiseforjava.domain.SelectBuilder;
 import libnoiseforjava.module.Cached;
@@ -7,6 +9,8 @@ import libnoiseforjava.module.ScaleBias;
 import libnoiseforjava.module.Select;
 
 public class PlanarBaseContinentElevationType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarBaseContinentElevationType.class);
 	
 	Double base_continent_elev_sb_bias;
 	Double continent_height_scale;
@@ -39,6 +43,7 @@ public class PlanarBaseContinentElevationType implements CachedIF {
 		Select select = new SelectBuilder().build(scaleBias, continentalShelf, continentDef,
 				shelf_level - base_continent_elev_se_bound_scalar, shelf_level, base_continent_elev_se_edge_falloff);
 		this.baseContinentElev = new Cached(select);
+		logger.info(this.toString());
 		return this.baseContinentElev;
 	}
 

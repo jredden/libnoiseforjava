@@ -1,5 +1,7 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.NoiseGen.NoiseQuality;
 import libnoiseforjava.domain.RidgedMultiBuilder;
 import libnoiseforjava.module.Cached;
@@ -7,6 +9,8 @@ import libnoiseforjava.module.Multiply;
 import libnoiseforjava.module.RidgedMulti;
 
 public class PlanarLowMountainType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarLowMountainType.class);
 	
 	private Double mountain_low_freqeuncy_0;
 	private Integer mountain_low_octave_count_0;
@@ -39,6 +43,7 @@ public class PlanarLowMountainType implements CachedIF {
 		Multiply mountainousLow_mu = new Multiply(
 				ridgedMulti_0, ridgedMulti_1);
 		this.mountainousLow = new Cached(mountainousLow_mu);
+		logger.info(this.toString());
 		return this.mountainousLow;
 	}
 

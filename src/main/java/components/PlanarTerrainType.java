@@ -1,5 +1,7 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import com.zenred.util.GenRandomRolls;
 
 import libnoiseforjava.domain.TerraceBuilder;
@@ -9,6 +11,8 @@ import libnoiseforjava.module.Terrace;
 import libnoiseforjava.module.Turbulence;
 
 public class PlanarTerrainType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarTerrainType.class);
 	
 	Cached continentDef;
 	Double terrainTypeFrequency;
@@ -48,6 +52,7 @@ public class PlanarTerrainType implements CachedIF {
 		Terrace terrace = new TerraceBuilder().build(terrainTypeLowControlPoint, terrainTypeMidControlPoint,
 				terrainTypeHighControlPoint, planarLevel, shelfLevel, turbulence);
 		this.terrainTypeDef = new Cached(terrace);
+		logger.info(this.toString());
 		return this.terrainTypeDef;
 	}
 

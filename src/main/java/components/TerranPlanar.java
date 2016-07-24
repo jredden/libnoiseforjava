@@ -219,6 +219,7 @@ public class TerranPlanar extends Planar {
 		continentsMountainsControlPoints.add(controlPoint);
 		}
 	
+	static Double scalar_divisor = 2.0;
 	
 	/**
 	 * 
@@ -309,10 +310,10 @@ public class TerranPlanar extends Planar {
 				badlands_cliffs_tu1_scalar1, badlands_cliffs_tu1_roughness, badLandCLiffsControlPoints,
 				badLandsTerraceControlPoints, NoiseQuality.QUALITY_BEST);
 		
-		Cached badlandCliffs = planarBadlandSandType.build();
+		Cached badlandCliffs = planarBadlandCliffType.build();
 		
 		PlanarBadlandsDunesType planarBadlandsDunesType = new PlanarBadlandsDunesType(badlands_terrain_sb_scale,
-				badlands_terrain_sb_bias, badlandSand);
+				badlands_terrain_sb_bias, badlandSand, badlandCliffs);
 
 		Cached badlandDunes = planarBadlandsDunesType.build();
 
@@ -391,8 +392,16 @@ public class TerranPlanar extends Planar {
 		
 		Cached continentsWithBadlands = planarContinentsWithBadlandsType.build();
 		
+		PlanarContinentsWithRiversType planarContinentsWithRiversType = new PlanarContinentsWithRiversType(
+				continents_with_rivers_sb_scalar0, continents_with_rivers_sb_scalar1, river_depth, riverPositions,
+				continentsWithBadlands, sea_level, continent_height_scale);
 		
+		Cached continentsWithRivers = planarContinentsWithRiversType.build();
 		
+		PlanarFinalType planarFinalType = new PlanarFinalType(max_elev, min_elev, scalar_divisor, continentsWithRivers);
+		
+		Cached finalPlanet = planarFinalType.build();
+
 		/**
 		 * build the planet
 		 */
@@ -403,7 +412,7 @@ public class TerranPlanar extends Planar {
 		planet.setBounds(south_coord, north_coord, west_coord, east_coord);
 		planet.setDestSize(grid_width, grid_height);
 
-		planet.setSourceModule(terrainType);
+		planet.setSourceModule(finalPlanet);
 		planet.setDestNoiseMap(elevGrid);
 		planet.build();
 		RenderImageParameter renderImageParameter = new RenderImageParameter(gradientPointList, elevGrid, renderParameter,

@@ -1,4 +1,6 @@
 package components;
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.domain.ScaleBiasBuilder;
 import libnoiseforjava.module.Cached;
 import libnoiseforjava.module.Max;
@@ -7,19 +9,24 @@ import libnoiseforjava.module.ScaleBias;
 
 public class PlanarBadlandsDunesType implements CachedIF {
 	
+	private static Logger logger = Logger.getLogger(PlanarBadlandsDunesType.class);
+	
 	Double badlands_terrain_sb_scale;
 	Double badlands_terrain_sb_bias;
 	Cached badlands_sand;
 	Cached badland_cliffs;
+	
+	Cached badland_dunes;
 
 	
 
 	public PlanarBadlandsDunesType(Double badlands_terrain_sb_scale, Double badlands_terrain_sb_bias,
-			Cached badlands_sand) {
+			Cached badlands_sand, Cached badlands_cliffs) {
 		super();
 		this.badlands_terrain_sb_scale = badlands_terrain_sb_scale;
 		this.badlands_terrain_sb_bias = badlands_terrain_sb_bias;
 		this.badlands_sand = badlands_sand;
+		this.badland_cliffs = badlands_cliffs;
 	}
 
 
@@ -28,8 +35,9 @@ public class PlanarBadlandsDunesType implements CachedIF {
 	public Cached build() {
 		ScaleBias scaleBias = new ScaleBiasBuilder().build(badlands_terrain_sb_scale, badlands_terrain_sb_bias, badlands_sand);
 		Max badlandsTerrain_ma = new Max(badland_cliffs, scaleBias);
-		this.badland_cliffs = new Cached(badlandsTerrain_ma);
-		return this.badland_cliffs;
+		this.badland_dunes = new Cached(badlandsTerrain_ma);
+		logger.info(this.toString());
+		return this.badland_dunes;
 	}
 
 

@@ -1,5 +1,7 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.domain.ScaleBiasBuilder;
 import libnoiseforjava.domain.SelectBuilder;
 import libnoiseforjava.module.Add;
@@ -8,6 +10,8 @@ import libnoiseforjava.module.ScaleBias;
 import libnoiseforjava.module.Select;
 
 public class PlanarContinentsWithRiversType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarContinentsWithRiversType.class);
 	
 	Double continents_with_rivers_sb_scalar0;
 	Double continents_with_rivers_sb_scalar1;
@@ -40,8 +44,9 @@ public class PlanarContinentsWithRiversType implements CachedIF {
 				river_depth / continents_with_rivers_sb_scalar1, riverPositions);
 		Add continentsWithRivers_ad = new Add(continentsWithBadlands, scaleBias);
 		Select select = new SelectBuilder().build(continentsWithBadlands, continentsWithRivers_ad,
-				continentsWithBadlands, sea_level, 0.0, continent_height_scale - sea_level);
+				continentsWithBadlands, sea_level, continent_height_scale - sea_level, 0.0);
 		this.continentsWithRivers = new Cached(select);
+		logger.info(this.toString());
 		return this.continentsWithRivers;
 	}
 

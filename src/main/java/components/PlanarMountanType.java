@@ -1,5 +1,7 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import com.zenred.util.GenRandomRolls;
 
 import libnoiseforjava.NoiseGen.NoiseQuality;
@@ -15,6 +17,8 @@ import libnoiseforjava.module.ScaleBias;
 import libnoiseforjava.module.Turbulence;
 
 public class PlanarMountanType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarMountanType.class);
 	
 	private Double mountain_base_freqeuncy_0;
 	private Integer mountain_base_octave_count_0;
@@ -101,7 +105,7 @@ public class PlanarMountanType implements CachedIF {
 		currSeed = GenRandomRolls.Instance().getD1000();
 		Turbulence turbulence_1 = new TurbulenceBuilder().build(currSeed, turbulenceFrequency_1, turbulencePowerScalar_1, turbulenceRoughness_1, turbulence_0);
 		this.mountainBaseDef = new Cached(turbulence_1);
-
+		logger.info(this.toString());
 		return this.mountainBaseDef;
 	}
 

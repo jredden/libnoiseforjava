@@ -1,5 +1,7 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.NoiseGen.NoiseQuality;
 import libnoiseforjava.domain.ExponentBuilder;
 import libnoiseforjava.domain.PerlinBuilder;
@@ -11,6 +13,8 @@ import libnoiseforjava.module.Perlin;
 import libnoiseforjava.module.ScaleBias;
 
 public class PlanarScaledHillTerrainType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarScaledHillTerrainType.class);
 	
 	Double scaled_hilly_terrain_sb0_scale;
 	Double scaled_hilly_terrain_sb0_bias;
@@ -58,6 +62,7 @@ public class PlanarScaledHillTerrainType implements CachedIF {
 		Multiply scaledHillyTerrain_mu = new Multiply(
 				scaleBias_0, scaleBias_1);
 		this.scaled_hilly_terrain = new Cached(scaledHillyTerrain_mu);
+		logger.info(this.toString());
 		return this.scaled_hilly_terrain;
 	}
 

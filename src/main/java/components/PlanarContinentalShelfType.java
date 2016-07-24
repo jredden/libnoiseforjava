@@ -3,6 +3,8 @@ package components;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.NoiseGen.NoiseQuality;
 import libnoiseforjava.domain.ClampBuilder;
 import libnoiseforjava.domain.RidgedMultiBuilder;
@@ -16,6 +18,8 @@ import libnoiseforjava.module.ScaleBias;
 import libnoiseforjava.module.Terrace;
 
 public class PlanarContinentalShelfType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarContinentalShelfType.class);
 	
 	Double continental_shelf_te_lowest_control_point;
 	Double continental_shelf_te_low_control_point;
@@ -75,6 +79,7 @@ public class PlanarContinentalShelfType implements CachedIF {
 		Clamp clamp = new ClampBuilder().build(scaleBias, continental_shelf_cl_bounds, sea_level);
 		Add continentalShelf_ad = new Add(scaleBias, clamp);
 		this.continentalShelf = new Cached(continentalShelf_ad);
+		logger.info(this.toString());
 		return this.continentalShelf;
 	}
 

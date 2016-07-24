@@ -25,11 +25,15 @@
 
 package libnoiseforjava.module;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.NoiseGen;
 import libnoiseforjava.NoiseGen.NoiseQuality;
 
 public class Billow extends ModuleBase
 {
+	private static Logger logger = Logger.getLogger(Billow.class);
+	
    /// Noise module that outputs three-dimensional "billowy" noise.
    ///
    /// @image html modulebillow.png
@@ -117,7 +121,7 @@ public class Billow extends ModuleBase
       }
 
       value += 0.5;
-
+      logger.info(this.toString());
       return value;
    }
 
@@ -180,5 +184,11 @@ public class Billow extends ModuleBase
    {
       this.noiseQuality = noiseQuality;
    }
+
+@Override
+public String toString() {
+	return "Billow [frequency=" + frequency + ", lacunarity=" + lacunarity + ", persistence=" + persistence
+			+ ", octaveCount=" + octaveCount + ", seed=" + seed + ", noiseQuality=" + noiseQuality + "]";
+}
 
 }

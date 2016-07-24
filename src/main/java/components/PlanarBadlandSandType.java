@@ -1,5 +1,7 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.NoiseGen.NoiseQuality;
 import libnoiseforjava.domain.RidgedMultiBuilder;
 import libnoiseforjava.domain.ScaleBiasBuilder;
@@ -11,6 +13,8 @@ import libnoiseforjava.module.ScaleBias;
 import libnoiseforjava.module.Voronoi;
 
 public class PlanarBadlandSandType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarBadlandSandType.class);
 	
 	Double badlands_lacunarity;
 	
@@ -61,6 +65,7 @@ public class PlanarBadlandSandType implements CachedIF {
 		ScaleBias scaleBias_1 = new ScaleBiasBuilder().build(badlands_sand_sb1_scale, badlands_sand_sb1_bias, voronoi);
 		Add badlandsSand_ad = new Add(scaleBias_0,	scaleBias_1);
 		this.cached = new Cached(badlandsSand_ad);
+		logger.info(this.toString());
 		return this.cached;
 	}
 

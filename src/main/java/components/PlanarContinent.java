@@ -1,5 +1,7 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import com.zenred.util.GenRandomRolls;
 
 import libnoiseforjava.domain.SelectBuilder;
@@ -12,6 +14,8 @@ import libnoiseforjava.module.Spheres;
 import libnoiseforjava.module.Turbulence;
 
 public class PlanarContinent implements  CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarContinent.class);
 	
 	private Cached baseContinentDef;
 	private Double spheres_scalar;
@@ -79,6 +83,7 @@ public class PlanarContinent implements  CachedIF {
 		Select continentDef_se = new SelectBuilder().build(baseContinentDef, continentDef_tu2, baseContinentDef,
 				continent_def_lower_bounds, continent_def_upper_bounds, continent_def_edge_falloff);
 		continentDef = new Cached(continentDef_se);
+		logger.info(this.toString());
 		return continentDef;
 	}
 

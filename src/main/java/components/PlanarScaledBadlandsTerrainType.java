@@ -1,10 +1,14 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.domain.ScaleBiasBuilder;
 import libnoiseforjava.module.Cached;
 import libnoiseforjava.module.ScaleBias;
 
 public class PlanarScaledBadlandsTerrainType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarScaledBadlandsTerrainType.class);
 	
 	Cached badlandsTerrain;
 	Double scaled_badlands_terrain_scale;
@@ -25,6 +29,7 @@ public class PlanarScaledBadlandsTerrainType implements CachedIF {
 	public Cached build() {
 		ScaleBias scaleBias = new ScaleBiasBuilder().build(scaled_badlands_terrain_scale, scaled_badlands_terrain_scale, badlandsTerrain);
 		this.scaled_badlands_terrain = new Cached(scaleBias);
+		logger.info(this.toString());
 		return this.scaled_badlands_terrain;
 	}
 

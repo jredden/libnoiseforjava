@@ -1,9 +1,13 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.module.Add;
 import libnoiseforjava.module.Cached;
 
 public class PlanarContinentsWithPlainsType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarContinentsWithPlainsType.class);
 	
 	Cached baseContinentElev;
 	Cached scaledPlainsTerrain;
@@ -20,6 +24,7 @@ public class PlanarContinentsWithPlainsType implements CachedIF {
 	public Cached build() {
 		Add add = new Add(baseContinentElev, scaledPlainsTerrain);
 		this.continentsWithPlains = new Cached(add);
+		logger.info("end " + this.getClass().getSimpleName());
 		return this.continentsWithPlains;
 	}
 

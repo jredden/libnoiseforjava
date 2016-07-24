@@ -1,11 +1,15 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.domain.SelectBuilder;
 import libnoiseforjava.module.Add;
 import libnoiseforjava.module.Cached;
 import libnoiseforjava.module.Select;
 
 public class PlanarContinentsWithHillsType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarContinentsWithHillsType.class);
 	
 	Cached baseContinentElev, scaledHillyTerrain;
 	
@@ -41,6 +45,7 @@ public class PlanarContinentsWithHillsType implements CachedIF {
 				continents_with_hills_bounds_scalar0 - hills_amount,
 				continents_with_hills_bounds_scalar1 - hills_amount, continents_with_hills_edge_falloff);
 		this.continentsWithHills = new Cached(select);
+		logger.info(this.toString());
 		return this.continentsWithHills;
 	}
 

@@ -25,11 +25,14 @@
 
 package libnoiseforjava.util;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.exception.ExceptionInvalidParam;
 import libnoiseforjava.model.Sphere;
 
 public class NoiseMapBuilderSphere extends NoiseMapBuilder
 {
+	private static Logger logger = Logger.getLogger(NoiseMapBuilderCylinder.class);
    /// Builds a spherical noise map.
    ///
    /// This class builds a noise map by filling it with coherent-noise values
@@ -110,6 +113,7 @@ public class NoiseMapBuilderSphere extends NoiseMapBuilder
          setCallback(y);
 
       }
+      logger.info(this.toString());
    }
 
    /// Returns the eastern boundary of the spherical noise map.
@@ -191,5 +195,12 @@ public class NoiseMapBuilderSphere extends NoiseMapBuilder
    {
       this.westLonBound = westLonBound;
    }
+
+@Override
+public String toString() {
+	return "NoiseMapBuilderSphere [eastLonBound=" + eastLonBound + ", northLatBound=" + northLatBound
+			+ ", southLatBound=" + southLatBound + ", westLonBound=" + westLonBound + ", destHeight=" + destHeight
+			+ ", destWidth=" + destWidth + "]";
+}
 
 }

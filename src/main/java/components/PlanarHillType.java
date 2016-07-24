@@ -1,5 +1,7 @@
 package components;
 
+import org.apache.log4j.Logger;
+
 import com.zenred.util.GenRandomRolls;
 
 import libnoiseforjava.NoiseGen.NoiseQuality;
@@ -19,6 +21,8 @@ import libnoiseforjava.module.ScaleBias;
 import libnoiseforjava.module.Turbulence;
 
 public class PlanarHillType implements CachedIF {
+	
+	private static Logger logger = Logger.getLogger(PlanarHillType.class);
 	
 	Double hilly_terrain_bi_freauency;
 	Double hilly_terrain_bi_persistence;
@@ -114,6 +118,7 @@ public class PlanarHillType implements CachedIF {
 		Double power_1 = hilly_terrain_tu0_scalar1 / hilly_terrain_tu1_scalar1 * hills_twist;
 		Turbulence turbulence_1 = new TurbulenceBuilder().build(currSeed, hilly_terrain_tu1_frequency, power_1, hilly_terrain_tu1_roughness, turbulence_0);
 		hilly_terrain = new Cached(turbulence_1);
+		logger.info(this.toString());
 		return hilly_terrain;
 		
 	}
