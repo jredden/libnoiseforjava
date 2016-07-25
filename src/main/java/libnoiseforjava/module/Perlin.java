@@ -25,12 +25,16 @@
 
 package libnoiseforjava.module;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.NoiseGen;
 import libnoiseforjava.NoiseGen.NoiseQuality;
 import libnoiseforjava.exception.ExceptionInvalidParam;
 
 public class Perlin extends ModuleBase
 {
+	private static Logger logger = Logger.getLogger(Perlin.class);
+	
    /// Noise module that outputs 3-dimensional Perlin noise.
    ///
    /// Perlin noise is the sum of several coherent-noise functions of
@@ -212,7 +216,7 @@ public class Perlin extends ModuleBase
          z *= lacunarity;
          curPersistence *= persistence;
       }
-
+      logger.info(this.toString());
       return value;
    }
 
@@ -353,5 +357,11 @@ public class Perlin extends ModuleBase
    {
       this.seed = seed;
    }
+
+@Override
+public String toString() {
+	return "Perlin [frequency=" + frequency + ", lacunarity=" + lacunarity + ", noiseQuality=" + noiseQuality
+			+ ", octaveCount=" + octaveCount + ", persistence=" + persistence + ", seed=" + seed + "]";
+}
    
 }

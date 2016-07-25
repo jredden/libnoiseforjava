@@ -25,11 +25,14 @@
 
 package libnoiseforjava.module;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.exception.ExceptionInvalidParam;
 
 public class ScaleBias extends ModuleBase
 {
-
+	private static Logger logger = Logger.getLogger(ScaleBias.class);
+	
    /// Noise module that applies a scaling factor and a bias to the output
    /// value from a source module.
    ///
@@ -120,5 +123,10 @@ public class ScaleBias extends ModuleBase
    {
       this.scale = scale;
    }
+
+@Override
+public String toString() {
+	return "ScaleBias [bias=" + bias + ", scale=" + scale + "]";
+}
 
 }

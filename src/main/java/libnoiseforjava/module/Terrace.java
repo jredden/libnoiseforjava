@@ -25,6 +25,10 @@
 
 package libnoiseforjava.module;
 
+import java.util.Arrays;
+
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.Interp;
 import libnoiseforjava.Misc;
 import libnoiseforjava.exception.ExceptionInvalidParam;
@@ -32,6 +36,8 @@ import libnoiseforjava.exception.ExceptionInvalidParam;
 public class Terrace extends ModuleBase
 {
 
+	private static Logger logger = Logger.getLogger(Terrace.class);
+	
    /// Noise module that maps the output value from a source module onto a
    /// terrace-forming curve.
    ///
@@ -193,9 +199,11 @@ public class Terrace extends ModuleBase
 
       // Squaring the alpha produces the terrace effect.
       alpha *= alpha;
-
+      
       // Now perform the linear interpolation given the alpha value.
-      return Interp.linearInterp (value0, value1, alpha);
+      double interp = Interp.linearInterp (value0, value1, alpha);
+      logger.info(this.toString());
+      return interp;
    }
 
    /// Inserts the control point at the specified position in the
@@ -322,5 +330,11 @@ public class Terrace extends ModuleBase
    {
       return invertTerraces;
    }
+
+@Override
+public String toString() {
+	return "Terrace [controlPointCount=" + controlPointCount + ", invertTerraces=" + invertTerraces + ", controlPoints="
+			+ Arrays.toString(controlPoints) + "]";
+}
 
 }

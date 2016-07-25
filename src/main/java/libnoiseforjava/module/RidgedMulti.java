@@ -25,12 +25,18 @@
 
 package libnoiseforjava.module;
 
+import java.util.Arrays;
+
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.NoiseGen;
 import libnoiseforjava.NoiseGen.NoiseQuality;
 import libnoiseforjava.exception.ExceptionInvalidParam;
 
 public class RidgedMulti extends ModuleBase
 {
+	private static Logger logger = Logger.getLogger(RidgedMulti.class);
+			
    /// Noise module that outputs 3-dimensional ridged-multifractal noise.
    ///
    /// This noise module, heavily based on the Perlin-noise module, generates
@@ -220,7 +226,7 @@ public class RidgedMulti extends ModuleBase
          y *= lacunarity;
          z *= lacunarity;
       }
-
+      logger.info(this.toString());
       return (value * 1.25) - 1.0;
    }
 
@@ -353,5 +359,12 @@ public class RidgedMulti extends ModuleBase
    {
       this.spectralWeights = spectralWeights;
    }
+
+@Override
+public String toString() {
+	return "RidgedMulti [frequency=" + frequency + ", lacunarity=" + lacunarity + ", noiseQuality=" + noiseQuality
+			+ ", octaveCount=" + octaveCount + ", spectralWeights=" + Arrays.toString(spectralWeights) + ", seed="
+			+ seed + "]";
+}
 
 }

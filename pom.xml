@@ -62,7 +62,8 @@
 					<target>1.7</target>
 					<fork>true</fork>
 					<meminitial>512m</meminitial>
-					<maxmem>2096m</maxmem>
+					<maxmem>4096m</maxmem>
+					<argLine>-Xmx16384m </argLine>
 				</configuration>
 			</plugin>
 			<plugin>

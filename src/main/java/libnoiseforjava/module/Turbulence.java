@@ -25,10 +25,13 @@
 
 package libnoiseforjava.module;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.exception.ExceptionInvalidParam;
 
 public class Turbulence extends ModuleBase
 {
+	private static Logger logger = Logger.getLogger(Turbulence.class);
    /// Noise module that randomly displaces the input value before
    /// returning the output value from a source module.
    ///
@@ -184,7 +187,7 @@ public class Turbulence extends ModuleBase
             * power);
       double zDistort = z + (zDistortModule.getValue (x2, y2, z2)
             * power);
-
+      logger.info(this.toString());
       // Retrieve the output value at the offsetted input value instead of the
       // original input value.
       return sourceModules[0].getValue (xDistort, yDistort, zDistort);
@@ -278,5 +281,11 @@ public class Turbulence extends ModuleBase
       yDistortModule.setOctaveCount (roughness);
       zDistortModule.setOctaveCount (roughness);
    }
+
+@Override
+public String toString() {
+	return "Turbulence [power=" + power + ", xDistortModule=" + xDistortModule + ", yDistortModule=" + yDistortModule
+			+ ", zDistortModule=" + zDistortModule + "]";
+}
 
 }

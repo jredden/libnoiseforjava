@@ -25,12 +25,16 @@
 
 package libnoiseforjava.module;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.Interp;
 import libnoiseforjava.exception.ExceptionInvalidParam;
 import libnoiseforjava.exception.ExceptionNoModule;
 
 public class Select extends ModuleBase
 {
+	private static Logger logger = Logger.getLogger(Select.class);
+	
    /// Noise module that outputs the value selected from one of two source
    /// modules chosen by the output value from a control module.
    ///
@@ -102,7 +106,7 @@ public class Select extends ModuleBase
 
       double controlValue = sourceModules[2].getValue (x, y, z);
       double alpha;
-
+      logger.info(this.toString());
       if (edgeFalloff > 0.0)
       {
          if (controlValue < (lowerBound - edgeFalloff))
@@ -296,5 +300,10 @@ public class Select extends ModuleBase
       assert (sourceModules != null);
       sourceModules[2] = controlModule;
    }
+
+@Override
+public String toString() {
+	return "Select [edgeFalloff=" + edgeFalloff + ", lowerBound=" + lowerBound + ", upperBound=" + upperBound + "]";
+}
 
 }

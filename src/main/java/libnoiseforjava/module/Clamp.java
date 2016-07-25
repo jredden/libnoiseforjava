@@ -25,11 +25,14 @@
 
 package libnoiseforjava.module;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.exception.ExceptionInvalidParam;
 
 public class Clamp extends ModuleBase
 {
 
+	private static Logger logger = Logger.getLogger(Clamp.class);
    /// Noise module that clamps the output value from a source module to a
    /// range of values.
    ///
@@ -71,6 +74,7 @@ public class Clamp extends ModuleBase
       assert (sourceModules[0] != null);
 
       double value = sourceModules[0].getValue (x, y, z);
+      logger.info(this.toString());
       if (value < lowerBound)
          return lowerBound;
       else if (value > upperBound)
@@ -87,4 +91,9 @@ public class Clamp extends ModuleBase
       this.upperBound = upperBound;
    }
 
+@Override
+public String toString() {
+	return "Clamp [lowerBound=" + lowerBound + ", upperBound=" + upperBound + "]";
+}
+   
 }
