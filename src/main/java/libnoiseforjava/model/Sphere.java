@@ -25,10 +25,14 @@
 
 package libnoiseforjava.model;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.module.ModuleBase;
 
 public class Sphere
 {
+	private static Logger logger = Logger.getLogger(Sphere.class);
+	
    /// Model that defines the surface of a sphere.
    ///
    /// @image html modelsphere.png
@@ -88,6 +92,7 @@ public class Sphere
       x = r * Math.cos (Math.toRadians(lon));
       y = Math.sin (Math.toRadians(lat));
       z = r * Math.sin (Math.toRadians(lon));
+      logger.info(this.toString());
       return module.getValue (x, y, z);
    }
 
@@ -114,5 +119,10 @@ public class Sphere
    {
       this.module = module;
    }
+
+@Override
+public String toString() {
+	return "Sphere [module=" + module + "]";
+}
 
 }

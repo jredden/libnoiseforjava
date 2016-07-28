@@ -27,11 +27,14 @@ package libnoiseforjava.module;
 
 import java.util.Arrays;
 
+import javax.management.RuntimeErrorException;
+
 import org.apache.log4j.Logger;
 
 import libnoiseforjava.Interp;
 import libnoiseforjava.Misc;
 import libnoiseforjava.exception.ExceptionInvalidParam;
+import sun.util.logging.resources.logging;
 
 public class Terrace extends ModuleBase
 {
@@ -159,9 +162,17 @@ public class Terrace extends ModuleBase
    {
       assert (sourceModules[0] != null);
       assert (controlPointCount >= 2);
-
+      double sourceModuleValue = 0.0;
+      try{
       // Get the output value from the source module.
-      double sourceModuleValue = sourceModules[0].getValue (x, y, z);
+    	  sourceModuleValue = sourceModules[0].getValue (x, y, z);
+      }
+      // tough debugging
+      catch(NullPointerException npe){
+    	  logger.error("Source Module:"+sourceModules[0] + "generated null pointer exception " + npe.getStackTrace());
+    	  return 1.0;
+      }
+      
 
       // Find the first element in the control point array that has a value
       // larger than the output value from the source module.
