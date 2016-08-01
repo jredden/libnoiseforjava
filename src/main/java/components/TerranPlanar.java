@@ -34,11 +34,6 @@ public class TerranPlanar extends Planar implements PlanarTerranIF{
 	
 	protected static TerranPlanar terranPlanar = new TerranPlanar();
 	protected static PlanarTerranImpl planarTerranImpl = terranPlanar.new PlanarTerranImpl();
-	static{
-		planarTerranImpl.deep_sea_level = deep_sea_level;
-		planarTerranImpl.mountains_amount = mountains_amount;
-		planarTerranImpl.seaLevelInMeters = seaLevelInMeters;
-	}
 	
 	static Double scalar_divisor = 2.0;
 	
@@ -66,7 +61,7 @@ public class TerranPlanar extends Planar implements PlanarTerranIF{
 
 		PlanarTerrainType planarTerrainType = new PlanarTerrainType(continent, terrain_type_tu_frequency,
 				terrain_type_tu_power, terrain_type_tu_roughness, terrain_type_def_low_control_point,
-				terrain_type_def_mid_control_point_scalar, terrain_type_def_high_control_point, shelf_level, sea_level);
+				terrain_type_def_mid_control_point_scalar, terrain_type_def_high_control_point, shelf_level, PlanarTerranIF.sea_level);
 		Cached terrainType = planarTerrainType.build();
 		
 		PlanarMountanType planarMountanType = new PlanarMountanType(mountain_base_def_tu0_frequency,
@@ -178,7 +173,7 @@ public class TerranPlanar extends Planar implements PlanarTerranIF{
 				continental_shelf_te_lowest_control_point, continental_shelf_te_low_control_point,
 				continental_shelf_te_high_control_point, shelf_level, continent, continental_shelf_frequency_scalar,
 				continent_lacunarity, continental_shelf_frequency_octave_count, NoiseQuality.QUALITY_BEST,
-				continental_shelf_sb_scale, continental_shelf_sb_bias, continental_shelf_cl_bounds, sea_level);
+				continental_shelf_sb_scale, continental_shelf_sb_bias, continental_shelf_cl_bounds, PlanarTerranIF.sea_level);
 		
 		Cached continentalShelf = planarContinentalShelfType.build();
 		
@@ -202,7 +197,7 @@ public class TerranPlanar extends Planar implements PlanarTerranIF{
 		PlanarContinentsWithMountainsType planarContinentsWithMountainsType = new PlanarContinentsWithMountainsType(
 				baseContinentElevation, scaledMountainTerrain, continent, continentsMountainsControlPoints,
 				continent_with_mountains_bounds_scalar0, continent_with_mountains_bounds_scalar1,
-				continent_with_mountains_edge_falloff, continentsWithHills, terrainType, mountains_amount);
+				continent_with_mountains_edge_falloff, continentsWithHills, terrainType, PlanarTerranIF.mountains_amount);
 		
 		Cached continentsWithMountains = planarContinentsWithMountainsType.build();
 		
@@ -217,11 +212,11 @@ public class TerranPlanar extends Planar implements PlanarTerranIF{
 		
 		PlanarContinentsWithRiversType planarContinentsWithRiversType = new PlanarContinentsWithRiversType(
 				continents_with_rivers_sb_scalar0, continents_with_rivers_sb_scalar1, river_depth, riverPositions,
-				continentsWithBadlands, sea_level, continent_height_scale);
+				continentsWithBadlands, PlanarTerranIF.sea_level, continent_height_scale);
 		
 		Cached continentsWithRivers = planarContinentsWithRiversType.build();
 		
-		PlanarFinalType planarFinalType = new PlanarFinalType(max_elev, min_elev, scalar_divisor, continentsWithRivers);
+		PlanarFinalType planarFinalType = new PlanarFinalType(PlanarTerranIF.max_elev, PlanarTerranIF.min_elev, scalar_divisor, continentsWithRivers);
 		
 		Cached finalPlanet = planarFinalType.build();
 

@@ -222,7 +222,7 @@ public class PlanarBaseContinent implements CachedIF {
 		Perlin baseContinentDef_pe0 = new PerlinBuilder().biuld(currSeed, continent_frequency,
 				base_continent_persistence_0, continent_lacunarity, base_continent_octive_count0, noiseQuality);
 		Curve baseContinentDef_cu = new CurveBuilder().builder(baseContinentDef_pe0, p_level, controlPoints);
-		Perlin baseContinentDef_pe1 = new PerlinBuilder().biuld(currSeed, continent_frequency,
+		Perlin baseContinentDef_pe1 = new PerlinBuilder().biuld(currSeed +1, continent_frequency,
 				base_continent_persistence_1, continent_lacunarity, base_continent_octive_count1, noiseQuality);
 		ScaleBias scaleBias = new ScaleBiasBuilder().build(base_continent_def_scale, base_continent_def_bias, baseContinentDef_pe1);
 		Cached baseContinentDef = null;

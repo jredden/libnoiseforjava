@@ -32,10 +32,10 @@ public abstract class Planar {
 	protected static Integer base_continent_def_octave_count_pe1 = 11;
 	// specifies the planet's sea level. this value must be between -1.0
 	// (minimum planet elevation) and +1.0 (maximum planet elevation.)
-	protected static Double sea_level = 0.0;
+	protected static Double sea_level = PlanarTerranIF.sea_level;
 	// / sets the bias to apply to the scaled output value from the source
 	// / module.
-	protected static Double deep_sea_level = -256.0;
+	protected static Double deep_sea_level = PlanarTerranIF.deep_sea_level;
 	protected static Double base_continent_def_bias = 0.625;
 	// / sets the scaling factor to apply to the output value from the
 	// / source module.
@@ -44,15 +44,14 @@ public abstract class Planar {
 	protected static Double base_continent_def_clamp_lower_bound = -1.0;
 	protected static Double base_continent_def_clamp_upper_bound = 1.0;
 	// minimum elevation on the planet, in meters. this value is approximate.
-	protected static Double min_elev = -8192.0;
+	protected static Double min_elev = PlanarTerranIF.min_elev;
 	// maximum elevation on the planet, in meters. this value is approximate.
-	protected static Double max_elev = 8192.0;
+	protected static Double max_elev = PlanarTerranIF.max_elev;
 	// sea level calculation parameters
-	protected static Double parameter0 = 1.0;
-	protected static Double parameter1 = 2.0;
+	protected static Double parameter0 = PlanarTerranIF.parameter0;
+	protected static Double parameter1 = PlanarTerranIF.parameter1;
 	// calculate the sea level, in meters
-	protected static Double seaLevelInMeters = (((sea_level + parameter0) / parameter1) * (max_elev - min_elev))
-			+ min_elev;
+	protected static Double seaLevelInMeters = PlanarTerranIF.seaLevelInMeters;
 	// southernmost coordinate of elevation grid.
 	protected static Double south_coord = -90.0;
 	// northernmost coordinate of elevation grid.
@@ -129,7 +128,7 @@ public abstract class Planar {
 	// because the badlands terrain may overlap parts of the mountainous
 	// terrain, setting mountains_amount to 1.0 may not completely cover the
 	// terrain in mountains.
-	protected static Double mountains_amount = 0.5;
+	protected static Double mountains_amount = PlanarTerranIF.mountains_amount;
 	// determines the amount of hilly terrain that appears on the planet.
 	// values range from 0.0 (no hills) to 1.0 (all terrain is covered in
 	// hills). this value must be less than mountains_amount. because the

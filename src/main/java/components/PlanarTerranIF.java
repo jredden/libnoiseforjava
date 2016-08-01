@@ -8,6 +8,22 @@ import libnoiseforjava.domain.GradientPointParameter;
 import libnoiseforjava.util.ColorCafe;
 
 public interface PlanarTerranIF {
+	
+	public static Double sea_level = 0.0;
+	
+	public static Double min_elev = -8192.0;
+	// maximum elevation on the planet, in meters. this value is approximate.
+	public static Double max_elev = 8192.0;
+	// sea level calculation parameters
+	public static Double parameter0 = 1.0;
+	public static Double parameter1 = 2.0;
+	// calculate the sea level, in meters
+	public static Double seaLevelInMeters = (((sea_level + parameter0) / parameter1) * (max_elev - min_elev))
+			+ min_elev;
+
+	static public Double deep_sea_level = -256.0;
+	static public Double mountains_amount = 0.5;
+
 
 	// surface map
 	static List<GradientPointParameter> gradientPointList = new ArrayList<GradientPointParameter>();
@@ -20,9 +36,6 @@ public interface PlanarTerranIF {
 
 	abstract class AbstractPlanarTerran {
 
-		static protected Double deep_sea_level;
-		static protected Double seaLevelInMeters;
-		static protected Double mountains_amount;
 		static {
 			GradientPointParameter gradientPointParameter = new GradientPointParameter(-16384.0 + seaLevelInMeters,
 					new ColorCafe(3, 29, 63, 255));
