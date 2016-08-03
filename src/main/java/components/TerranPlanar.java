@@ -50,8 +50,8 @@ public class TerranPlanar extends Planar implements PlanarTerranIF{
 		PlanarBaseContinent planarBaseContinent = new PlanarBaseContinent(continent_frequency,
 				base_continent_def_persistence_0, continent_lacunarity, base_continent_def_octave_count_pe0,
 				controlPoints, base_continent_def_persistence_1, base_continent_def_octave_count_pe1,
-				base_continent_def_scale, base_continent_def_bias, continent_def_se_lower_bounds,
-				continent_def_se_upper_bounds, NoiseQuality.QUALITY_STD);
+				base_continent_def_scale, base_continent_def_bias, base_continent_def_clamp_lower_bound,
+				base_continent_def_clamp_upper_bound, NoiseQuality.QUALITY_STD);
 		Cached baseContinent = planarBaseContinent.build();
 		PlanarContinent planarContinent = new PlanarContinent(null, Boolean.FALSE, tu0_frequency, tu1_frequency,
 				tu2_frequency, tu0_power_scalar, tu1_power_scalar, tu2_power_scalar, tu0_roughness, tu1_roughness,

@@ -8,13 +8,9 @@ public class TerranPlanarApp {
 	
 	public void basicTerran() {
 		TerranPlanar terranPlanar = new TerranPlanar();
-		ImageCafe  imageCafe = terranPlanar.build(Boolean.TRUE);
-		String uri = "images/" + Math.random()
-		+ "TerranPlanarApp0.png";
-		Output.writer(imageCafe, uri);
 
-		imageCafe = terranPlanar.build(Boolean.FALSE);
-		uri = "images/" + Math.random()
+		ImageCafe imageCafe = terranPlanar.build(Boolean.FALSE);
+		String uri = "images/" + Math.random()
 		+ "TerranPlanarApp00.png";
 		Output.writer(imageCafe, uri);
 
