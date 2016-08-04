@@ -49,8 +49,9 @@ public class PlanarTerrainType implements CachedIF {
 		Integer currSeed = GenRandomRolls.Instance().getD1000();
 		Turbulence turbulence = new TurbulenceBuilder().build(currSeed, terrainTypeFrequency, terrainTypePower,
 				terainTypeRoughness, continentDef);
+		Cached cachedTurbulence = new Cached(turbulence);  // subtle nasty bug fixed.
 		Terrace terrace = new TerraceBuilder().build(terrainTypeLowControlPoint, terrainTypeMidControlPoint,
-				terrainTypeHighControlPoint, planarLevel, shelfLevel, turbulence);
+				terrainTypeHighControlPoint, planarLevel, shelfLevel, cachedTurbulence);
 		this.terrainTypeDef = new Cached(terrace);
 		logger.info(this.toString());
 		return this.terrainTypeDef;

@@ -3,6 +3,7 @@ package libnoiseforjava.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import libnoiseforjava.module.Cached;
 import libnoiseforjava.module.ModuleBase;
 import libnoiseforjava.module.Terrace;
 
@@ -15,11 +16,11 @@ public class TerraceBuilder {
 	Double shelf_level;
 	
 	List<Double> controlPoints;
-	ModuleBase sourceModule;
+	Cached sourceModule;
 	Terrace terrace;
 	
 	public Terrace build(Double low_control_point_scalar, Double mid_control_point_scalar,
-			Double high_control_point_scalar, Double p_level, Double shelf_level, ModuleBase moduleBase) {
+			Double high_control_point_scalar, Double p_level, Double shelf_level, Cached moduleBase) {
 		this.low_control_point_scalar = low_control_point_scalar;
 		this.mid_control_point_scalar = mid_control_point_scalar;
 		this.high_control_point_scalar = high_control_point_scalar;
