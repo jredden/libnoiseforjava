@@ -31,6 +31,8 @@ import javax.management.RuntimeErrorException;
 
 import org.apache.log4j.Logger;
 
+import com.zenred.util.GenRandomRolls;
+
 import libnoiseforjava.Interp;
 import libnoiseforjava.Misc;
 import libnoiseforjava.exception.ExceptionInvalidParam;
@@ -169,8 +171,9 @@ public class Terrace extends ModuleBase
       }
       // tough debugging
       catch(NullPointerException npe){
-    	  logger.error("Source Module:"+sourceModules[0] + "generated null pointer exception " + npe.getStackTrace());
-    	  return 1.0;
+    	  Double fake = 0.1+(GenRandomRolls.Instance().draw_rand() *0.9);
+    	  logger.error("Source Module:"+sourceModules[0] + " generated null pointer exception " + fake + " fake value generated");
+    	  return fake;
       }
       
 
