@@ -8,23 +8,25 @@ import libnoiseforjava.util.ImageCafe;
 import libnoiseforjava.util.NoiseMap;
 import libnoiseforjava.util.NoiseMapBuilderSphere;
 
-public class TerranPlanar extends Planar implements PlanarTerranIF{
+public class OddTerranPlanar extends Planar implements OddPlanarTerranIF{
 	
 	
 		
 	// overrides static variables in abstract class
-	protected static Double planet_circumference = 44236800.0;
+	protected static Double planet_circumference = 64236800.0;
 	protected static Double meters_per_degree = planet_circumference / 360.0;
 	protected static Double resinmeters = (degextent / gridextent) * meters_per_degree;
 	protected static Double inverse_res_in_meters = 1.0 / resinmeters;
 
 	protected static Double lightcontrast = new Double(1.0 / resinmeters);
+	
+	protected static Double spheresScalar = 2000.0;
 
 	// implements PlanarTerranIF static variables
 	
 	class PlanarTerranImpl extends AbstractPlanarTerran{}
 	
-	protected static TerranPlanar terranPlanar = new TerranPlanar();
+	protected static OddTerranPlanar terranPlanar = new OddTerranPlanar();
 	protected static PlanarTerranImpl planarTerranImpl = terranPlanar.new PlanarTerranImpl();
 	
 	static Double scalar_divisor = 2.0;
@@ -45,7 +47,7 @@ public class TerranPlanar extends Planar implements PlanarTerranIF{
 				base_continent_def_scale, base_continent_def_bias, base_continent_def_clamp_lower_bound,
 				base_continent_def_clamp_upper_bound, NoiseQuality.QUALITY_STD);
 		Cached baseContinent = planarBaseContinent.build();
-		PlanarContinent planarContinent = new PlanarContinent(null, Boolean.FALSE, tu0_frequency, tu1_frequency,
+		PlanarContinent planarContinent = new PlanarContinent(spheresScalar, Boolean.TRUE, tu0_frequency, tu1_frequency,
 				tu2_frequency, tu0_power_scalar, tu1_power_scalar, tu2_power_scalar, tu0_roughness, tu1_roughness,
 				tu2_roughness, continent_def_se_lower_bounds, continent_def_se_upper_bounds,
 				continent_def_se_edge_falloff, baseContinent);
