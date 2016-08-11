@@ -399,8 +399,9 @@ public class RendererImage
             || sourceNoiseMap.getWidth  () <= 0
             || sourceNoiseMap.getHeight () <= 0
             || gradient.getGradientPointCount () < 2)
-         throw new ExceptionInvalidParam ("Invalid Parameter in RendererImage");
-
+			throw new ExceptionInvalidParam("Invalid Parameter in RendererImage:" + sourceNoiseMap + "::"
+					+ destImageCafe + "::" + sourceNoiseMap.getWidth() + "::" + sourceNoiseMap.getHeight()+ 
+					"::"+gradient.getGradientPointCount ()+"::");
 
       int width  = sourceNoiseMap.getWidth  ();
       int height = sourceNoiseMap.getHeight ();

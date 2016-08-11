@@ -22,7 +22,7 @@ public class OddTerranPlanar extends Planar implements OddPlanarTerranIF{
 	
 	protected static Double spheresScalar = 2000.0;
 
-	// implements PlanarTerranIF static variables
+	// implements OddPlanarTerranIF static variables
 	
 	class PlanarTerranImpl extends AbstractPlanarTerran{}
 	
@@ -55,7 +55,7 @@ public class OddTerranPlanar extends Planar implements OddPlanarTerranIF{
 
 		PlanarTerrainType planarTerrainType = new PlanarTerrainType(continent, terrain_type_tu_frequency,
 				terrain_type_tu_power, terrain_type_tu_roughness, terrain_type_def_low_control_point,
-				terrain_type_def_mid_control_point_scalar, terrain_type_def_high_control_point, shelf_level, PlanarTerranIF.sea_level);
+				terrain_type_def_mid_control_point_scalar, terrain_type_def_high_control_point, shelf_level, OddPlanarTerranIF.sea_level);
 		Cached terrainType = planarTerrainType.build();
 		
 		PlanarMountanType planarMountanType = new PlanarMountanType(mountain_base_def_tu0_frequency,
@@ -167,7 +167,7 @@ public class OddTerranPlanar extends Planar implements OddPlanarTerranIF{
 				continental_shelf_te_lowest_control_point, continental_shelf_te_low_control_point,
 				continental_shelf_te_high_control_point, shelf_level, continent, continental_shelf_frequency_scalar,
 				continent_lacunarity, continental_shelf_frequency_octave_count, NoiseQuality.QUALITY_BEST,
-				continental_shelf_sb_scale, continental_shelf_sb_bias, continental_shelf_cl_bounds, PlanarTerranIF.sea_level);
+				continental_shelf_sb_scale, continental_shelf_sb_bias, continental_shelf_cl_bounds, OddPlanarTerranIF.sea_level);
 		
 		Cached continentalShelf = planarContinentalShelfType.build();
 		
@@ -191,7 +191,7 @@ public class OddTerranPlanar extends Planar implements OddPlanarTerranIF{
 		PlanarContinentsWithMountainsType planarContinentsWithMountainsType = new PlanarContinentsWithMountainsType(
 				baseContinentElevation, scaledMountainTerrain, continent, continentsMountainsControlPoints,
 				continent_with_mountains_bounds_scalar0, continent_with_mountains_bounds_scalar1,
-				continent_with_mountains_edge_falloff, continentsWithHills, terrainType, PlanarTerranIF.mountains_amount);
+				continent_with_mountains_edge_falloff, continentsWithHills, terrainType, OddPlanarTerranIF.mountains_amount);
 		
 		Cached continentsWithMountains = planarContinentsWithMountainsType.build();
 		
@@ -206,11 +206,11 @@ public class OddTerranPlanar extends Planar implements OddPlanarTerranIF{
 		
 		PlanarContinentsWithRiversType planarContinentsWithRiversType = new PlanarContinentsWithRiversType(
 				continents_with_rivers_sb_scalar0, continents_with_rivers_sb_scalar1, river_depth, riverPositions,
-				continentsWithBadlands, PlanarTerranIF.sea_level, continent_height_scale);
+				continentsWithBadlands, OddPlanarTerranIF.sea_level, continent_height_scale);
 		
 		Cached continentsWithRivers = planarContinentsWithRiversType.build();
 		
-		PlanarFinalType planarFinalType = new PlanarFinalType(PlanarTerranIF.max_elev, PlanarTerranIF.min_elev, scalar_divisor, continentsWithRivers);
+		PlanarFinalType planarFinalType = new PlanarFinalType(OddPlanarTerranIF.max_elev, OddPlanarTerranIF.min_elev, scalar_divisor, continentsWithRivers);
 		
 		Cached finalPlanet = planarFinalType.build();
 
@@ -227,7 +227,7 @@ public class OddTerranPlanar extends Planar implements OddPlanarTerranIF{
 		planet.setSourceModule(finalPlanet);
 		planet.setDestNoiseMap(elevGrid);
 		planet.build();
-		RenderImageParameter renderImageParameter = new RenderImageParameter(PlanarTerranIF.gradientPointList, elevGrid, renderParameter,
+		RenderImageParameter renderImageParameter = new RenderImageParameter(OddPlanarTerranIF.gradientPointList, elevGrid, renderParameter,
 				lightcontrast, lightcontrast);
 		ImageCafe imageCafe = Builder.buildRendererImage(renderImageParameter);
 
