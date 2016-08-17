@@ -28,6 +28,13 @@ public class RATest {
 		someVectors[5] = someDimensions[5] - virtEarth[1];	// v
 		
 	}
+	
+	private static Double checkForNegativeDegree(Double degree){
+		if(degree < 0.0){
+			degree += 360.0;
+		}
+		return degree;
+	}
 
 	public static void main(String[] args) {
 		Double tn0 = Math.atan2(someVectors[1], someVectors[0]);
@@ -38,11 +45,25 @@ public class RATest {
 		Double d1 = Math.toDegrees(tn1);
 		Double d2 = Math.toDegrees(tn2);
 		
-		d2 += 360.0;  // negative degrees
+		// d2 += 360.0;   negative degrees
+		d0 = checkForNegativeDegree(d0);
+		d1 = checkForNegativeDegree(d1);
+		d2 = checkForNegativeDegree(d2);
+		
 		
 		System.out.println("vectU:" + someVectors[0] + ":VectV:" + someVectors[1] + ":tn0:" + tn0 + ":d0:" + d0 + ":");
 		System.out.println("vectU:" + someVectors[2] + ":VectV:" + someVectors[3] + ":tn1:" + tn1 + ":d1:" + d1 + ":");
 		System.out.println("vectU:" + someVectors[4] + ":VectV:" + someVectors[5] + ":tn2:" + tn2 + ":d2:" + d2 + ":");
+		
+		Double declination = Declension.determineQuadrant(d0);
+		System.out.println("d0:"+d0+" declenation:" + declination);
+		
+		declination = Declension.determineQuadrant(d1);
+		System.out.println("d1:"+d1+" declenation:" + declination);
+		
+		declination = Declension.determineQuadrant(d2);
+		System.out.println("d2:"+d2+" declenation:" + declination);
+
 		
 	}
 

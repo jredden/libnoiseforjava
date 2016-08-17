@@ -1,0 +1,1 @@
+java -cp target/libfornoise-1.0.jar:/Users/jredden/.m2/repository/log4j/log4j/1.2.14/log4j-1.2.14.jar:/Users/jredden//.m2/repository/com/zenred/johntredden/1.0/johntredden-1.0.jar  app.TerranPlanarApp > /Volumes/Scratchintosh/tmp/debugNoise2.txt
