@@ -80,6 +80,7 @@ public class StarTypeMapping {
 		cosmosToCelestiaMap.put("sdk","KVI");
 		cosmosToCelestiaMap.put("sdm","MVI");
 		cosmosToCelestiaMap.put("do","D");
+		cosmosToCelestiaMap.put("dwo","D");
 		cosmosToCelestiaMap.put("db","DA1");
 		cosmosToCelestiaMap.put("da","DA2");
 		cosmosToCelestiaMap.put("df","DA3");
@@ -98,8 +99,8 @@ public class StarTypeMapping {
 	 */
 	public static String doTheMapping(String cosmosType){
 		String result;
-		
-		result = cosmosToCelestiaMap.get(cosmosType);
+		// str.substring(0, str.length()-1)
+		result = cosmosToCelestiaMap.get(cosmosType.substring(0, cosmosType.length()-1));  // drop number
 		if(null == result){
 			logger.error("CosmosType:"+cosmosType+" did not map");
 		}
