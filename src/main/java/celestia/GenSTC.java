@@ -48,7 +48,7 @@ public class GenSTC {
 			Double magnitude, Double period, Double axis, Double eccentricity, Double inclination,
 			Double ascendingnode) {
 		return star.format(
-				new Object[] { hipparch, name, barycentre, spectralType, magnitude.toString(), period.toString(),
+				new Object[] { hipparch.toString(), name, barycentre, spectralType, magnitude.toString(), period.toString(),
 						axis.toString(), eccentricity.toString(), inclination.toString(), ascendingnode.toString() });
 	}
 	
