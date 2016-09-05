@@ -5,7 +5,24 @@ import com.zenred.cosmos.domain.Star;
 
 public class Planar {
 	
-	public static enum PlanarClass {PLANET, MOON}
+	private static String GRAPHIC_SUFFIX = ".png";
+	
+	public enum PlanarClass {PLANET("planet"){}, MOON("moon"){};
+		
+		private String type;
+		
+		PlanarClass(String type){
+			this.setType(type);
+		}
+		
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+	};
 	
 	/*
 	 * Open GL colors ... take HTML colors and divide by 255
@@ -44,7 +61,8 @@ public class Planar {
 	
 	public static Planar build(Star star, Planetoid planetoid, PlanarClass planarClass){
 		Planar instance = new Planar();
-		
+		instance.planarClass = planarClass;
+		instance.texture = planetoid.getPlanetoidName()+GRAPHIC_SUFFIX;
 		return instance;
 	}
 }
