@@ -1,5 +1,8 @@
 package celestia.domain;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 
  * @author jredden
@@ -106,7 +109,18 @@ public class StarExtension {
 		this.apparantMagnitude = apparantMagnitude;
 	}
 	
-	
+	public static Map<String, Object> getStarExtensionMap(StarExtension starExtension){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(StarExtensionDao.APPARANTMAGNITUDE, starExtension.getApparantMagnitude());
+		map.put(StarExtensionDao.ASCENDINGNODE, starExtension.getAscendingNode());
+		map.put(StarExtensionDao.ECCENTRICITY, starExtension.getEccentricity());
+		map.put(StarExtensionDao.INCLINATION, starExtension.getInclination());
+		map.put(StarExtensionDao.PERIOD, starExtension.getPeriod());
+		map.put(StarExtensionDao.SEMIMAJORAXIS, starExtension.getSemiMajorAxis());
+		map.put(StarExtensionDao.STAREXTENSIONID, starExtension.getStarExtensionId());
+		map.put(StarExtensionDao.STARNAME, starExtension.getStarName());
+		return map;
+	}
 
 	@Override
 	public int hashCode() {
