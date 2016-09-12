@@ -1,9 +1,12 @@
 package celestia.domain;
 
+import java.util.Map;
+
 import com.zenred.johntredden.domain.AbstractJDBCDao;
 
 public class StarExtensionDao extends AbstractJDBCDao {
 	
+	public static final String STAR_EXTENSION = "StarExtension";
 	
 	public static final String STAREXTENSIONID = "starExtensionId";
 	public static final String STARID = "starId";
@@ -19,7 +22,7 @@ public class StarExtensionDao extends AbstractJDBCDao {
 
 
 	public StarExtension addStarExtension(StarExtension starExtension){
-		
+		Map<String, Object> starExtensionMap = StarExtension.getStarExtensionMap(starExtension);
 		return null;
 	}
 }

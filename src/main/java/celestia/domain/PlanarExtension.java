@@ -484,7 +484,38 @@ public class PlanarExtension {
 		map.put(PlanarExtensionDao.ATMOSPHERELOWERG, planarExtension.getLower().gOfRGB);		
 		map.put(PlanarExtensionDao.ATMOSPHERELOWERB, planarExtension.getLower().bOfRGB);		
 		map.put(PlanarExtensionDao.ORBITMEANLONGITUDE, planarExtension.getMeanLongitude());
+		map.put(PlanarExtensionDao.NIGHTTEXTURE, planarExtension.getNightTexture());
+		map.put(PlanarExtensionDao.OBLATENESS, planarExtension.getOblateness());
+		map.put(PlanarExtensionDao.OBLIQUITY, planarExtension.getObliquity());
+		map.put(PlanarExtensionDao.ORBITPERIOD, planarExtension.getPeriod());
+		map.put(PlanarExtensionDao.ROTATIONPERIOD, planarExtension.getRotationPeriod());
+		map.put(PlanarExtensionDao.SEMIMAJORAXIS, planarExtension.getSemiMajorAxis());
+		map.put(PlanarExtensionDao.ATMOSPHERESKYR, planarExtension.getSky().rOfRGB);
+		map.put(PlanarExtensionDao.ATMOSPHERESKYG, planarExtension.getSky().gOfRGB);
+		map.put(PlanarExtensionDao.ATMOSPHERESKYB, planarExtension.getSky().bOfRGB);
+		map.put(PlanarExtensionDao.SPECULARPOWER, planarExtension.getSpecularPower());
+		map.put(PlanarExtensionDao.SPECULARTEXTURE, planarExtension.getSpecularTexture());
+		map.put(PlanarExtensionDao.TEXTURE, planarExtension.getTexture());
+		map.put(PlanarExtensionDao.ATMOSPHEREUPPERR, planarExtension.getUpper().rOfRGB);
+		map.put(PlanarExtensionDao.ATMOSPHEREUPPERG, planarExtension.getUpper().gOfRGB);
+		map.put(PlanarExtensionDao.ATMOSPHEREUPPERB, planarExtension.getUpper().bOfRGB);
 		return map;
+	}
+	
+	public static String[] csvPlanarExtension() {
+		return new String[] { PlanarExtensionDao.ALBEDO, PlanarExtensionDao.ATMOSPHEREHEIGHT,
+				PlanarExtensionDao.CLOUDHEIGHT, PlanarExtensionDao.CLOUDMAP, PlanarExtensionDao.CLOUDSPEED,
+				PlanarExtensionDao.COLORR, PlanarExtensionDao.COLORG, PlanarExtensionDao.COLORB,
+				PlanarExtensionDao.ECCENTRICITY, PlanarExtensionDao.HAZECOLORR, PlanarExtensionDao.HAZECOLORG,
+				PlanarExtensionDao.HAZECOLORB, PlanarExtensionDao.ORBITLONGOFPERICENTRE,
+				PlanarExtensionDao.ATMOSPHERELOWERR, PlanarExtensionDao.ATMOSPHERELOWERG,
+				PlanarExtensionDao.ATMOSPHERELOWERB, PlanarExtensionDao.ORBITMEANLONGITUDE,
+				PlanarExtensionDao.NIGHTTEXTURE, PlanarExtensionDao.OBLATENESS, PlanarExtensionDao.OBLIQUITY,
+				PlanarExtensionDao.ORBITPERIOD, PlanarExtensionDao.ROTATIONPERIOD, PlanarExtensionDao.SEMIMAJORAXIS,
+				PlanarExtensionDao.ATMOSPHERESKYR, PlanarExtensionDao.ATMOSPHERESKYG, PlanarExtensionDao.ATMOSPHERESKYB,
+				PlanarExtensionDao.SPECULARPOWER, PlanarExtensionDao.SPECULARTEXTURE, PlanarExtensionDao.TEXTURE,
+				PlanarExtensionDao.ATMOSPHEREUPPERR, PlanarExtensionDao.ATMOSPHEREUPPERG,
+				PlanarExtensionDao.ATMOSPHEREUPPERB };
 	}
 
 	@Override

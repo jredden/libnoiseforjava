@@ -10,7 +10,7 @@ import java.util.Map;
  */
 
 public class StarExtension {
-	
+
 	private Integer starExtensionId;
 	private Integer starId;
 	private String starName;
@@ -20,9 +20,10 @@ public class StarExtension {
 	private Double ascendingNode;
 	private Double inclination;
 	private Double apparantMagnitude;
-	
-	public StarExtension(){}
-	
+
+	public StarExtension() {
+	}
+
 	public StarExtension(Integer starExtensionId, Integer starId, String starName, Double period, Double semiMajorAxis,
 			Double eccentricity, Double ascendingNode, Double inclination, Double apparantMagnitude) {
 		super();
@@ -108,8 +109,8 @@ public class StarExtension {
 	public void setApparantMagnitude(Double apparantMagnitude) {
 		this.apparantMagnitude = apparantMagnitude;
 	}
-	
-	public static Map<String, Object> getStarExtensionMap(StarExtension starExtension){
+
+	public static Map<String, Object> getStarExtensionMap(StarExtension starExtension) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(StarExtensionDao.APPARANTMAGNITUDE, starExtension.getApparantMagnitude());
 		map.put(StarExtensionDao.ASCENDINGNODE, starExtension.getAscendingNode());
@@ -120,6 +121,12 @@ public class StarExtension {
 		map.put(StarExtensionDao.STAREXTENSIONID, starExtension.getStarExtensionId());
 		map.put(StarExtensionDao.STARNAME, starExtension.getStarName());
 		return map;
+	}
+
+	public static String[] csvStarExtension() {
+		return new String[] { StarExtensionDao.APPARANTMAGNITUDE, StarExtensionDao.ASCENDINGNODE,
+				StarExtensionDao.ECCENTRICITY, StarExtensionDao.INCLINATION, StarExtensionDao.PERIOD,
+				StarExtensionDao.SEMIMAJORAXIS, StarExtensionDao.STAREXTENSIONID, StarExtensionDao.STARNAME };
 	}
 
 	@Override
@@ -203,6 +210,4 @@ public class StarExtension {
 				+ apparantMagnitude + "]";
 	}
 
-	
-	
 }
