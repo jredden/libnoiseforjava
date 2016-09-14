@@ -20,6 +20,7 @@ public class StarExtension {
 	private Double ascendingNode;
 	private Double inclination;
 	private Double apparantMagnitude;
+	private String datestamp;
 
 	public StarExtension() {
 	}
@@ -109,24 +110,34 @@ public class StarExtension {
 	public void setApparantMagnitude(Double apparantMagnitude) {
 		this.apparantMagnitude = apparantMagnitude;
 	}
+	
+	public String getDatestamp() {
+		return datestamp;
+	}
+
+	public void setDatestamp(String datestamp) {
+		this.datestamp = datestamp;
+	}
 
 	public static Map<String, Object> getStarExtensionMap(StarExtension starExtension) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(StarExtensionDao.APPARANTMAGNITUDE, starExtension.getApparantMagnitude());
 		map.put(StarExtensionDao.ASCENDINGNODE, starExtension.getAscendingNode());
-		map.put(StarExtensionDao.ECCENTRICITY, starExtension.getEccentricity());
+		map.put(StarExtensionDao.STAR_ECCENTRICITY, starExtension.getEccentricity());
 		map.put(StarExtensionDao.INCLINATION, starExtension.getInclination());
 		map.put(StarExtensionDao.PERIOD, starExtension.getPeriod());
-		map.put(StarExtensionDao.SEMIMAJORAXIS, starExtension.getSemiMajorAxis());
+		map.put(StarExtensionDao.STAR_SEMIMAJORAXIS, starExtension.getSemiMajorAxis());
 		map.put(StarExtensionDao.STAREXTENSIONID, starExtension.getStarExtensionId());
 		map.put(StarExtensionDao.STARNAME, starExtension.getStarName());
+		map.put(StarExtensionDao.STARID, starExtension.getStarId());
 		return map;
 	}
 
 	public static String[] csvStarExtension() {
 		return new String[] { StarExtensionDao.APPARANTMAGNITUDE, StarExtensionDao.ASCENDINGNODE,
-				StarExtensionDao.ECCENTRICITY, StarExtensionDao.INCLINATION, StarExtensionDao.PERIOD,
-				StarExtensionDao.SEMIMAJORAXIS, StarExtensionDao.STAREXTENSIONID, StarExtensionDao.STARNAME };
+				StarExtensionDao.STAR_ECCENTRICITY, StarExtensionDao.INCLINATION, StarExtensionDao.PERIOD,
+				StarExtensionDao.STAR_SEMIMAJORAXIS, StarExtensionDao.STAREXTENSIONID, StarExtensionDao.STARNAME,
+				StarExtensionDao.STARID };
 	}
 
 	@Override
@@ -207,7 +218,7 @@ public class StarExtension {
 		return "StarExtension [starExtensionId=" + starExtensionId + ", starId=" + starId + ", starName=" + starName
 				+ ", period=" + period + ", semiMajorAxis=" + semiMajorAxis + ", eccentricity=" + eccentricity
 				+ ", ascendingNode=" + ascendingNode + ", inclination=" + inclination + ", apparantMagnitude="
-				+ apparantMagnitude + "]";
+				+ apparantMagnitude + ", datestamp=" + datestamp + "]";
 	}
 
 }

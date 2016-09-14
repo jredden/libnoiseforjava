@@ -2,6 +2,7 @@ package celestia.domain;
 
 import java.util.Map;
 
+import org.springframework.transaction.annotation.Transactional;
 import com.zenred.johntredden.domain.AbstractJDBCDao;
 
 public class StarExtensionDao extends AbstractJDBCDao {
@@ -17,12 +18,97 @@ public class StarExtensionDao extends AbstractJDBCDao {
 	public static final String ASCENDINGNODE = "ascendingNode";
 	public static final String INCLINATION = "inclination";
 	public static final String APPARANTMAGNITUDE = "apparantMagnitude";
-	public static final String ECCENTRICITY = "eccentricity";
-	public static final String SEMIMAJORAXIS = "semiMajorAxis";
+	public static final String DATESTAMP = "datestamp";
+	
+	private static String lastStarExtensionInsertSql = "SELECT MAX("+STAREXTENSIONID+") FROM " + STAR_EXTENSION;
+	
+	private static String readStarExtensionByIdSql = "SELECT "
+			+ " stex." + STAREXTENSIONID + " "
+			+ ", stex." + STARID + " "
+			+ ", stex." + STARNAME + " "
+			+ ", stex." + PERIOD + " "
+			+ ", stex." + STAR_SEMIMAJORAXIS + " "
+			+ ", stex." + STAR_ECCENTRICITY + " "
+			+ ", stex." + ASCENDINGNODE + " "
+			+ ", stex." + INCLINATION + " "
+			+ ", stex." + APPARANTMAGNITUDE + " "
+			+ ", stex." + DATESTAMP + " "
+			+ " FROM " + STAR_EXTENSION + " stex "
+			+ " WHERE stex." + STAREXTENSIONID + " = ? "
+			;
+	
+	private static String deleteStarExtensionSql = "DELETE FROM " + STAR_EXTENSION + " WHERE " + STAREXTENSIONID
+			+ " = ? ";
 
-
-	public StarExtension addStarExtension(StarExtension starExtension){
+	/**
+	 * 
+	 * @param starExtension
+	 * @return new StarExtension object
+	 */
+	@Transactional
+	public StarExtension addStarExtension(StarExtension starExtension) {
 		Map<String, Object> starExtensionMap = StarExtension.getStarExtensionMap(starExtension);
-		return null;
+		super.jdbcInsertSetup().withTableName(STAR_EXTENSION).usingColumns(StarExtension.csvStarExtension())
+				.execute(starExtensionMap);
+		Integer starExtensionId = super.jdbcSetUp().getSimpleJdbcTemplate().queryForInt(lastStarExtensionInsertSql);
+		starExtension.setStarExtensionId(starExtensionId);
+		return readStarExtensionById(starExtensionId);
 	}
+
+	/**
+	 * 
+	 * @param starExtensionId
+	 * @return found StarExtension
+	 */
+	public StarExtension readStarExtensionById(Integer starExtensionId) {
+		Object[] param = { starExtensionId };
+		Map<String, Object> starExtensionMap = super.jdbcSetUp().getSimpleJdbcTemplate()
+				.queryForMap(readStarExtensionByIdSql, param);
+		return buildStarExtension(starExtensionMap);
+	}
+	
+	/**
+	 * 
+	 * @param starExtension
+	 */
+	public void deleteStarExtension(StarExtension starExtension){
+		super.jdbcSetUp()
+		.getSimpleJdbcTemplate()
+		.update(deleteStarExtensionSql,
+				new Object[] {starExtension.getStarExtensionId()});
+	}
+	/**
+	 * 
+	 * @param starExtension
+	 * @return true if already built
+	 */
+	public Boolean doesStarExtensionExist(StarExtension starExtension){
+		Boolean answer = false;
+		
+		return answer;
+	}
+	
+	private StarExtension buildStarExtension(Map<String, Object> starExtensionMap){
+		StarExtension starExtension = new StarExtension();
+		String s_starExtensionId = starExtensionMap.get(STAREXTENSIONID).toString();
+		starExtension.setStarExtensionId(new Integer(s_starExtensionId));
+		String s_starId = starExtensionMap.get(STARID).toString();
+		starExtension.setStarId(new Integer(s_starId));
+		starExtension.setStarName(starExtensionMap.get(STARNAME).toString());
+		String s_period = starExtensionMap.get(PERIOD).toString();
+		starExtension.setPeriod(new Double(s_period));
+		String s_starSemiMajorAxis = starExtensionMap.get(STAR_SEMIMAJORAXIS).toString();
+		starExtension.setSemiMajorAxis(new Double(s_starSemiMajorAxis));
+		String s_starEccentricity = starExtensionMap.get(STAR_ECCENTRICITY).toString();
+		starExtension.setEccentricity(new Double(s_starEccentricity));
+		String s_ascendingNode = starExtensionMap.get(ASCENDINGNODE).toString();
+		starExtension.setAscendingNode(new Double(s_ascendingNode));
+		String s_inclinaton = starExtensionMap.get(INCLINATION).toString();
+		starExtension.setInclination(new Double(s_inclinaton));
+		String s_apparentMagnitude = starExtensionMap.get(APPARANTMAGNITUDE).toString();
+		starExtension.setApparantMagnitude(new Double(s_apparentMagnitude));
+		starExtension.setDatestamp(starExtensionMap.get(DATESTAMP).toString());
+		return starExtension;
+	}
+	
 }

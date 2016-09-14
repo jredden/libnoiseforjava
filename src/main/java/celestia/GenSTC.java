@@ -3,6 +3,8 @@ package celestia;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.zenred.cosmos.domain.ClusterRep;
 import com.zenred.cosmos.domain.ClusterRepDao;
 import com.zenred.cosmos.domain.Star;
@@ -11,6 +13,8 @@ import com.zenred.cosmos.domain.SystemClusterSubSet;
 import com.zenred.cosmos.domain.SystemDao;
 import com.zenred.util.GenRandomRolls;
 
+import celestia.domain.StarExtension;
+import celestia.domain.StarExtensionDao;
 import celestia.persistence.BasicFileWriter;
 
 /**
@@ -21,6 +25,8 @@ import celestia.persistence.BasicFileWriter;
  */
 
 public class GenSTC {
+	
+	private static Logger logger = Logger.getLogger(GenSTC.class);
 	
 	private static Integer fakeHipparchLow = new Integer(3000000);
 	private static Integer fakeHipparchHigh = new Integer(6000000);
@@ -53,6 +59,7 @@ public class GenSTC {
 	}
 	
 	public static void build() {
+		StarExtensionDao starExtensionDao = new StarExtensionDao();
 		StringBuilder fileImage = new StringBuilder("");
 		SystemDao systemDao = new SystemDao();
 		ClusterRepDao clusterRepDao = new ClusterRepDao();
@@ -64,12 +71,12 @@ public class GenSTC {
 			Double declension = Declension.determineQuadrant(rightAscension);
 			Double distance = Math.sqrt(systemClusterSubSet.getUcoordinate() * systemClusterSubSet.getUcoordinate()
 					+ systemClusterSubSet.getVcoordinate() * systemClusterSubSet.getVcoordinate());
-			distance /= 10.0;  // scale to celestia maximum, 16K light years.
+			distance /= 10.0; // scale to celestia maximum, 16K light years.
 			String baryCentreName = systemClusterSubSet.getClustername();
 			ClusterRep clusterRep = clusterRepDao.readClusterRepById(systemClusterSubSet.getClusterRepId());
 			fileImage.append(buildBaryCentre(baryCentreName, rightAscension, declension, distance));
 			List<Star> starList = starDao.readStarsInCluster(clusterRep);
-			for(Star star : starList){
+			for (Star star : starList) {
 				String starName = star.getName();
 				String spectralType = StarTypeMapping.doTheMapping(star.getStar_type());
 				Double apparentMagnitude = star.getLuminosity();
@@ -78,13 +85,18 @@ public class GenSTC {
 				Double eccentricity = Eccentriity.build();
 				Double inclination = Inclination.build();
 				Double ascendingNode = 360.0 * GenRandomRolls.Instance().draw_rand();
-				fileImage.append(buildStar(genFakeHipparch(), starName, baryCentreName, spectralType, apparentMagnitude, period, semiMajorAxis, eccentricity, inclination, ascendingNode));
+				StarExtension starExtension = new StarExtension(null, star.getStarId(), starName, period, semiMajorAxis,
+						eccentricity, ascendingNode, inclination, apparentMagnitude);
+				starExtension = starExtensionDao.addStarExtension(starExtension);
+				logger.info(starExtension);
+				fileImage.append(buildStar(genFakeHipparch(), starName, baryCentreName, spectralType, apparentMagnitude,
+						period, semiMajorAxis, eccentricity, inclination, ascendingNode));
 			}
 		}
 		String uri = "celestia/cosmos/" + Math.random() + "_cosmos.stc";
 		BasicFileWriter.writeIt(fileImage, uri);
 	}
-	
+
 	public static void main(String[] args) {
 		build();
 	}
