@@ -24,7 +24,21 @@ public class StarExtensionDaoTest {
 		StarExtension starExtension = new StarExtension(null, starId, starName, period, semiMajorAxis, 
 				eccentricity, ascendingNode, inclination, apparantMagnitude);
 		StarExtension starExtension_result = starExtensionDao.addStarExtension(starExtension);
+		logger.info("addReadAndDeleteTest:" + starExtension_result);
+		assertTrue(starExtension_result.getStarExtensionId() != null);
+		starExtensionDao.deleteStarExtension(starExtension_result);
+	}
+	@Test
+	public void addReadUpdateAndDeleteTest() {
+		StarExtensionDao starExtensionDao = new StarExtensionDao();
+		StarExtension starExtension = new StarExtension(null, starId, starName, period, semiMajorAxis, 
+				eccentricity, ascendingNode, inclination, apparantMagnitude);
+		StarExtension starExtension_result = starExtensionDao.addStarExtension(starExtension);
 		logger.info(starExtension_result);
+		assertTrue(starExtension_result.getStarExtensionId() != null);
+		starExtension_result.setApparantMagnitude(starExtension.getApparantMagnitude()+2.0);
+		starExtension_result = starExtensionDao.updateStarExtensionByStarName(starExtension_result);
+		logger.info("addReadUpdateAndDeleteTest:"+starExtension_result);
 		assertTrue(starExtension_result.getStarExtensionId() != null);
 		starExtensionDao.deleteStarExtension(starExtension_result);
 	}

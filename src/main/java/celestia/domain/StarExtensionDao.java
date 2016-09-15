@@ -3,6 +3,8 @@ package celestia.domain;
 import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
+
+import com.zenred.cosmos.domain.System;
 import com.zenred.johntredden.domain.AbstractJDBCDao;
 
 public class StarExtensionDao extends AbstractJDBCDao {
@@ -36,9 +38,34 @@ public class StarExtensionDao extends AbstractJDBCDao {
 			+ " FROM " + STAR_EXTENSION + " stex "
 			+ " WHERE stex." + STAREXTENSIONID + " = ? "
 			;
+	private static String readStarExtensionByStarNameSql = "SELECT "
+			+ " stex." + STAREXTENSIONID + " "
+			+ ", stex." + STARID + " "
+			+ ", stex." + STARNAME + " "
+			+ ", stex." + PERIOD + " "
+			+ ", stex." + STAR_SEMIMAJORAXIS + " "
+			+ ", stex." + STAR_ECCENTRICITY + " "
+			+ ", stex." + ASCENDINGNODE + " "
+			+ ", stex." + INCLINATION + " "
+			+ ", stex." + APPARANTMAGNITUDE + " "
+			+ ", stex." + DATESTAMP + " "
+			+ " FROM " + STAR_EXTENSION + " stex "
+			+ " WHERE stex." + STARNAME + " = ? "
+			;
 	
 	private static String deleteStarExtensionSql = "DELETE FROM " + STAR_EXTENSION + " WHERE " + STAREXTENSIONID
 			+ " = ? ";
+	
+	private static String updateStarExtensionByStarNameSql = "UPDATE " + STAR_EXTENSION + " stex SET " 
+			+ " stex."+STARID+" = ?  "
+			+ ", stex."+PERIOD+" = ?  "
+			+ ", stex."+STAR_SEMIMAJORAXIS+" = ?  "
+			+ ", stex."+STAR_ECCENTRICITY+" = ?  "
+			+ ", stex."+ASCENDINGNODE+" = ?  "
+			+ ", stex."+INCLINATION+" = ?  "
+			+ ", stex."+APPARANTMAGNITUDE+" = ?  "
+			+ " WHERE stex."+STARNAME+ " = ?"; 
+			;
 
 	/**
 	 * 
@@ -67,6 +94,13 @@ public class StarExtensionDao extends AbstractJDBCDao {
 		return buildStarExtension(starExtensionMap);
 	}
 	
+	public StarExtension readStarExtensionByStarName(String starName){
+		Object[] param = { starName };
+		Map<String, Object> starExtensionMap = super.jdbcSetUp().getSimpleJdbcTemplate()
+				.queryForMap(readStarExtensionByStarNameSql, param);
+		return buildStarExtension(starExtensionMap);
+	}
+	
 	/**
 	 * 
 	 * @param starExtension
@@ -86,6 +120,15 @@ public class StarExtensionDao extends AbstractJDBCDao {
 		Boolean answer = false;
 		
 		return answer;
+	}
+	
+	public StarExtension updateStarExtensionByStarName(StarExtension starExtension) {
+		super.jdbcSetUp().getSimpleJdbcTemplate().update(updateStarExtensionByStarNameSql,
+				new Object[] { starExtension.getStarId(), starExtension.getPeriod(), starExtension.getSemiMajorAxis(),
+						starExtension.getEccentricity(), starExtension.getAscendingNode(),
+						starExtension.getInclination(), starExtension.getApparantMagnitude(),
+						starExtension.getStarName() });
+		return readStarExtensionByStarName(starExtension.getStarName());
 	}
 	
 	private StarExtension buildStarExtension(Map<String, Object> starExtensionMap){
