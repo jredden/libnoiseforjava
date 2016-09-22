@@ -36,6 +36,8 @@ public class StarExtensionDaoTest {
 		StarExtension starExtension_result = starExtensionDao.addStarExtension(starExtension);
 		logger.info(starExtension_result);
 		assertTrue(starExtension_result.getStarExtensionId() != null);
+		Boolean doesSystemExist = starExtensionDao.doesStarExtensionExist(starExtension_result);
+		assertTrue(doesSystemExist);
 		starExtension_result.setApparantMagnitude(starExtension.getApparantMagnitude()+2.0);
 		starExtension_result = starExtensionDao.updateStarExtensionByStarName(starExtension_result);
 		logger.info("addReadUpdateAndDeleteTest:"+starExtension_result);

@@ -52,6 +52,11 @@ public class StarExtensionDao extends AbstractJDBCDao {
 			+ " FROM " + STAR_EXTENSION + " stex "
 			+ " WHERE stex." + STARNAME + " = ? "
 			;
+	private static String readSystemByNameCountSql = "SELECT COUNT(*) " 
+			+ " FROM " + STAR_EXTENSION + " stex " + " WHERE stex." + STARNAME
+			+ " = ? "
+			;
+
 	
 	private static String deleteStarExtensionSql = "DELETE FROM " + STAR_EXTENSION + " WHERE " + STAREXTENSIONID
 			+ " = ? ";
@@ -117,11 +122,20 @@ public class StarExtensionDao extends AbstractJDBCDao {
 	 * @return true if already built
 	 */
 	public Boolean doesStarExtensionExist(StarExtension starExtension){
-		Boolean answer = false;
-		
+		Boolean answer = true;
+		int count  = super.jdbcSetUp().getSimpleJdbcTemplate()
+				.queryForInt(readSystemByNameCountSql, starExtension.getStarName());
+		if(0 == count ){
+			answer = false;
+		}
 		return answer;
 	}
 	
+	/**
+	 * 
+	 * @param starExtension
+	 * @return updated StarExtension domain object
+	 */
 	public StarExtension updateStarExtensionByStarName(StarExtension starExtension) {
 		super.jdbcSetUp().getSimpleJdbcTemplate().update(updateStarExtensionByStarNameSql,
 				new Object[] { starExtension.getStarId(), starExtension.getPeriod(), starExtension.getSemiMajorAxis(),
