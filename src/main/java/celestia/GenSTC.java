@@ -87,7 +87,13 @@ public class GenSTC {
 				Double ascendingNode = 360.0 * GenRandomRolls.Instance().draw_rand();
 				StarExtension starExtension = new StarExtension(null, star.getStarId(), starName, period, semiMajorAxis,
 						eccentricity, ascendingNode, inclination, apparentMagnitude);
-				starExtension = starExtensionDao.addStarExtension(starExtension);
+				if (starExtensionDao.doesStarExtensionExist(starExtension)) {
+					// already, there update
+					starExtension = starExtensionDao.updateStarExtensionByStarName(starExtension);
+				} else {
+
+					starExtension = starExtensionDao.addStarExtension(starExtension);
+				}
 				logger.info(starExtension);
 				fileImage.append(buildStar(genFakeHipparch(), starName, baryCentreName, spectralType, apparentMagnitude,
 						period, semiMajorAxis, eccentricity, inclination, ascendingNode));
