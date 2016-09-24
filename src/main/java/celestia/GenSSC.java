@@ -22,28 +22,34 @@ public class GenSSC {
 	public static String moonClass = "moon";
 	public static String imageType = ".png";
 	public static String nightImageType = ".night.png";
+	public static String bumpMapType = ".bump.png";
 	
 	// 0 -> planet  1-> star 2-> rest of planet ... or ... 0 -> moon  1 -> planet 2-> rest of moon
 	private static MessageFormat planar = new MessageFormat("\"{0}\" \"{1}\" '{' \n {2} \n '}' \n\n");
 	// 0 -> moon or planet or other in system object
 	private static MessageFormat planarClass = new MessageFormat("Class \"{0}\" \n");
 	// png image
-	private static MessageFormat texture = new MessageFormat("Texture \"{0}{1}\" ");
+	private static MessageFormat texture = new MessageFormat("Texture \"{0}{1}\" \n ");
 	// night png image
-	private static MessageFormat nightTexture = new MessageFormat("NightTexture \"{0}{1}\" ");
+	private static MessageFormat nightTexture = new MessageFormat("NightTexture \"{0}{1}\" \n ");
+	// bump map png image
+	private static MessageFormat bumpMap = new MessageFormat("BumpMap \"{0}{1}\" \n ");
+	// bump height
+	private static MessageFormat bumpHeight = new MessageFormat("BumpHeight {0} \n");
 	
-	private static Double bumpHeight(UnifiedPlanetoidI unifiedPlanetoidI){
-		Double height = null;
-		Double radius = unifiedPlanetoidI.getPlanetoid().getRadius();
-		String planarSizeType = GenAtmosphere.sizeType(radius);
-		String temperatureType = GenAtmosphere.temperatureType(unifiedPlanetoidI.getPlanetoid().getTemperature());
-		return height;
-	}
-	
+	/**
+	 * generic planar builder for SSC 
+	 * 
+	 * @param unifiedPlanetoidI
+	 * @param image
+	 * @return processed string image
+	 */
 	private static String buildPlanar(UnifiedPlanetoidI unifiedPlanetoidI, StringBuilder image){
 		image.append(texture.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), imageType}));
 		image.append("Emissive true \n");  // light source from primary
 		image.append(nightTexture.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), nightImageType}));
+		image.append(bumpMap.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), bumpMapType}));
+		image.append(bumpHeight.format(new Object[]{BumpHeight.build(unifiedPlanetoidI)}));
 		return image.toString();
 	}
 	
@@ -78,7 +84,6 @@ public class GenSSC {
 				else{
 					for (UnifiedPlanetoidI unifiedPlanetoidI : unifiedPlanetoidIs){
 						String planetnoidName = unifiedPlanetoidI.getPlanetoid().getPlanetoidName();
-						String planarClass = 
 					}
 				}
 

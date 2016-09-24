@@ -28,31 +28,31 @@ public class BumpHeight {
 		buildMap.put(RadiusRange.s_DWARF_PLANETOID+":"+TemperatureRange.CRYOGENIC, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.5 + GenRandomRolls.Instance().getDraw(0.1);
+				return 0.5 + GenRandomRolls.Instance().draw_rand()*0.1;
 			}
 		});
 		buildMap.put(RadiusRange.s_DWARF_PLANETOID+":"+TemperatureRange.ICE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.5 + GenRandomRolls.Instance().getDraw(0.3);
+				return 0.5 + GenRandomRolls.Instance().draw_rand()*0.3;
 			}
 		});
 		buildMap.put(RadiusRange.s_DWARF_PLANETOID+":"+TemperatureRange.TEMPERATE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 2.0 + GenRandomRolls.Instance().getDraw(1.0);
+				return 2.0 + GenRandomRolls.Instance().draw_rand()*1.0;
 			}
 		});
 		buildMap.put(RadiusRange.s_DWARF_PLANETOID+":"+TemperatureRange.HOT, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.1 + GenRandomRolls.Instance().getDraw(0.3);
+				return 0.1 + GenRandomRolls.Instance().draw_rand()*0.3;
 			}
 		});
 		buildMap.put(RadiusRange.s_DWARF_PLANETOID+":"+TemperatureRange.MOLTEN, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.0 + GenRandomRolls.Instance().getDraw(0.001);
+				return 0.0 + GenRandomRolls.Instance().draw_rand()*0.001;
 			}
 		});
 		
@@ -60,31 +60,31 @@ public class BumpHeight {
 		buildMap.put(RadiusRange.s_MINI_PLANETOID+":"+TemperatureRange.CRYOGENIC, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.5 + GenRandomRolls.Instance().getDraw(0.2);
+				return 0.5 + GenRandomRolls.Instance().draw_rand()*0.2;
 			}
 		});
 		buildMap.put(RadiusRange.s_MINI_PLANETOID+":"+TemperatureRange.ICE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.5 + GenRandomRolls.Instance().getDraw(0.5);
+				return 0.5 + GenRandomRolls.Instance().draw_rand()*0.5;
 			}
 		});
 		buildMap.put(RadiusRange.s_MINI_PLANETOID+":"+TemperatureRange.TEMPERATE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 2.0 + GenRandomRolls.Instance().getDraw(1.5);
+				return 2.0 + GenRandomRolls.Instance().draw_rand()*1.5;
 			}
 		});
 		buildMap.put(RadiusRange.s_MINI_PLANETOID+":"+TemperatureRange.HOT, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.1 + GenRandomRolls.Instance().getDraw(0.35);
+				return 0.1 + GenRandomRolls.Instance().draw_rand()*0.35;
 			}
 		});
 		buildMap.put(RadiusRange.s_MINI_PLANETOID+":"+TemperatureRange.MOLTEN, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.0 + GenRandomRolls.Instance().getDraw(0.002);
+				return 0.0 + GenRandomRolls.Instance().draw_rand()*0.002;
 			}
 		});
 		
@@ -92,31 +92,31 @@ public class BumpHeight {
 		buildMap.put(RadiusRange.s_EARTH_PLANETOID+":"+TemperatureRange.CRYOGENIC, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.5 + GenRandomRolls.Instance().getDraw(1.0);
+				return 0.5 + GenRandomRolls.Instance().draw_rand()*1.0;
 			}
 		});
 		buildMap.put(RadiusRange.s_EARTH_PLANETOID+":"+TemperatureRange.ICE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.5 + GenRandomRolls.Instance().getDraw(1.5);
+				return 0.5 + GenRandomRolls.Instance().draw_rand()*1.5;
 			}
 		});
 		buildMap.put(RadiusRange.s_EARTH_PLANETOID+":"+TemperatureRange.TEMPERATE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 2.0 + GenRandomRolls.Instance().getDraw(2.0);
+				return 2.0 + GenRandomRolls.Instance().draw_rand()*2.0;
 			}
 		});
 		buildMap.put(RadiusRange.s_EARTH_PLANETOID+":"+TemperatureRange.HOT, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.1 + GenRandomRolls.Instance().getDraw(0.9);
+				return 0.1 + GenRandomRolls.Instance().draw_rand()*0.9;
 			}
 		});
 		buildMap.put(RadiusRange.s_EARTH_PLANETOID+":"+TemperatureRange.MOLTEN, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.0 + GenRandomRolls.Instance().getDraw(0.05);
+				return 0.0 + GenRandomRolls.Instance().draw_rand()*0.05;
 			}
 		});
 
@@ -124,31 +124,31 @@ public class BumpHeight {
 		buildMap.put(RadiusRange.s_SUPER_EARTH_PLANETOID+":"+TemperatureRange.CRYOGENIC, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.5 + GenRandomRolls.Instance().getDraw(3.0);
+				return 0.5 + GenRandomRolls.Instance().draw_rand()*3.0;
 			}
 		});
 		buildMap.put(RadiusRange.s_SUPER_EARTH_PLANETOID+":"+TemperatureRange.ICE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.5 + GenRandomRolls.Instance().getDraw(3.1);
+				return 0.5 + GenRandomRolls.Instance().draw_rand()*3.1;
 			}
 		});
 		buildMap.put(RadiusRange.s_SUPER_EARTH_PLANETOID+":"+TemperatureRange.TEMPERATE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 2.0 + GenRandomRolls.Instance().getDraw(5.0);
+				return 2.0 + GenRandomRolls.Instance().draw_rand()*5.0;
 			}
 		});
 		buildMap.put(RadiusRange.s_SUPER_EARTH_PLANETOID+":"+TemperatureRange.HOT, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.1 + GenRandomRolls.Instance().getDraw(1.1);
+				return 0.1 + GenRandomRolls.Instance().draw_rand()*1.1;
 			}
 		});
 		buildMap.put(RadiusRange.s_SUPER_EARTH_PLANETOID+":"+TemperatureRange.MOLTEN, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.0 + GenRandomRolls.Instance().getDraw(0.1);
+				return 0.0 + GenRandomRolls.Instance().draw_rand()*0.1;
 			}
 		});
 
@@ -156,31 +156,31 @@ public class BumpHeight {
 		buildMap.put(RadiusRange.s_MINI_GAS_GIANT_PLANETOID+":"+TemperatureRange.CRYOGENIC, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.01 + GenRandomRolls.Instance().getDraw(0.01);
+				return 0.01 + GenRandomRolls.Instance().draw_rand()*0.01;
 			}
 		});
 		buildMap.put(RadiusRange.s_MINI_GAS_GIANT_PLANETOID+":"+TemperatureRange.ICE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.01 + GenRandomRolls.Instance().getDraw(0.01);
+				return 0.01 + GenRandomRolls.Instance().draw_rand()*0.01;
 			}
 		});
 		buildMap.put(RadiusRange.s_MINI_GAS_GIANT_PLANETOID+":"+TemperatureRange.TEMPERATE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.01 + GenRandomRolls.Instance().getDraw(0.01);
+				return 0.01 + GenRandomRolls.Instance().draw_rand()*0.01;
 			}
 		});
 		buildMap.put(RadiusRange.s_MINI_GAS_GIANT_PLANETOID+":"+TemperatureRange.HOT, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.02 + GenRandomRolls.Instance().getDraw(0.01);
+				return 0.02 + GenRandomRolls.Instance().draw_rand()*0.01;
 			}
 		});
 		buildMap.put(RadiusRange.s_MINI_GAS_GIANT_PLANETOID+":"+TemperatureRange.MOLTEN, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.0 + GenRandomRolls.Instance().getDraw(0.02);
+				return 0.0 + GenRandomRolls.Instance().draw_rand()*0.02;
 			}
 		});
 
@@ -188,31 +188,31 @@ public class BumpHeight {
 		buildMap.put(RadiusRange.s_GAS_GIANT_PLANETOID+":"+TemperatureRange.CRYOGENIC, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.01 + GenRandomRolls.Instance().getDraw(0.02);
+				return 0.01 + GenRandomRolls.Instance().draw_rand()*0.02;
 			}
 		});
 		buildMap.put(RadiusRange.s_GAS_GIANT_PLANETOID+":"+TemperatureRange.ICE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.01 + GenRandomRolls.Instance().getDraw(0.02);
+				return 0.01 + GenRandomRolls.Instance().draw_rand()*0.02;
 			}
 		});
 		buildMap.put(RadiusRange.s_GAS_GIANT_PLANETOID+":"+TemperatureRange.TEMPERATE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.01 + GenRandomRolls.Instance().getDraw(0.02);
+				return 0.01 + GenRandomRolls.Instance().draw_rand()*0.02;
 			}
 		});
 		buildMap.put(RadiusRange.s_GAS_GIANT_PLANETOID+":"+TemperatureRange.HOT, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.02 + GenRandomRolls.Instance().getDraw(0.02);
+				return 0.02 + GenRandomRolls.Instance().draw_rand()*0.02;
 			}
 		});
 		buildMap.put(RadiusRange.s_GAS_GIANT_PLANETOID+":"+TemperatureRange.MOLTEN, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.0 + GenRandomRolls.Instance().getDraw(0.03);
+				return 0.0 + GenRandomRolls.Instance().draw_rand()*0.03;
 			}
 		});
 		
@@ -220,31 +220,31 @@ public class BumpHeight {
 		buildMap.put(RadiusRange.s_SUPER_GAS_GIANT_PLANETOID+":"+TemperatureRange.CRYOGENIC, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.01 + GenRandomRolls.Instance().getDraw(0.03);
+				return 0.01 + GenRandomRolls.Instance().draw_rand()*0.03;
 			}
 		});
 		buildMap.put(RadiusRange.s_SUPER_GAS_GIANT_PLANETOID+":"+TemperatureRange.ICE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.01 + GenRandomRolls.Instance().getDraw(0.03);
+				return 0.01 + GenRandomRolls.Instance().draw_rand()*0.03;
 			}
 		});
 		buildMap.put(RadiusRange.s_SUPER_GAS_GIANT_PLANETOID+":"+TemperatureRange.TEMPERATE, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.01 + GenRandomRolls.Instance().getDraw(0.03);
+				return 0.01 + GenRandomRolls.Instance().draw_rand()*0.03;
 			}
 		});
 		buildMap.put(RadiusRange.s_SUPER_GAS_GIANT_PLANETOID+":"+TemperatureRange.HOT, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.02 + GenRandomRolls.Instance().getDraw(0.03);
+				return 0.02 + GenRandomRolls.Instance().draw_rand()*0.03;
 			}
 		});
 		buildMap.put(RadiusRange.s_SUPER_GAS_GIANT_PLANETOID+":"+TemperatureRange.MOLTEN, new BumpHeightComponent() {
 			@Override
 			public Double genHeight() {
-				return 0.0 + GenRandomRolls.Instance().getDraw(0.04);
+				return 0.0 + GenRandomRolls.Instance().draw_rand()*0.04;
 			}
 		});
 
