@@ -14,6 +14,8 @@ import com.zenred.cosmos.domain.SystemDao;
 import com.zenred.cosmos.domain.UnifiedPlanetoidI;
 import com.zenred.cosmos.service_rules_and_infrastructure.GenAtmosphere;
 
+import celestia.domain.ColorRGB;
+
 public class GenSSC {
 	
 	
@@ -23,6 +25,8 @@ public class GenSSC {
 	public static String imageType = ".png";
 	public static String nightImageType = ".night.png";
 	public static String bumpMapType = ".bump.png";
+	public static String specularTextureType = ".specular.png"
+			;
 	
 	// 0 -> planet  1-> star 2-> rest of planet ... or ... 0 -> moon  1 -> planet 2-> rest of moon
 	private static MessageFormat planar = new MessageFormat("\"{0}\" \"{1}\" '{' \n {2} \n '}' \n\n");
@@ -36,6 +40,10 @@ public class GenSSC {
 	private static MessageFormat bumpMap = new MessageFormat("BumpMap \"{0}{1}\" \n ");
 	// bump height
 	private static MessageFormat bumpHeight = new MessageFormat("BumpHeight {0} \n");
+	// generic color of planet from stars color
+	private static MessageFormat planarBaseColor = new MessageFormat("Color [ {0} {1} {2} ]");
+	// specular png image
+	private static MessageFormat specularTexture = new MessageFormat("SpecularTexture \"{0}{1}\" \n ");
 	
 	/**
 	 * generic planar builder for SSC 
@@ -44,12 +52,15 @@ public class GenSSC {
 	 * @param image
 	 * @return processed string image
 	 */
-	private static String buildPlanar(UnifiedPlanetoidI unifiedPlanetoidI, StringBuilder image){
+	private static String buildPlanar(Star star, UnifiedPlanetoidI unifiedPlanetoidI, StringBuilder image){
 		image.append(texture.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), imageType}));
 		image.append("Emissive true \n");  // light source from primary
 		image.append(nightTexture.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), nightImageType}));
 		image.append(bumpMap.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), bumpMapType}));
 		image.append(bumpHeight.format(new Object[]{BumpHeight.build(unifiedPlanetoidI)}));
+		ColorRGB colorRGB = StarColorMapping.mapStarColor(star.getStar_color());
+		image.append(planarBaseColor.format(new Object[]{colorRGB.getColorR(), colorRGB.getColorG(), colorRGB.getColorB()}));
+		image.append(specularTexture.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), specularTextureType}));
 		return image.toString();
 	}
 	
