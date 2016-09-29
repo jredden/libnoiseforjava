@@ -116,6 +116,34 @@ public class PlanarSpecular {
 		});
 	}
 	
+	private static Map<Double, Distance> distanceMap = new HashMap<Double, Distance>();
+	static{
+		distanceMap.put(new Double (0.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 100;
+			}
+		});
+		distanceMap.put(new Double (0.03), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 96;
+			}
+		});
+		distanceMap.put(new Double (0.09), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 94;
+			}
+		});
+		distanceMap.put(new Double (0.12), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 92;
+			}
+		});
+	}
+	
 	/**
 	 * 
 	 * @param star
