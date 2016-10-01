@@ -142,6 +142,132 @@ public class PlanarSpecular {
 				return 92;
 			}
 		});
+		distanceMap.put(new Double (0.25), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 88;
+			}
+		});
+		distanceMap.put(new Double (0.50), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 86;
+			}
+		});
+		distanceMap.put(new Double (1.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 80;
+			}
+		});
+		distanceMap.put(new Double (3.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 75;
+			}
+		});
+		distanceMap.put(new Double (10.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 70;
+			}
+		});
+		distanceMap.put(new Double (20.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 65;
+			}
+		});
+		distanceMap.put(new Double (50.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 60;
+			}
+		});
+		distanceMap.put(new Double (100.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 55;
+			}
+		});
+		distanceMap.put(new Double (500.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 50;
+			}
+		});
+		distanceMap.put(new Double (1000.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 45;
+			}
+		});
+		distanceMap.put(new Double (5000.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 40;
+			}
+		});
+		distanceMap.put(new Double (10000.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 35;
+			}
+		});
+		distanceMap.put(new Double (20000.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 30;
+			}
+		});
+		distanceMap.put(new Double (50000.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 25;
+			}
+		});
+		distanceMap.put(new Double (100000.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 20;
+			}
+		});
+		distanceMap.put(new Double (200000.0), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 15;
+			}
+		});
+		distanceMap.put(new Double (5.0E5), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 10;
+			}
+		});
+		distanceMap.put(new Double (5.0E6), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 5;
+			}
+		});
+		distanceMap.put(new Double (5.0E7), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 3;
+			}
+		});
+		distanceMap.put(new Double (5.0E10), new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 2;
+			}
+		});
+		distanceMap.put(Double.POSITIVE_INFINITY, new Distance(){
+			@Override
+			public Integer genSPecualrDistanceScalar() {
+				return 1;
+			}
+		});
 	}
 	
 	/**
