@@ -27,6 +27,10 @@ public class PlanarSpecular {
 	interface Distance{
 		Integer genSPecualrDistanceScalar();
 	}
+	
+	interface Temperature{
+		Integer genSpecularTemperatureScalar();
+	}
 
 	private static Map<Double, Luminosity> luminosityMap = new HashMap<Double, PlanarSpecular.Luminosity>();
 	static{
@@ -270,6 +274,39 @@ public class PlanarSpecular {
 		});
 	}
 	
+	private static Map<Double, Temperature> temperatureMap = new HashMap<Double, Temperature>();
+	static{
+		temperatureMap.put(new Double(0.0), new Temperature(){
+			@Override
+			public Integer genSpecularTemperatureScalar() {
+				return 100;
+			}
+			
+		});
+		temperatureMap.put(new Double(5.0), new Temperature(){
+			@Override
+			public Integer genSpecularTemperatureScalar() {
+				return 98;
+			}
+			
+		});
+		temperatureMap.put(new Double(10.0), new Temperature(){
+			@Override
+			public Integer genSpecularTemperatureScalar() {
+				return 95;
+			}
+			
+		});
+		temperatureMap.put(new Double(20.0), new Temperature(){
+			@Override
+			public Integer genSpecularTemperatureScalar() {
+				return 92;
+			}
+			
+		});
+		
+	}
+	
 	/**
 	 * 
 	 * @param star
@@ -282,13 +319,25 @@ public class PlanarSpecular {
 		Integer luminosityScalar = null;
 		Iterator<Double> luminosityIterator = luminosityKeys.iterator();
 		Double currentLuminosityKey = luminosityIterator.next();
-		while(luminosityIterator.hasNext()){
+		while (luminosityIterator.hasNext()) {
 			Double nextLuminosityKey = luminosityIterator.next();
-			if(star.getLuminosity() > currentLuminosityKey && nextLuminosityKey <= nextLuminosityKey){
+			if (star.getLuminosity() > currentLuminosityKey && star.getLuminosity() <= nextLuminosityKey) {
 				luminosityScalar = luminosityMap.get(nextLuminosityKey).genSpecularLumenosityScalar();
 				break;
 			}
 			currentLuminosityKey = nextLuminosityKey;
+		}
+		Integer distanceScalar = null;
+		Set<Double> distanceKeys = distanceMap.keySet();
+		Iterator<Double> distanceIterator = distanceKeys.iterator();
+		Double currentDistanceKey = distanceIterator.next();
+		while (distanceIterator.hasNext()) {
+			Double nextDistanceKey = distanceIterator.next();
+			if (unifiedPlanetoidI.getPlanetoid().getDistanceToPrimary() > currentDistanceKey
+					&& unifiedPlanetoidI.getPlanetoid().getDistanceToPrimary() <= nextDistanceKey) {
+				distanceScalar = distanceMap.get(nextDistanceKey).genSPecualrDistanceScalar();
+				break;
+			}
 		}
 		return null;
 	}
