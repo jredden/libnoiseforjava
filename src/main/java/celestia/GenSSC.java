@@ -44,6 +44,8 @@ public class GenSSC {
 	private static MessageFormat planarBaseColor = new MessageFormat("Color [ {0} {1} {2} ]");
 	// specular png image
 	private static MessageFormat specularTexture = new MessageFormat("SpecularTexture \"{0}{1}\" \n ");
+	// specular power
+	private static MessageFormat specularPower = new MessageFormat("SpecularPower {0} \n");
 	
 	/**
 	 * generic planar builder for SSC 
@@ -61,6 +63,7 @@ public class GenSSC {
 		ColorRGB colorRGB = StarColorMapping.mapStarColor(star.getStar_color());
 		image.append(planarBaseColor.format(new Object[]{colorRGB.getColorR(), colorRGB.getColorG(), colorRGB.getColorB()}));
 		image.append(specularTexture.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), specularTextureType}));
+		image.append(specularPower.format(new Object[]{PlanarSpecular.build(star, unifiedPlanetoidI)}));
 		return image.toString();
 	}
 	
