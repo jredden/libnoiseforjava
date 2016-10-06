@@ -30,7 +30,7 @@ public class PlanarSpecularColor {
 	}
 	
 	static private Logger logger = Logger.getLogger(PlanarSpecularColor.class);
-	static private List<String> colorsThatModify = new ArrayList<String>();
+	static public List<String> colorsThatModify = new ArrayList<String>();
 	static{
 		colorsThatModify.add("Water");
 		colorsThatModify.add("Carbon");
