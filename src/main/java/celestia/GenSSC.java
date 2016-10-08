@@ -15,6 +15,7 @@ import com.zenred.cosmos.domain.UnifiedPlanetoidI;
 import com.zenred.cosmos.service_rules_and_infrastructure.GenAtmosphere;
 
 import celestia.domain.ColorRGB;
+import celestia.domain.Haze;
 
 public class GenSSC {
 	
@@ -25,8 +26,7 @@ public class GenSSC {
 	public static String imageType = ".png";
 	public static String nightImageType = ".night.png";
 	public static String bumpMapType = ".bump.png";
-	public static String specularTextureType = ".specular.png"
-			;
+	public static String specularTextureType = ".specular.png";
 	
 	// 0 -> planet  1-> star 2-> rest of planet ... or ... 0 -> moon  1 -> planet 2-> rest of moon
 	private static MessageFormat planar = new MessageFormat("\"{0}\" \"{1}\" '{' \n {2} \n '}' \n\n");
@@ -47,8 +47,13 @@ public class GenSSC {
 	// specular power
 	private static MessageFormat specularPower = new MessageFormat("SpecularPower {0} \n");
 	// specular color
-	private static MessageFormat specularColor = new MessageFormat("Color [ {0} {1} {2} ]");
-	
+	private static MessageFormat specularColor = new MessageFormat("SpecularColor [ {0} {1} {2} ]");
+	// haze color
+	private static MessageFormat hazeColor = new MessageFormat("HazeColor [ {0} {1} {2} ]");
+	// haze density
+	private static MessageFormat hazePower = new MessageFormat("HazeDensity [0]");
+	// radius
+	private static MessageFormat radius = new MessageFormat("Radius [0]");
 	/**
 	 * generic planar builder for SSC 
 	 * 
@@ -68,6 +73,11 @@ public class GenSSC {
 		colorRGB = PlanarSpecularColor.build(star, unifiedPlanetoidI);
 		image.append(specularColor.format(new Object[]{colorRGB.getColorR(), colorRGB.getColorG(), colorRGB.getColorB()}));
 		image.append(specularPower.format(new Object[]{PlanarSpecular.build(star, unifiedPlanetoidI)}));
+		Haze haze = PlanarHaze.build(unifiedPlanetoidI);
+		image.append(hazeColor.format(new Object[] { haze.getHazeColor().getColorR(), haze.getHazeColor().getColorG(),
+				haze.getHazeColor().getColorB() }));
+		image.append(hazePower.format(new Object[]{haze.getHazeDensity()}));
+		image.append(radius.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getRadius()}));
 		return image.toString();
 	}
 	
