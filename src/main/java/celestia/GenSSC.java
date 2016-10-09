@@ -41,19 +41,23 @@ public class GenSSC {
 	// bump height
 	private static MessageFormat bumpHeight = new MessageFormat("BumpHeight {0} \n");
 	// generic color of planet from stars color
-	private static MessageFormat planarBaseColor = new MessageFormat("Color [ {0} {1} {2} ]");
+	private static MessageFormat planarBaseColor = new MessageFormat("Color [ {0} {1} {2} ] \n");
 	// specular png image
 	private static MessageFormat specularTexture = new MessageFormat("SpecularTexture \"{0}{1}\" \n ");
 	// specular power
 	private static MessageFormat specularPower = new MessageFormat("SpecularPower {0} \n");
 	// specular color
-	private static MessageFormat specularColor = new MessageFormat("SpecularColor [ {0} {1} {2} ]");
+	private static MessageFormat specularColor = new MessageFormat("SpecularColor [ {0} {1} {2} \n ]");
 	// haze color
-	private static MessageFormat hazeColor = new MessageFormat("HazeColor [ {0} {1} {2} ]");
+	private static MessageFormat hazeColor = new MessageFormat("HazeColor [ {0} {1} {2} \n ]");
 	// haze density
-	private static MessageFormat hazePower = new MessageFormat("HazeDensity [0]");
+	private static MessageFormat hazePower = new MessageFormat("HazeDensity [0] \n");
 	// radius
-	private static MessageFormat radius = new MessageFormat("Radius [0]");
+	private static MessageFormat radius = new MessageFormat("Radius [0] \n");
+	// oblateness
+	private static MessageFormat oblateness = new MessageFormat("Oblateness [0]\n");
+	
+	
 	/**
 	 * generic planar builder for SSC 
 	 * 
@@ -78,6 +82,7 @@ public class GenSSC {
 				haze.getHazeColor().getColorB() }));
 		image.append(hazePower.format(new Object[]{haze.getHazeDensity()}));
 		image.append(radius.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getRadius()}));
+		image.append(oblateness.format(new Object[]{Oblateness.build(unifiedPlanetoidI)}));
 		return image.toString();
 	}
 	
