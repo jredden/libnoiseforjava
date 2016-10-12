@@ -185,7 +185,54 @@ public class PlanarAtmosphere {
 	
 	private static Map<Double,CloudSpeed> cloudSpeedMap = new HashMap<Double,CloudSpeed>();
 	static{
-		
+		cloudSpeedMap.put(0.0, new CloudSpeed() {
+			@Override
+			public Double genCloudSpeed() {
+				return 0.0;
+			}
+		});
+		cloudSpeedMap.put(4000.0, new CloudSpeed() {
+			@Override
+			public Double genCloudSpeed() {
+				return 4000.0/3000.0 * GenRandomRolls.Instance().draw_rand()*10.0;
+			}
+		});
+		cloudSpeedMap.put(8000.0, new CloudSpeed() {
+			@Override
+			public Double genCloudSpeed() {
+				return 8000.0/3000.0 * GenRandomRolls.Instance().draw_rand()*10.0;
+			}
+		});
+		cloudSpeedMap.put(12000.0, new CloudSpeed() {
+			@Override
+			public Double genCloudSpeed() {
+				return 12000.0/3000.0 * GenRandomRolls.Instance().draw_rand()*10.0;
+			}
+		});
+		cloudSpeedMap.put(16000.0, new CloudSpeed() {
+			@Override
+			public Double genCloudSpeed() {
+				return 16000.0/3000.0 * GenRandomRolls.Instance().draw_rand()*10.0;
+			}
+		});
+		cloudSpeedMap.put(22000.0, new CloudSpeed() {
+			@Override
+			public Double genCloudSpeed() {
+				return 22000.0/3000.0 * GenRandomRolls.Instance().draw_rand()*10.0;
+			}
+		});
+		cloudSpeedMap.put(40000.0, new CloudSpeed() {
+			@Override
+			public Double genCloudSpeed() {
+				return 40000.0/3000.0 * GenRandomRolls.Instance().draw_rand()*10.0;
+			}
+		});
+		cloudSpeedMap.put(Double.MAX_VALUE, new CloudSpeed() {
+			@Override
+			public Double genCloudSpeed() {
+				return Double.MAX_VALUE/3000.0 * GenRandomRolls.Instance().draw_rand()*10.0;
+			}
+		});
 	}
 	
 	private static ColorRGB genColorAtmosphere(Star star, UnifiedPlanetoidI unifiedPlanetoidI, Double scalar){
@@ -241,7 +288,30 @@ public class PlanarAtmosphere {
 		}
 		return cloudHeight;
 	}
+	
+	private static Double cloudSpeed(UnifiedPlanetoidI unifiedPlanetoidI){
+		Set<Double> cloudSpeedKeys = cloudSpeedMap.keySet();
+		Double cloudSpeed = null;
+		Iterator<Double> cloudSpeedIterator = cloudSpeedKeys.iterator();
+		Double currentCloudSpeedKey = cloudSpeedIterator.next();
+		while(cloudSpeedIterator.hasNext()){
+			Double nextCloudSpeedKey = cloudSpeedIterator.next();
+			if (unifiedPlanetoidI.getPlanetoid().getRadius() > currentCloudSpeedKey
+					&& unifiedPlanetoidI.getPlanetoid().getRadius() <= nextCloudSpeedKey){
+				cloudSpeed = cloudSpeedMap.get(nextCloudSpeedKey).genCloudSpeed();
+				break;
+			}
+			currentCloudSpeedKey = nextCloudSpeedKey;
+		}
+		return cloudSpeed;
+	}
 
+	/**
+	 * 
+	 * @param star
+	 * @param unifiedPlanetoidI
+	 * @return built celestia atmosphere scalars
+	 */
 	public static CelestAtmosphere build(Star star, UnifiedPlanetoidI unifiedPlanetoidI) {
 		Set<Double> heightKeys = heightMap.keySet();
 		Double height = null;
@@ -259,9 +329,12 @@ public class PlanarAtmosphere {
 		ColorRGB skyColor = genColorAtmosphere(star, unifiedPlanetoidI, skyScalar);
 		ColorRGB highColor = genColorAtmosphere(star, unifiedPlanetoidI, highScalar);
 		ColorRGB lowColor = genColorAtmosphere(star, unifiedPlanetoidI, lowScalar);
-		Double celectCloudHeight = cloudHeight(unifiedPlanetoidI);
-		CelestAtmosphere celestAtmosphere = new CelestAtmosphere();
-		
+		Integer celestCloudHeight = cloudHeight(unifiedPlanetoidI).intValue();
+		Integer cloudSpeed = cloudSpeed(unifiedPlanetoidI).intValue();
+		String cloudMap = unifiedPlanetoidI.getPlanetoid().getPlanetoidName() + GenSSC.cloudMapType;
+
+		CelestAtmosphere celestAtmosphere = new CelestAtmosphere(height, lowColor, highColor, skyColor,
+				celestCloudHeight, cloudSpeed, cloudMap);
 		return celestAtmosphere;
 	}
 }

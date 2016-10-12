@@ -27,6 +27,7 @@ public class GenSSC {
 	public static String nightImageType = ".night.png";
 	public static String bumpMapType = ".bump.png";
 	public static String specularTextureType = ".specular.png";
+	public static String cloudMapType = ".cloud.png";
 	
 	// 0 -> planet  1-> star 2-> rest of planet ... or ... 0 -> moon  1 -> planet 2-> rest of moon
 	private static MessageFormat planar = new MessageFormat("\"{0}\" \"{1}\" '{' \n {2} \n '}' \n\n");
