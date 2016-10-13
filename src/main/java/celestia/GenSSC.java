@@ -14,6 +14,7 @@ import com.zenred.cosmos.domain.SystemDao;
 import com.zenred.cosmos.domain.UnifiedPlanetoidI;
 import com.zenred.cosmos.service_rules_and_infrastructure.GenAtmosphere;
 
+import celestia.domain.CelestAtmosphere;
 import celestia.domain.ColorRGB;
 import celestia.domain.Haze;
 
@@ -57,6 +58,17 @@ public class GenSSC {
 	private static MessageFormat radius = new MessageFormat("Radius [0] \n");
 	// oblateness
 	private static MessageFormat oblateness = new MessageFormat("Oblateness [0]\n");
+	// atmosphere
+	private static MessageFormat planarAtmosphere = new MessageFormat("Atmosphere \n { Height {0} \n"
+			+ " Lower [ {1} {2} {3} ] \n"
+			+ " Upper [ {4} {5} {6} ] \n"
+			+ " Sky [ {7} {8} {9} ] \n"
+			+ " CloudHeight {10} \n"
+			+ " CloudSpeed {11} \n"
+			+ " CloudMap \"{12}\" \n"
+			+ "} \n\n"
+			);
+	
 	
 	
 	/**
@@ -84,6 +96,22 @@ public class GenSSC {
 		image.append(hazePower.format(new Object[]{haze.getHazeDensity()}));
 		image.append(radius.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getRadius()}));
 		image.append(oblateness.format(new Object[]{Oblateness.build(unifiedPlanetoidI)}));
+		CelestAtmosphere celestAtmosphere = PlanarAtmosphere.build(star, unifiedPlanetoidI);
+		image.append(planarAtmosphere.format(new Object[]{
+				celestAtmosphere.getHeight() // {0}
+				, celestAtmosphere.getLower().getColorR() // {1}
+				, celestAtmosphere.getLower().getColorG() // {2}
+				, celestAtmosphere.getLower().getColorB() // {3}
+				, celestAtmosphere.getUpper().getColorR() // {4}
+				, celestAtmosphere.getUpper().getColorG() // {5}
+				, celestAtmosphere.getUpper().getColorB() // {6}
+				, celestAtmosphere.getSky().getColorR() // {7}
+				, celestAtmosphere.getSky().getColorG() // {8}
+				, celestAtmosphere.getSky().getColorB() // {9}
+				, celestAtmosphere.getCloudHeight() // {10}
+				, celestAtmosphere.getCloudSpeed() // {11}
+				, celestAtmosphere.getCloudMap() // {12}
+		}));
 		return image.toString();
 	}
 	
