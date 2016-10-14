@@ -1,6 +1,6 @@
 package celestia;
 
-public class PeriiodExperiment {
+public class PeriodFirstExperiment {
 	
 	/**
 	 * tests the implementation of orbital period (see https://en.wikipedia.org/wiki/Orbital_period) 
