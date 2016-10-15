@@ -3,6 +3,8 @@ package celestia;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.zenred.util.GenRandomRolls;
+
 public class StarMassApproximator {
 	
 
@@ -16,19 +18,19 @@ public class StarMassApproximator {
 		starMassMap.put("sg2o",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 80.0 * GenRandomRolls.Instance().draw_rand() * 40;
 			}
 		});
 		starMassMap.put("sg2b",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 60.0 * GenRandomRolls.Instance().draw_rand() * 40;
 			}
 		});
 		starMassMap.put("sg2a",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 40.0 * GenRandomRolls.Instance().draw_rand() * 40;
 			}
 		});
 		starMassMap.put("sg2f",new StarMass() {
@@ -46,13 +48,13 @@ public class StarMassApproximator {
 		starMassMap.put("sg2k",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 0.9 * GenRandomRolls.Instance().draw_rand() * 11;
 			}
 		});
 		starMassMap.put("sg2m",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 0.8 * GenRandomRolls.Instance().draw_rand() * 10;
 			}
 		});
 		starMassMap.put("sg1o",new StarMass() {
