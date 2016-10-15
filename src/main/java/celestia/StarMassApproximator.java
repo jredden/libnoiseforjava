@@ -18,151 +18,151 @@ public class StarMassApproximator {
 		starMassMap.put("sg2o",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return 80.0 * GenRandomRolls.Instance().draw_rand() * 40;
+				return 80.0 * GenRandomRolls.Instance().draw_rand() * 40.0;
 			}
 		});
 		starMassMap.put("sg2b",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return 60.0 * GenRandomRolls.Instance().draw_rand() * 40;
+				return 60.0 * GenRandomRolls.Instance().draw_rand() * 40.0;
 			}
 		});
 		starMassMap.put("sg2a",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return 40.0 * GenRandomRolls.Instance().draw_rand() * 40;
+				return 40.0 * GenRandomRolls.Instance().draw_rand() * 40.0;
 			}
 		});
 		starMassMap.put("sg2f",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 20.0 * GenRandomRolls.Instance().draw_rand() * 30.0;
 			}
 		});
 		starMassMap.put("sg2g",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 5.0 * GenRandomRolls.Instance().draw_rand() * 20.0;
 			}
 		});
 		starMassMap.put("sg2k",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return 0.9 * GenRandomRolls.Instance().draw_rand() * 11;
+				return 0.9 * GenRandomRolls.Instance().draw_rand() * 11.0;
 			}
 		});
 		starMassMap.put("sg2m",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return 0.8 * GenRandomRolls.Instance().draw_rand() * 10;
+				return 0.8 * GenRandomRolls.Instance().draw_rand() * 10.0;
 			}
 		});
 		starMassMap.put("sg1o",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 70.0 * GenRandomRolls.Instance().draw_rand() * 30.0;
 			}
 		});
 		starMassMap.put("sg1b",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 50.0 * GenRandomRolls.Instance().draw_rand() * 30.0;
 			}
 		});
 		starMassMap.put("sg1a",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 30.0 * GenRandomRolls.Instance().draw_rand() * 30.0;
 			}
 		});
 		starMassMap.put("sg1f",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 10.0 * GenRandomRolls.Instance().draw_rand() * 20.0;
 			}
 		});
 		starMassMap.put("sg1g",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 2.5 * GenRandomRolls.Instance().draw_rand() * 10.0;
 			}
 		});
 		starMassMap.put("sg1k",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 0.8 * GenRandomRolls.Instance().draw_rand() * 9.0;
 			}
 		});
 		starMassMap.put("sg1m",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 0.6 * GenRandomRolls.Instance().draw_rand() * 9.0;
 			}
 		});
 		starMassMap.put("g2o",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 60.0 * GenRandomRolls.Instance().draw_rand() * 40.0;
 			}
 		});
 		starMassMap.put("g2b",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 40.0 * GenRandomRolls.Instance().draw_rand() * 40.0;
 			}
 		});
 		starMassMap.put("g2a",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 20.0 * GenRandomRolls.Instance().draw_rand() * 30.0;
 			}
 		});
 		starMassMap.put("g2f",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 5.0 * GenRandomRolls.Instance().draw_rand() * 20.0;
 			}
 		});
 		starMassMap.put("g2g",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 2.0 * GenRandomRolls.Instance().draw_rand() * 10.0;
 			}
 		});
 		starMassMap.put("g2k",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 0.7 * GenRandomRolls.Instance().draw_rand() * 8.0;
 			}
 		});
 		starMassMap.put("g2m",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 0.5 * GenRandomRolls.Instance().draw_rand() * 9.0;
 			}
 		});
 		starMassMap.put("g1o",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 50.0 * GenRandomRolls.Instance().draw_rand() * 40.0;
 			}
 		});
 		starMassMap.put("g1b",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 30.0 * GenRandomRolls.Instance().draw_rand() * 40.0;
 			}
 		});
 		starMassMap.put("g1a",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 15.0 * GenRandomRolls.Instance().draw_rand() * 35.0;
 			}
 		});
 		starMassMap.put("g1f",new StarMass() {
 			@Override
 			public Double genStarMass(String starType) {
-				return null;
+				return 3.0 * GenRandomRolls.Instance().draw_rand() * 20.0;
 			}
 		});
 		starMassMap.put("g1g",new StarMass() {
