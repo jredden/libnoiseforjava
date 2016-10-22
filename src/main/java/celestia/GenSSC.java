@@ -3,6 +3,7 @@ package celestia;
 import java.text.MessageFormat;
 import java.util.List;
 
+import com.zenred.cosmos.domain.AstronomicalUnits;
 import com.zenred.cosmos.domain.ClusterRep;
 import com.zenred.cosmos.domain.ClusterRepDao;
 import com.zenred.cosmos.domain.ExistingSystemWithStars;
@@ -115,16 +116,21 @@ public class GenSSC {
 		return image.toString();
 	}
 	
-	private static String buildPlanet(UnifiedPlanetoidI unifiedPlanetoidI){
+	private static String buildPlanet(Star star, UnifiedPlanetoidI unifiedPlanetoidI, StringBuilder image){
 		StringBuilder planetImage = new StringBuilder("");
 		planetImage.append(planarClass.format(new Object[]{planetClass}));
+		planetImage.append(buildPlanar(star, unifiedPlanetoidI, planetImage));
+		Double planarPeriod = PlanarPeriod.build(star, unifiedPlanetoidI);
+		Double semiMajorAxis = unifiedPlanetoidI.getPlanetoid().getDistanceToPrimary();
 		return planetImage.toString();
 	}
 	
-	private static String buildMoon(UnifiedPlanetoidI unifiedPlanetoidI){
+	private static String buildMoon(Star star, UnifiedPlanetoidI unifiedPlanetoidI, UnifiedPlanetoidI unifiedMoonI, StringBuilder image){
 		StringBuilder moonImage = new StringBuilder("");
 		moonImage.append(planarClass.format(new Object[]{moonClass}));
-		
+		moonImage.append(buildPlanar(star, unifiedPlanetoidI, moonImage));
+		Double moonPeriod = PlanarPeriod.build(unifiedMoonI);
+		Double semiMajorAxis = unifiedMoonI.getPlanetoid().getDistanceToPrimary() * AstronomicalUnits.MOON_UNIT;
 		return moonImage.toString();
 	}
 	public static void build() {
@@ -146,6 +152,17 @@ public class GenSSC {
 				else{
 					for (UnifiedPlanetoidI unifiedPlanetoidI : unifiedPlanetoidIs){
 						String planetnoidName = unifiedPlanetoidI.getPlanetoid().getPlanetoidName();
+						fileImage.append(buildPlanet(star, unifiedPlanetoidI, fileImage));
+						List<UnifiedPlanetoidI> unifiedMoonsIs = ExistingSystemWithStars
+								.readMoonsAroundPlanet(unifiedPlanetoidI.getPlanetoid());
+						if(unifiedMoonsIs.isEmpty()){
+							continue; // no moons
+						}
+						else{
+							for (UnifiedPlanetoidI unifiedMoonI : unifiedMoonsIs) {
+								fileImage.append(buildMoon(star, unifiedPlanetoidI, unifiedMoonI, fileImage));
+							}
+						}
 					}
 				}
 
