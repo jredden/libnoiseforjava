@@ -60,7 +60,7 @@ public class GenSSC {
 	// oblateness
 	private static MessageFormat oblateness = new MessageFormat("Oblateness [0]\n");
 	// atmosphere
-	private static MessageFormat planarAtmosphere = new MessageFormat("Atmosphere \n { Height {0} \n"
+	private static MessageFormat planarAtmosphere = new MessageFormat("Atmosphere { \n Height {0} \n"
 			+ " Lower [ {1} {2} {3} ] \n"
 			+ " Upper [ {4} {5} {6} ] \n"
 			+ " Sky [ {7} {8} {9} ] \n"
@@ -69,7 +69,15 @@ public class GenSSC {
 			+ " CloudMap \"{12}\" \n"
 			+ "} \n\n"
 			);
-	
+	private static MessageFormat ellipticalOrbit = new MessageFormat("ElipticalOrbit {\n"
+			+ " Period {0} \n"
+			+ " SemiMajorAxis {1} \n"
+			+ " Eccentricity {2} \n"
+			+ " Inclination {3} \n"
+			+ " LongOfPericenter {4} \n"
+			+ " MeanLongitude {5} \n"
+			+ "} \n\n"
+			);
 	
 	
 	/**
@@ -116,12 +124,29 @@ public class GenSSC {
 		return image.toString();
 	}
 	
+	private static String buildOrbit(UnifiedPlanetoidI unifiedPlanetoidI, Double period, Double axis, StringBuilder image){
+		Double eccentricity = AdditionalPlanarOrbitScalars.genEccentricity();
+		Double inclinaton = AdditionalPlanarOrbitScalars.genInclination();
+		Double longOfPeriCentre = AdditionalPlanarOrbitScalars.genLongOfPericentre();
+		Double meanLongitude = AdditionalPlanarOrbitScalars.genMeanLongitude();
+		image.append(new Object[]{
+		period // {0}
+		,axis	// {1}
+		,eccentricity // {2}
+		,inclinaton 	// {3}
+		,longOfPeriCentre // {4}
+		,meanLongitude	// {5}
+		});
+		return image.toString();
+	}
+	
 	private static String buildPlanet(Star star, UnifiedPlanetoidI unifiedPlanetoidI, StringBuilder image){
 		StringBuilder planetImage = new StringBuilder("");
 		planetImage.append(planarClass.format(new Object[]{planetClass}));
 		planetImage.append(buildPlanar(star, unifiedPlanetoidI, planetImage));
 		Double planarPeriod = PlanarPeriod.build(star, unifiedPlanetoidI);
 		Double semiMajorAxis = unifiedPlanetoidI.getPlanetoid().getDistanceToPrimary();
+		planetImage.append(buildOrbit(unifiedPlanetoidI, planarPeriod, semiMajorAxis, image));
 		return planetImage.toString();
 	}
 	
@@ -131,6 +156,7 @@ public class GenSSC {
 		moonImage.append(buildPlanar(star, unifiedPlanetoidI, moonImage));
 		Double moonPeriod = PlanarPeriod.build(unifiedMoonI);
 		Double semiMajorAxis = unifiedMoonI.getPlanetoid().getDistanceToPrimary() * AstronomicalUnits.MOON_UNIT;
+		moonImage.append(buildOrbit(unifiedPlanetoidI, moonPeriod, semiMajorAxis, image));
 		return moonImage.toString();
 	}
 	public static void build() {
