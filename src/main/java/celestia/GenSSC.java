@@ -126,7 +126,8 @@ public class GenSSC {
 		return image.toString();
 	}
 	
-	private static String buildOrbit(UnifiedPlanetoidI unifiedPlanetoidI, Double period, Double axis, StringBuilder image){
+	private static String buildOrbit(UnifiedPlanetoidI unifiedPlanetoidI, Double period, Double axis){
+		StringBuilder image = new StringBuilder();
 		Double eccentricity = AdditionalPlanarOrbitScalars.genEccentricity();
 		Double inclinaton = AdditionalPlanarOrbitScalars.genInclination();
 		Double longOfPeriCentre = AdditionalPlanarOrbitScalars.genLongOfPericentre();
@@ -142,23 +143,23 @@ public class GenSSC {
 		return image.toString();
 	}
 	
-	private static String buildPlanet(Star star, UnifiedPlanetoidI unifiedPlanetoidI, StringBuilder image){
+	private static String buildPlanet(Star star, UnifiedPlanetoidI unifiedPlanetoidI){
 		StringBuilder planetImage = new StringBuilder("");
-		planetImage.append(planarClass.format(new Object[]{planetClass}));
+		planetImage.append(planarClass.format(new Object[]{planetClass.toString()}));
 		planetImage.append(buildPlanar(star, unifiedPlanetoidI, planetImage));
 		Double planarPeriod = PlanarPeriod.build(star, unifiedPlanetoidI);
 		Double semiMajorAxis = unifiedPlanetoidI.getPlanetoid().getDistanceToPrimary();
-		planetImage.append(buildOrbit(unifiedPlanetoidI, planarPeriod, semiMajorAxis, image));
+		planetImage.append(buildOrbit(unifiedPlanetoidI, planarPeriod, semiMajorAxis));
 		return planetImage.toString();
 	}
 	
-	private static String buildMoon(Star star, UnifiedPlanetoidI unifiedPlanetoidI, UnifiedPlanetoidI unifiedMoonI, StringBuilder image){
+	private static String buildMoon(Star star, UnifiedPlanetoidI unifiedPlanetoidI, UnifiedPlanetoidI unifiedMoonI){
 		StringBuilder moonImage = new StringBuilder("");
-		moonImage.append(planarClass.format(new Object[]{moonClass}));
+		moonImage.append(planarClass.format(new Object[]{moonClass.toString()}));
 		moonImage.append(buildPlanar(star, unifiedPlanetoidI, moonImage));
 		Double moonPeriod = PlanarPeriod.build(unifiedMoonI);
 		Double semiMajorAxis = unifiedMoonI.getPlanetoid().getDistanceToPrimary() * AstronomicalUnits.MOON_UNIT;
-		moonImage.append(buildOrbit(unifiedPlanetoidI, moonPeriod, semiMajorAxis, image));
+		moonImage.append(buildOrbit(unifiedPlanetoidI, moonPeriod, semiMajorAxis));
 		return moonImage.toString();
 	}
 	public static void build() {
@@ -181,7 +182,7 @@ public class GenSSC {
 					StringBuilder fileImage = new StringBuilder("");
 					for (UnifiedPlanetoidI unifiedPlanetoidI : unifiedPlanetoidIs){
 						String planetnoidName = unifiedPlanetoidI.getPlanetoid().getPlanetoidName();
-						fileImage.append(buildPlanet(star, unifiedPlanetoidI, fileImage));
+						fileImage.append(buildPlanet(star, unifiedPlanetoidI));
 						StringBuilder container = new StringBuilder().append(planar.format(new Object[]{planetnoidName,
 								star.getName(), fileImage}));
 						masterFileImage.append(container);
@@ -195,7 +196,7 @@ public class GenSSC {
 							fileImage = new StringBuilder("");
 							for (UnifiedPlanetoidI unifiedMoonI : unifiedMoonsIs) {
 								String moonName = unifiedMoonI.getPlanetoid().getPlanetoidName();
-								fileImage.append(buildMoon(star, unifiedPlanetoidI, unifiedMoonI, fileImage));
+								fileImage.append(buildMoon(star, unifiedPlanetoidI, unifiedMoonI));
 								container = new StringBuilder().append(planar.format(new Object[]{moonName, star.getName() + '/' + planetnoidName,
 										fileImage}));
 								masterFileImage.append(container);
@@ -203,11 +204,12 @@ public class GenSSC {
 						}
 					}
 				}
-
+				String uri = "celestia/cosmos/" + Math.random() + star.getName() + "_cosmos.ssc";
+				BasicFileWriter.writeIt(masterFileImage, uri);
+				masterFileImage = new StringBuilder("");
 			}
+	
 		}
-		String uri = "celestia/cosmos/" + Math.random() + "_cosmos.ssc";
-		BasicFileWriter.writeIt(masterFileImage, uri);
 		
 	}
 
