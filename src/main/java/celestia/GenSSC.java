@@ -18,6 +18,7 @@ import com.zenred.cosmos.service_rules_and_infrastructure.GenAtmosphere;
 import celestia.domain.CelestAtmosphere;
 import celestia.domain.ColorRGB;
 import celestia.domain.Haze;
+import celestia.persistence.BasicFileWriter;
 
 public class GenSSC {
 	
@@ -54,31 +55,31 @@ public class GenSSC {
 	// haze color
 	private static MessageFormat hazeColor = new MessageFormat("HazeColor [ {0} {1} {2} \n ]");
 	// haze density
-	private static MessageFormat hazePower = new MessageFormat("HazeDensity [0] \n");
+	private static MessageFormat hazePower = new MessageFormat("HazeDensity {0} \n");
 	// radius
-	private static MessageFormat radius = new MessageFormat("Radius [0] \n");
+	private static MessageFormat radius = new MessageFormat("Radius {0} \n");
 	// oblateness
-	private static MessageFormat oblateness = new MessageFormat("Oblateness [0]\n");
+	private static MessageFormat oblateness = new MessageFormat("Oblateness {0}\n");
 	// atmosphere
-	private static MessageFormat planarAtmosphere = new MessageFormat("Atmosphere { \n Height {0} \n"
+	private static MessageFormat planarAtmosphere = new MessageFormat("Atmosphere '{' \n Height {0} \n"
 			+ " Lower [ {1} {2} {3} ] \n"
 			+ " Upper [ {4} {5} {6} ] \n"
 			+ " Sky [ {7} {8} {9} ] \n"
 			+ " CloudHeight {10} \n"
 			+ " CloudSpeed {11} \n"
 			+ " CloudMap \"{12}\" \n"
-			+ "} \n\n"
+			+ "'}' \n\n"
 			);
-	private static MessageFormat ellipticalOrbit = new MessageFormat("ElipticalOrbit {\n"
+	private static MessageFormat ellipticalOrbit = new MessageFormat("ElipticalOrbit '{'\n"
 			+ " Period {0} \n"
 			+ " SemiMajorAxis {1} \n"
 			+ " Eccentricity {2} \n"
 			+ " Inclination {3} \n"
 			+ " LongOfPericenter {4} \n"
 			+ " MeanLongitude {5} \n"
-			+ "} \n\n"
+			+ "'}' \n\n"
 			);
-	
+	private static MessageFormat planarAlbedo = new MessageFormat("Albedo {0} \n");
 	
 	/**
 	 * generic planar builder for SSC 
@@ -121,6 +122,7 @@ public class GenSSC {
 				, celestAtmosphere.getCloudSpeed() // {11}
 				, celestAtmosphere.getCloudMap() // {12}
 		}));
+		image.append(planarAlbedo.format(new Object[]{PlanarAlbedo.genAlbedoPlanar(unifiedPlanetoidI)}));
 		return image.toString();
 	}
 	
@@ -160,7 +162,7 @@ public class GenSSC {
 		return moonImage.toString();
 	}
 	public static void build() {
-		StringBuilder fileImage = new StringBuilder("");
+		StringBuilder masterFileImage = new StringBuilder("");
 		SystemDao systemDao = new SystemDao();
 		ClusterRepDao clusterRepDao = new ClusterRepDao();
 		StarDao starDao = new StarDao();
@@ -176,17 +178,27 @@ public class GenSSC {
 					continue; // no planars
 				}
 				else{
+					StringBuilder fileImage = new StringBuilder("");
 					for (UnifiedPlanetoidI unifiedPlanetoidI : unifiedPlanetoidIs){
 						String planetnoidName = unifiedPlanetoidI.getPlanetoid().getPlanetoidName();
 						fileImage.append(buildPlanet(star, unifiedPlanetoidI, fileImage));
+						StringBuilder container = new StringBuilder().append(planar.format(new Object[]{planetnoidName,
+								star.getName(), fileImage}));
+						masterFileImage.append(container);
+						
 						List<UnifiedPlanetoidI> unifiedMoonsIs = ExistingSystemWithStars
 								.readMoonsAroundPlanet(unifiedPlanetoidI.getPlanetoid());
 						if(unifiedMoonsIs.isEmpty()){
 							continue; // no moons
 						}
 						else{
+							fileImage = new StringBuilder("");
 							for (UnifiedPlanetoidI unifiedMoonI : unifiedMoonsIs) {
+								String moonName = unifiedMoonI.getPlanetoid().getPlanetoidName();
 								fileImage.append(buildMoon(star, unifiedPlanetoidI, unifiedMoonI, fileImage));
+								container = new StringBuilder().append(planar.format(new Object[]{moonName, star.getName() + '/' + planetnoidName,
+										fileImage}));
+								masterFileImage.append(container);
 							}
 						}
 					}
@@ -194,6 +206,8 @@ public class GenSSC {
 
 			}
 		}
+		String uri = "celestia/cosmos/" + Math.random() + "_cosmos.ssc";
+		BasicFileWriter.writeIt(masterFileImage, uri);
 		
 	}
 

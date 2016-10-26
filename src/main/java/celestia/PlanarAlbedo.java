@@ -220,7 +220,7 @@ public class PlanarAlbedo {
 				logger.info("start albedo:"+albedo);
 				albedo += (GenRandomRolls.Instance().draw_rand() * 0.2);
 				if(albedo > 1.0){
-					albedo = 1.0 + GenRandomRolls.Instance().draw_rand() * 0.01;
+					albedo = 1.0 - GenRandomRolls.Instance().draw_rand() * 0.01;
 				}
 				logger.info("end albedo:"+albedo);
 				return albedo;
@@ -232,7 +232,7 @@ public class PlanarAlbedo {
 				logger.info("start albedo:"+albedo);
 				albedo += (GenRandomRolls.Instance().draw_rand() * 0.2);
 				if(albedo > 1.0){
-					albedo = 1.0 + GenRandomRolls.Instance().draw_rand() * 0.04;
+					albedo = 1.0 - GenRandomRolls.Instance().draw_rand() * 0.04;
 				}
 				logger.info("end albedo:"+albedo);
 				return albedo;
