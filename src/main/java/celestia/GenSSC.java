@@ -13,12 +13,17 @@ import com.zenred.cosmos.domain.StarDao;
 import com.zenred.cosmos.domain.SystemClusterSubSet;
 import com.zenred.cosmos.domain.SystemDao;
 import com.zenred.cosmos.domain.UnifiedPlanetoidI;
-import com.zenred.cosmos.service_rules_and_infrastructure.GenAtmosphere;
-
 import celestia.domain.CelestAtmosphere;
 import celestia.domain.ColorRGB;
 import celestia.domain.Haze;
 import celestia.persistence.BasicFileWriter;
+
+/**
+ * generates a celestia ssc file for each star system
+ * 
+ * @author jredden
+ *
+ */
 
 public class GenSSC {
 	
@@ -88,7 +93,8 @@ public class GenSSC {
 	 * @param image
 	 * @return processed string image
 	 */
-	private static String buildPlanar(Star star, UnifiedPlanetoidI unifiedPlanetoidI, StringBuilder image){
+	private static String buildPlanar(Star star, UnifiedPlanetoidI unifiedPlanetoidI){
+		StringBuilder image = new StringBuilder();
 		image.append(texture.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), imageType}));
 		image.append("Emissive true \n");  // light source from primary
 		image.append(nightTexture.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), nightImageType}));
@@ -125,45 +131,65 @@ public class GenSSC {
 		image.append(planarAlbedo.format(new Object[]{PlanarAlbedo.genAlbedoPlanar(unifiedPlanetoidI)}));
 		return image.toString();
 	}
-	
+	/**
+	 * 
+	 * @param unifiedPlanetoidI
+	 * @param period
+	 * @param axis
+	 * @return orbit component
+	 */
 	private static String buildOrbit(UnifiedPlanetoidI unifiedPlanetoidI, Double period, Double axis){
 		StringBuilder image = new StringBuilder();
 		Double eccentricity = AdditionalPlanarOrbitScalars.genEccentricity();
 		Double inclinaton = AdditionalPlanarOrbitScalars.genInclination();
 		Double longOfPeriCentre = AdditionalPlanarOrbitScalars.genLongOfPericentre();
 		Double meanLongitude = AdditionalPlanarOrbitScalars.genMeanLongitude();
-		image.append(new Object[]{
+		image.append(ellipticalOrbit.format(new Object[]{
 		period // {0}
 		,axis	// {1}
 		,eccentricity // {2}
 		,inclinaton 	// {3}
 		,longOfPeriCentre // {4}
 		,meanLongitude	// {5}
-		});
+		}));
 		return image.toString();
 	}
-	
+	/**
+	 * 
+	 * @param star
+	 * @param unifiedPlanetoidI
+	 * @return planet image
+	 */
 	private static String buildPlanet(Star star, UnifiedPlanetoidI unifiedPlanetoidI){
 		StringBuilder planetImage = new StringBuilder("");
 		planetImage.append(planarClass.format(new Object[]{planetClass.toString()}));
-		planetImage.append(buildPlanar(star, unifiedPlanetoidI, planetImage));
+		planetImage.append(buildPlanar(star, unifiedPlanetoidI));
 		Double planarPeriod = PlanarPeriod.build(star, unifiedPlanetoidI);
 		Double semiMajorAxis = unifiedPlanetoidI.getPlanetoid().getDistanceToPrimary();
 		planetImage.append(buildOrbit(unifiedPlanetoidI, planarPeriod, semiMajorAxis));
 		return planetImage.toString();
 	}
-	
+	/**
+	 * 
+	 * @param star
+	 * @param unifiedPlanetoidI
+	 * @param unifiedMoonI
+	 * @return moon image
+	 */
 	private static String buildMoon(Star star, UnifiedPlanetoidI unifiedPlanetoidI, UnifiedPlanetoidI unifiedMoonI){
 		StringBuilder moonImage = new StringBuilder("");
 		moonImage.append(planarClass.format(new Object[]{moonClass.toString()}));
-		moonImage.append(buildPlanar(star, unifiedPlanetoidI, moonImage));
+		moonImage.append(buildPlanar(star, unifiedPlanetoidI));
 		Double moonPeriod = PlanarPeriod.build(unifiedMoonI);
 		Double semiMajorAxis = unifiedMoonI.getPlanetoid().getDistanceToPrimary() * AstronomicalUnits.MOON_UNIT;
 		moonImage.append(buildOrbit(unifiedPlanetoidI, moonPeriod, semiMajorAxis));
 		return moonImage.toString();
 	}
+	
+	/**
+	 * primary procedure
+	 */
 	public static void build() {
-		StringBuilder masterFileImage = new StringBuilder("");
 		SystemDao systemDao = new SystemDao();
 		ClusterRepDao clusterRepDao = new ClusterRepDao();
 		StarDao starDao = new StarDao();
@@ -171,6 +197,7 @@ public class GenSSC {
 		List<SystemClusterSubSet> systemsWithCluster = systemDao.readSystemsWithClusters();
 		for (SystemClusterSubSet systemClusterSubSet : systemsWithCluster) {
 			ClusterRep clusterRep = clusterRepDao.readClusterRepById(systemClusterSubSet.getClusterRepId());
+			StringBuilder masterFileImage = new StringBuilder("");
 			List<Star> starList = starDao.readStarsInCluster(clusterRep);
 			for(Star star : starList){
 				List<UnifiedPlanetoidI> unifiedPlanetoidIs = ExistingSystemWithStars
@@ -182,7 +209,8 @@ public class GenSSC {
 					StringBuilder fileImage = new StringBuilder("");
 					for (UnifiedPlanetoidI unifiedPlanetoidI : unifiedPlanetoidIs){
 						String planetnoidName = unifiedPlanetoidI.getPlanetoid().getPlanetoidName();
-						fileImage.append(buildPlanet(star, unifiedPlanetoidI));
+						String planetImage = buildPlanet(star, unifiedPlanetoidI);
+						fileImage.append(planetImage);
 						StringBuilder container = new StringBuilder().append(planar.format(new Object[]{planetnoidName,
 								star.getName(), fileImage}));
 						masterFileImage.append(container);
@@ -196,7 +224,8 @@ public class GenSSC {
 							fileImage = new StringBuilder("");
 							for (UnifiedPlanetoidI unifiedMoonI : unifiedMoonsIs) {
 								String moonName = unifiedMoonI.getPlanetoid().getPlanetoidName();
-								fileImage.append(buildMoon(star, unifiedPlanetoidI, unifiedMoonI));
+								String moonImage = buildMoon(star, unifiedPlanetoidI, unifiedMoonI);
+								fileImage.append(moonImage);
 								container = new StringBuilder().append(planar.format(new Object[]{moonName, star.getName() + '/' + planetnoidName,
 										fileImage}));
 								masterFileImage.append(container);
