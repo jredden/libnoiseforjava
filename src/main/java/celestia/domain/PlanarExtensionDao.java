@@ -1,8 +1,12 @@
 package celestia.domain;
 
+import java.util.Map;
+
 import com.zenred.johntredden.domain.AbstractJDBCDao;
 
 public class PlanarExtensionDao extends AbstractJDBCDao {
+	
+	public static final String PLANET_EXTENSION = "PlanetExtension";
 
 	public static final String PLANETOIDEXTENSIONID = "planetoidExtensionId";
 	public static final String PLANETOIDID = "planetoidId";
@@ -44,5 +48,153 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 	public static final String ROTATIONPERIOD = "rotationPeriod";
 	public static final String ALBEDO = "albedo";
 	public static final String DATESTAMP = "datestamp";
+	
+	private static String lastPlanarExtensionInsertSql = "SELECT MAX("+PLANETOIDEXTENSIONID+") FROM " + PLANET_EXTENSION;
+	
+	// + " plex." + XXX + " "
+	
+	private static String readPlanarExtensionByIdSql = "SELECT "
+			+ " plex." + PLANETOIDEXTENSIONID + " "
+			+ " plex." + PLANETOIDID + " "
+			+ " plex." + PLANETOIDNAME + " "
+			+ " plex." + TEXTURE + " "
+			+ " plex." + NIGHTTEXTURE + " "			
+			+ " plex." + SEMIMAJORAXIS + " "
+			+ " plex." + ECCENTRICITY + " "
+			+ " plex." + COLORR + " "
+			+ " plex." + COLORG + " "
+			+ " plex." + COLORB + " "
+			+ " plex." + SPECULARTEXTURE + " "
+			+ " plex." + SPECULARPOWER + " "
+			+ " plex." + HAZECOLORR + " "
+			+ " plex." + HAZECOLORG + " "
+			+ " plex." + HAZECOLORB + " "
+			+ " plex." + HAZEDENSITY + " "
+			+ " plex." + OBLATENESS + " "
+			+ " plex." + ATMOSPHEREHEIGHT + " "
+			+ " plex." + ATMOSPHERELOWERR + " "
+			+ " plex." + ATMOSPHERELOWERG + " "
+			+ " plex." + ATMOSPHERELOWERB + " "
+			+ " plex." + ATMOSPHEREUPPERR + " "
+			+ " plex." + ATMOSPHEREUPPERG + " "
+			+ " plex." + ATMOSPHEREUPPERB + " "
+			+ " plex." + ATMOSPHERESKYR + " "
+			+ " plex." + ATMOSPHERESKYG + " "
+			+ " plex." + ATMOSPHERESKYB + " "
+			+ " plex." + CLOUDHEIGHT + " "
+			+ " plex." + CLOUDSPEED + " "
+			+ " plex." + CLOUDMAP + " "
+			+ " plex." + ORBITPERIOD + " "
+			+ " plex." + ORBITSEMIMAJORAXIS + " "
+			+ " plex." + ORBITECCENTRICITY + " "
+			+ " plex." + ORBITINCLINATION + " "
+			+ " plex." + ORBITLONGOFPERICENTRE + " "
+			+ " plex." + ORBITMEANLONGITUDE + " "
+			+ " plex." + OBLIQUITY + " "
+			+ " plex." + ROTATIONPERIOD + " "
+			+ " plex." + ALBEDO + " "
+			+ " plex." + DATESTAMP + " "
+			+ " FROM " + PLANET_EXTENSION + " plex "
+			+ " WHERE plex." + PLANETOIDEXTENSIONID + " = ? "
+			;
 
+	private static String readPlanarExtensionByPlanarNameSql = "SELECT "
+			+ " plex." + PLANETOIDEXTENSIONID + " "
+			+ " plex." + PLANETOIDID + " "
+			+ " plex." + PLANETOIDNAME + " "
+			+ " plex." + TEXTURE + " "
+			+ " plex." + NIGHTTEXTURE + " "			
+			+ " plex." + SEMIMAJORAXIS + " "
+			+ " plex." + ECCENTRICITY + " "
+			+ " plex." + COLORR + " "
+			+ " plex." + COLORG + " "
+			+ " plex." + COLORB + " "
+			+ " plex." + SPECULARTEXTURE + " "
+			+ " plex." + SPECULARPOWER + " "
+			+ " plex." + HAZECOLORR + " "
+			+ " plex." + HAZECOLORG + " "
+			+ " plex." + HAZECOLORB + " "
+			+ " plex." + HAZEDENSITY + " "
+			+ " plex." + OBLATENESS + " "
+			+ " plex." + ATMOSPHEREHEIGHT + " "
+			+ " plex." + ATMOSPHERELOWERR + " "
+			+ " plex." + ATMOSPHERELOWERG + " "
+			+ " plex." + ATMOSPHERELOWERB + " "
+			+ " plex." + ATMOSPHEREUPPERR + " "
+			+ " plex." + ATMOSPHEREUPPERG + " "
+			+ " plex." + ATMOSPHEREUPPERB + " "
+			+ " plex." + ATMOSPHERESKYR + " "
+			+ " plex." + ATMOSPHERESKYG + " "
+			+ " plex." + ATMOSPHERESKYB + " "
+			+ " plex." + CLOUDHEIGHT + " "
+			+ " plex." + CLOUDSPEED + " "
+			+ " plex." + CLOUDMAP + " "
+			+ " plex." + ORBITPERIOD + " "
+			+ " plex." + ORBITSEMIMAJORAXIS + " "
+			+ " plex." + ORBITECCENTRICITY + " "
+			+ " plex." + ORBITINCLINATION + " "
+			+ " plex." + ORBITLONGOFPERICENTRE + " "
+			+ " plex." + ORBITMEANLONGITUDE + " "
+			+ " plex." + OBLIQUITY + " "
+			+ " plex." + ROTATIONPERIOD + " "
+			+ " plex." + ALBEDO + " "
+			+ " plex." + DATESTAMP + " "
+			+ " FROM " + PLANET_EXTENSION + " plex "
+			+ " WHERE plex." + PLANETOIDNAME + " = ? "
+			;
+	
+	private static String readPlanarByNameCountSql  = "SELECT COUNT(*) "
+			+ " FROM " + PLANET_EXTENSION + " plex " + " WHERE plex." + PLANETOIDNAME
+			+ " = ? "
+			;
+	
+	private static String deletePlanarExtensionSql = "DELETE FROM " + PLANET_EXTENSION + " WHERE " + PLANETOIDEXTENSIONID
+			+ " = ? ";	
+	
+	private static String updatePlanarExtensionSql = "UPDATE " + PLANET_EXTENSION + " plex SET "
+			+ " plex." + PLANETOIDEXTENSIONID + " "
+			+ " plex." + PLANETOIDID + " "
+			+ " plex." + PLANETOIDNAME + " "
+			+ " plex." + TEXTURE + " "
+			+ " plex." + NIGHTTEXTURE + " "			
+			+ " plex." + SEMIMAJORAXIS + " "
+			+ " plex." + ECCENTRICITY + " "
+			+ " plex." + COLORR + " "
+			+ " plex." + COLORG + " "
+			+ " plex." + COLORB + " "
+			+ " plex." + SPECULARTEXTURE + " "
+			+ " plex." + SPECULARPOWER + " "
+			+ " plex." + HAZECOLORR + " "
+			+ " plex." + HAZECOLORG + " "
+			+ " plex." + HAZECOLORB + " "
+			+ " plex." + HAZEDENSITY + " "
+			+ " plex." + OBLATENESS + " "
+			+ " plex." + ATMOSPHEREHEIGHT + " "
+			+ " plex." + ATMOSPHERELOWERR + " "
+			+ " plex." + ATMOSPHERELOWERG + " "
+			+ " plex." + ATMOSPHERELOWERB + " "
+			+ " plex." + ATMOSPHEREUPPERR + " "
+			+ " plex." + ATMOSPHEREUPPERG + " "
+			+ " plex." + ATMOSPHEREUPPERB + " "
+			+ " plex." + ATMOSPHERESKYR + " "
+			+ " plex." + ATMOSPHERESKYG + " "
+			+ " plex." + ATMOSPHERESKYB + " "
+			+ " plex." + CLOUDHEIGHT + " "
+			+ " plex." + CLOUDSPEED + " "
+			+ " plex." + CLOUDMAP + " "
+			+ " plex." + ORBITPERIOD + " "
+			+ " plex." + ORBITSEMIMAJORAXIS + " "
+			+ " plex." + ORBITECCENTRICITY + " "
+			+ " plex." + ORBITINCLINATION + " "
+			+ " plex." + ORBITLONGOFPERICENTRE + " "
+			+ " plex." + ORBITMEANLONGITUDE + " "
+			+ " plex." + OBLIQUITY + " "
+			+ " plex." + ROTATIONPERIOD + " "
+			+ " plex." + ALBEDO + " "
+			+ " plex." + DATESTAMP + " "
+			+ " FROM " + PLANET_EXTENSION + " plex "
+			+ " WHERE plex." + PLANETOIDNAME + " = ?"
+		;
+	
+	
 }
