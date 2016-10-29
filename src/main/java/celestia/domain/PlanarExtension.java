@@ -77,6 +77,9 @@ public class PlanarExtension {
 		}
 	}
 	
+	private Integer planarExtensionId;
+	private Integer planarId;
+	private String planarName;
 	private PlanarClass planarClass;
 	private String texture;
 	private String nightTexture;
@@ -160,6 +163,30 @@ public class PlanarExtension {
 
 	public Float getHazeDensity() {
 		return hazeDensity;
+	}
+
+	public Integer getPlanarExtensionId() {
+		return planarExtensionId;
+	}
+
+	public Integer getPlanarId() {
+		return planarId;
+	}
+
+	public void setPlanarId(Integer planarId) {
+		this.planarId = planarId;
+	}
+
+	public void setPlanarExtensionId(Integer planarExtensionId) {
+		this.planarExtensionId = planarExtensionId;
+	}
+
+	public String getPlanarName() {
+		return planarName;
+	}
+
+	public void setPlanarName(String planarName) {
+		this.planarName = planarName;
 	}
 
 	public void setHazeDensity(Float hazeDensity) {
@@ -499,6 +526,9 @@ public class PlanarExtension {
 		map.put(PlanarExtensionDao.ATMOSPHEREUPPERR, planarExtension.getUpper().rOfRGB);
 		map.put(PlanarExtensionDao.ATMOSPHEREUPPERG, planarExtension.getUpper().gOfRGB);
 		map.put(PlanarExtensionDao.ATMOSPHEREUPPERB, planarExtension.getUpper().bOfRGB);
+		map.put(PlanarExtensionDao.PLANETOIDEXTENSIONID, planarExtension.getPlanarExtensionId());
+		map.put(PlanarExtensionDao.PLANETOIDID, planarExtension.getPlanarId());
+		map.put(PlanarExtensionDao.PLANETOIDNAME, planarExtension.getPlanarName());
 		return map;
 	}
 	
@@ -515,19 +545,21 @@ public class PlanarExtension {
 				PlanarExtensionDao.ATMOSPHERESKYR, PlanarExtensionDao.ATMOSPHERESKYG, PlanarExtensionDao.ATMOSPHERESKYB,
 				PlanarExtensionDao.SPECULARPOWER, PlanarExtensionDao.SPECULARTEXTURE, PlanarExtensionDao.TEXTURE,
 				PlanarExtensionDao.ATMOSPHEREUPPERR, PlanarExtensionDao.ATMOSPHEREUPPERG,
-				PlanarExtensionDao.ATMOSPHEREUPPERB };
+				PlanarExtensionDao.ATMOSPHEREUPPERB, PlanarExtensionDao.PLANETOIDEXTENSIONID, PlanarExtensionDao.PLANETOIDID };
 	}
 
 	@Override
 	public String toString() {
-		return "PlanarExtension [planarClass=" + planarClass + ", texture=" + texture + ", nightTexture=" + nightTexture
-				+ ", color=" + color + ", specularTexture=" + specularTexture + ", specularPower=" + specularPower
-				+ ", hazeColor=" + hazeColor + ", hazeDensity=" + hazeDensity + ", radius=" + radius + ", oblateness="
-				+ oblateness + ", atmosphereHeight=" + atmosphereHeight + ", lower=" + lower + ", upper=" + upper
-				+ ", sky=" + sky + ", cloudHeight=" + cloudHeight + ", cloudMap=" + cloudMap + ", cloudSpeed="
-				+ cloudSpeed + ", period=" + period + ", semiMajorAxis=" + semiMajorAxis + ", eccentricity="
-				+ eccentricity + ", longOfPericenter=" + longOfPericenter + ", meanLongitude=" + meanLongitude
-				+ ", rotationPeriod=" + rotationPeriod + ", obliquity=" + obliquity + ", albedo=" + albedo + "]";
+		return "PlanarExtension [planarExtensionId=" + planarExtensionId + ", planarId=" + planarId + ", planarName="
+				+ planarName + ", planarClass=" + planarClass + ", texture=" + texture + ", nightTexture="
+				+ nightTexture + ", color=" + color + ", specularTexture=" + specularTexture + ", specularPower="
+				+ specularPower + ", hazeColor=" + hazeColor + ", hazeDensity=" + hazeDensity + ", radius=" + radius
+				+ ", oblateness=" + oblateness + ", atmosphereHeight=" + atmosphereHeight + ", lower=" + lower
+				+ ", upper=" + upper + ", sky=" + sky + ", cloudHeight=" + cloudHeight + ", cloudMap=" + cloudMap
+				+ ", cloudSpeed=" + cloudSpeed + ", period=" + period + ", semiMajorAxis=" + semiMajorAxis
+				+ ", eccentricity=" + eccentricity + ", longOfPericenter=" + longOfPericenter + ", meanLongitude="
+				+ meanLongitude + ", rotationPeriod=" + rotationPeriod + ", obliquity=" + obliquity + ", albedo="
+				+ albedo + "]";
 	}
 	
 	

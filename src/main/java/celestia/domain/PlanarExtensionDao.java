@@ -2,7 +2,11 @@ package celestia.domain;
 
 import java.util.Map;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.zenred.johntredden.domain.AbstractJDBCDao;
+
+import celestia.domain.PlanarExtension.OGL_Color;
 
 public class PlanarExtensionDao extends AbstractJDBCDao {
 	
@@ -196,5 +200,44 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 			+ " WHERE plex." + PLANETOIDNAME + " = ?"
 		;
 	
+	@Transactional
+	public PlanarExtension addPlanarExtension(PlanarExtension planarExtension){
+		Map<String, Object> planarExtensionMap = PlanarExtension.getPlanarExtensionMap(planarExtension);
+		super.jdbcInsertSetup().withTableName(PLANET_EXTENSION).usingColumns(PlanarExtension.csvPlanarExtension()).execute(planarExtensionMap);
+		Integer planarExtensionId = super.jdbcSetUp().getSimpleJdbcTemplate().queryForInt(lastPlanarExtensionInsertSql);
+		planarExtension.setPlanarExtensionId(planarExtensionId);
+		return readPlanarExtensionById(planarExtensionId);
+	}
 	
+	@Transactional
+	public PlanarExtension readPlanarExtensionById(Integer planarExtensionId){
+		Object[] param = { planarExtensionId };
+		Map<String, Object> planarExtensionMap = super.jdbcSetUp().getSimpleJdbcTemplate()
+				.queryForMap(readPlanarExtensionByIdSql, param);
+		return buildPlanarExtension(planarExtensionMap);
+	}
+	
+	private PlanarExtension buildPlanarExtension(Map<String, Object> planarExtensionMap){
+		PlanarExtension planarExtension = new PlanarExtension();
+		String s_PlanarExtensionId = planarExtensionMap.get(PLANETOIDEXTENSIONID).toString();
+		planarExtension.setPlanarExtensionId(new Integer(s_PlanarExtensionId));
+		String s_PlanetoidId = planarExtensionMap.get(PLANETOIDID).toString();
+		planarExtension.setPlanarId(new Integer(s_PlanetoidId));
+		planarExtension.setPlanarName(planarExtensionMap.get(PLANETOIDNAME).toString());
+		planarExtension.setTexture(planarExtensionMap.get(TEXTURE).toString());
+		planarExtension.setNightTexture(planarExtensionMap.get(NIGHTTEXTURE).toString());
+		String s_SemiMajorAxis = planarExtensionMap.get(SEMIMAJORAXIS).toString();
+		planarExtension.setSemiMajorAxis(new Double(s_SemiMajorAxis));
+		String s_Eccentricity = planarExtensionMap.get(ECCENTRICITY).toString();
+		planarExtension.setEccentricity(new Double(s_Eccentricity));
+		String s_ColorR = planarExtensionMap.get(COLORR).toString();
+		String s_ColorG = planarExtensionMap.get(COLORG).toString();
+		String s_ColorB = planarExtensionMap.get(COLORB).toString();
+		OGL_Color colorRGB = planarExtension.new OGL_Color();
+		colorRGB.rOfRGB = new Float(s_ColorR);
+		colorRGB.gOfRGB = new Float(s_ColorG);
+		colorRGB.bOfRGB = new Float(s_ColorB);
+		planarExtension.setColor(colorRGB);
+		return planarExtension;
+	}
 }
