@@ -217,6 +217,19 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		return buildPlanarExtension(planarExtensionMap);
 	}
 	
+	public PlanarExtension readPlanarExtensionName(String name){
+		Object[] param = { name };
+		Map<String, Object> planarExtensionMap = super.jdbcSetUp().getSimpleJdbcTemplate()
+				.queryForMap(readPlanarExtensionByPlanarNameSql, param);
+		return buildPlanarExtension(planarExtensionMap);
+	}
+	
+	public void deletePlanarExtension(PlanarExtension planarExtension) {
+		super.jdbcSetUp().getSimpleJdbcTemplate().update(deletePlanarExtensionSql,
+				new Object[] { planarExtension.getPlanarExtensionId() });
+
+	}
+	
 	private PlanarExtension buildPlanarExtension(Map<String, Object> planarExtensionMap){
 		PlanarExtension planarExtension = new PlanarExtension();
 		String s_PlanarExtensionId = planarExtensionMap.get(PLANETOIDEXTENSIONID).toString();
@@ -238,6 +251,71 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		colorRGB.gOfRGB = new Float(s_ColorG);
 		colorRGB.bOfRGB = new Float(s_ColorB);
 		planarExtension.setColor(colorRGB);
+		planarExtension.setSpecularTexture(planarExtensionMap.get(SPECULARTEXTURE).toString());
+		String s_SpecularPower = planarExtensionMap.get(SPECULARPOWER).toString();
+		planarExtension.setSpecularPower(new Integer (s_SpecularPower));
+		String s_HazeColorR = planarExtensionMap.get(HAZECOLORR).toString();
+		String s_HazeColorG = planarExtensionMap.get(HAZECOLORG).toString();
+		String s_HazeColorB = planarExtensionMap.get(HAZECOLORB).toString();
+		OGL_Color hazeColorRGB = planarExtension.new OGL_Color();
+		hazeColorRGB.rOfRGB = new Float(s_HazeColorR);
+		hazeColorRGB.gOfRGB = new Float(s_HazeColorG);
+		hazeColorRGB.bOfRGB = new Float(s_HazeColorB);
+		planarExtension.setHazeColor(hazeColorRGB);
+		String s_HazeDensity = planarExtensionMap.get(HAZEDENSITY).toString();
+		planarExtension.setHazeDensity(new Float(s_HazeDensity));
+		String s_Oblateness = planarExtensionMap.get(OBLATENESS).toString();
+		planarExtension.setOblateness(new Double(s_Oblateness));
+		String s_AtmosphereHeight = planarExtensionMap.get(ATMOSPHEREHEIGHT).toString();
+		planarExtension.setAtmosphereHeight(new Integer(s_AtmosphereHeight));
+		String s_AtmosphereLowerColorR = planarExtensionMap.get(ATMOSPHERELOWERR).toString();
+		String s_AtmosphereLowerColorG = planarExtensionMap.get(ATMOSPHERELOWERG).toString();
+		String s_AtmosphereLowerColorB = planarExtensionMap.get(ATMOSPHERELOWERB).toString();
+		OGL_Color atmosphereLowerColorRGB = planarExtension.new OGL_Color();
+		atmosphereLowerColorRGB.rOfRGB = new Float(s_AtmosphereLowerColorR);
+		atmosphereLowerColorRGB.gOfRGB = new Float(s_AtmosphereLowerColorG);
+		atmosphereLowerColorRGB.bOfRGB = new Float(s_AtmosphereLowerColorB);
+		planarExtension.setLower(atmosphereLowerColorRGB);
+		String s_AtmosphereUpperColorR = planarExtensionMap.get(ATMOSPHEREUPPERR).toString();
+		String s_AtmosphereUpperColorG = planarExtensionMap.get(ATMOSPHEREUPPERG).toString();
+		String s_AtmosphereUpperColorB = planarExtensionMap.get(ATMOSPHEREUPPERB).toString();
+		OGL_Color atmosphereUpperColorRGB = planarExtension.new OGL_Color();
+		atmosphereUpperColorRGB.rOfRGB = new Float(s_AtmosphereUpperColorR);
+		atmosphereUpperColorRGB.gOfRGB = new Float(s_AtmosphereUpperColorG);
+		atmosphereUpperColorRGB.bOfRGB = new Float(s_AtmosphereUpperColorB);
+		planarExtension.setUpper(atmosphereUpperColorRGB);
+		String s_AtmosphereSkyColorR = planarExtensionMap.get(ATMOSPHERESKYR).toString();
+		String s_AtmosphereSkyColorG = planarExtensionMap.get(ATMOSPHERESKYG).toString();
+		String s_AtmosphereSkyColorB = planarExtensionMap.get(ATMOSPHERESKYB).toString();
+		OGL_Color atmosphereSkyColorRGB = planarExtension.new OGL_Color();
+		atmosphereSkyColorRGB.rOfRGB = new Float(s_AtmosphereSkyColorR);
+		atmosphereSkyColorRGB.gOfRGB = new Float(s_AtmosphereSkyColorG);
+		atmosphereSkyColorRGB.bOfRGB = new Float(s_AtmosphereSkyColorB);
+		planarExtension.setSky(atmosphereSkyColorRGB);
+		String s_CloudHeight = planarExtensionMap.get(CLOUDHEIGHT).toString();
+		planarExtension.setCloudHeight(new Integer(s_CloudHeight));
+		String s_CloudSpeed = planarExtensionMap.get(CLOUDSPEED).toString();
+		planarExtension.setCloudSpeed(new Integer(s_CloudSpeed));
+		planarExtension.setCloudMap(planarExtensionMap.get(CLOUDMAP).toString());
+		String s_OrbitPeriod = planarExtensionMap.get(ORBITPERIOD).toString();
+		planarExtension.setOrbitPeriod(new Double(s_OrbitPeriod));
+		String s_OrbitSemiMajorAxis = planarExtensionMap.get(ORBITSEMIMAJORAXIS).toString();
+		planarExtension.setSemiMajorAxis(new Double(s_OrbitSemiMajorAxis));
+		String s_OrbitEccentricity = planarExtensionMap.get(ORBITECCENTRICITY).toString();
+		planarExtension.setOrbitEccentricity(new Double(s_OrbitEccentricity));
+		String s_OrbitInclination = planarExtensionMap.get(ORBITINCLINATION).toString();
+		planarExtension.setOrbitInclination(new Double(s_OrbitInclination));
+		String s_OrbitLongOfPeriCentre = planarExtensionMap.get(ORBITLONGOFPERICENTRE).toString();
+		planarExtension.setOrbitLongOfPeriCentre(new Double(s_OrbitLongOfPeriCentre));
+		String s_OrbitMeanLongitude = planarExtensionMap.get(ORBITMEANLONGITUDE).toString();
+		planarExtension.setOrbitMeanLongitude(new Double(s_OrbitMeanLongitude));
+		String s_Obliquity = planarExtensionMap.get(OBLIQUITY).toString();
+		planarExtension.setObliquity(new Double(s_Obliquity));
+		String s_RotationPeriod = planarExtensionMap.get(ROTATIONPERIOD).toString();
+		planarExtension.setRotationPeriod(new Double(s_RotationPeriod));
+		String s_Albedo = planarExtensionMap.get(ALBEDO).toString();
+		planarExtension.setAlbedo(new Double(s_Albedo));
+		planarExtension.setDateStamp(planarExtensionMap.get(DATESTAMP).toString());
 		return planarExtension;
 	}
 }
