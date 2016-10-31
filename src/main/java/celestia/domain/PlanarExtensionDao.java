@@ -199,7 +199,11 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 			+ " FROM " + PLANET_EXTENSION + " plex "
 			+ " WHERE plex." + PLANETOIDNAME + " = ?"
 		;
-	
+	/**
+	 * 
+	 * @param planarExtension
+	 * @return planarExtension
+	 */
 	@Transactional
 	public PlanarExtension addPlanarExtension(PlanarExtension planarExtension){
 		Map<String, Object> planarExtensionMap = PlanarExtension.getPlanarExtensionMap(planarExtension);
@@ -209,6 +213,11 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		return readPlanarExtensionById(planarExtensionId);
 	}
 	
+	/**
+	 * 
+	 * @param planarExtensionId
+	 * @return planarExtension
+	 */
 	@Transactional
 	public PlanarExtension readPlanarExtensionById(Integer planarExtensionId){
 		Object[] param = { planarExtensionId };
@@ -217,6 +226,11 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		return buildPlanarExtension(planarExtensionMap);
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @return planarExtension
+	 */
 	public PlanarExtension readPlanarExtensionName(String name){
 		Object[] param = { name };
 		Map<String, Object> planarExtensionMap = super.jdbcSetUp().getSimpleJdbcTemplate()
@@ -224,12 +238,87 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		return buildPlanarExtension(planarExtensionMap);
 	}
 	
+	/**
+	 * 
+	 * @param planarExtension
+	 */
 	public void deletePlanarExtension(PlanarExtension planarExtension) {
 		super.jdbcSetUp().getSimpleJdbcTemplate().update(deletePlanarExtensionSql,
 				new Object[] { planarExtension.getPlanarExtensionId() });
 
 	}
 	
+	/**
+	 * 
+	 * @param planarExtension
+	 * @return yes or no
+	 */
+	public Boolean doesPlanarExtensionExist(PlanarExtension planarExtension){
+		Boolean answer = true;
+		int count  = super.jdbcSetUp().getSimpleJdbcTemplate()
+				.queryForInt(readPlanarByNameCountSql, planarExtension.getPlanarName());
+		if(0 == count ){
+			answer = false;
+		}
+		return answer;
+	}
+	
+	/**
+	 * 
+	 * @param planarExtension
+	 * @return planarExtension
+	 */
+	public PlanarExtension updatePlanarExtensionByName(PlanarExtension planarExtension){
+		super.jdbcSetUp().getSimpleJdbcTemplate().update(updatePlanarExtensionSql, new Object[]{
+				 planarExtension.getPlanarExtensionId()
+				 , planarExtension.getPlanarId()
+				 , planarExtension.getPlanarName()
+				 , planarExtension.getTexture()
+				 , planarExtension.getNightTexture()
+				 , planarExtension.getSemiMajorAxis()
+				 , planarExtension.getEccentricity()
+				 , planarExtension.getColor().rOfRGB
+				 , planarExtension.getColor().gOfRGB
+				 , planarExtension.getColor().bOfRGB
+				 , planarExtension.getSpecularTexture()
+				 , planarExtension.getSpecularPower()
+				 , planarExtension.getHazeColor().rOfRGB
+				 , planarExtension.getHazeColor().gOfRGB
+				 , planarExtension.getHazeColor().bOfRGB
+				 , planarExtension.getHazeDensity()
+				 , planarExtension.getOblateness()
+				 , planarExtension.getAtmosphereHeight()
+				 , planarExtension.getLower().rOfRGB
+				 , planarExtension.getLower().gOfRGB
+				 , planarExtension.getLower().bOfRGB
+				 , planarExtension.getUpper().rOfRGB
+				 , planarExtension.getUpper().gOfRGB
+				 , planarExtension.getUpper().bOfRGB
+				 , planarExtension.getSky().rOfRGB
+				 , planarExtension.getSky().gOfRGB
+				 , planarExtension.getSky().bOfRGB
+				 , planarExtension.getCloudHeight()
+				 , planarExtension.getCloudSpeed()
+				 , planarExtension.getCloudMap()
+				 , planarExtension.getOrbitPeriod()
+				 , planarExtension.getOrbitSemiMajorAxis()
+				 , planarExtension.getOrbitEccentricity()
+				 , planarExtension.getOrbitInclination()
+				 , planarExtension.getOrbitLongOfPeriCentre()
+				 , planarExtension.getOrbitMeanLongitude()
+				 , planarExtension.getObliquity()
+				 , planarExtension.getRotationPeriod()
+				 , planarExtension.getAlbedo()
+				 , planarExtension.getDateStamp()
+		});
+		return readPlanarExtensionName(planarExtension.getPlanarName());
+	}
+	
+	/**
+	 * 
+	 * @param planarExtensionMap
+	 * @return planarExtension
+	 */
 	private PlanarExtension buildPlanarExtension(Map<String, Object> planarExtensionMap){
 		PlanarExtension planarExtension = new PlanarExtension();
 		String s_PlanarExtensionId = planarExtensionMap.get(PLANETOIDEXTENSIONID).toString();
