@@ -300,12 +300,12 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 				 , planarExtension.getCloudHeight()
 				 , planarExtension.getCloudSpeed()
 				 , planarExtension.getCloudMap()
-				 , planarExtension.getOrbitPeriod()
-				 , planarExtension.getOrbitSemiMajorAxis()
-				 , planarExtension.getOrbitEccentricity()
-				 , planarExtension.getOrbitInclination()
-				 , planarExtension.getOrbitLongOfPeriCentre()
-				 , planarExtension.getOrbitMeanLongitude()
+				 , planarExtension.getPeriod()
+				 , planarExtension.getSemiMajorAxis()
+				 , planarExtension.getEccentricity()
+				 , planarExtension.getInclination()
+				 , planarExtension.getLongOfPericenter()
+				 , planarExtension.getMeanLongitude()
 				 , planarExtension.getObliquity()
 				 , planarExtension.getRotationPeriod()
 				 , planarExtension.getAlbedo()
@@ -387,17 +387,17 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		planarExtension.setCloudSpeed(new Integer(s_CloudSpeed));
 		planarExtension.setCloudMap(planarExtensionMap.get(CLOUDMAP).toString());
 		String s_OrbitPeriod = planarExtensionMap.get(ORBITPERIOD).toString();
-		planarExtension.setOrbitPeriod(new Double(s_OrbitPeriod));
+		planarExtension.setPeriod(new Double(s_OrbitPeriod));
 		String s_OrbitSemiMajorAxis = planarExtensionMap.get(ORBITSEMIMAJORAXIS).toString();
 		planarExtension.setSemiMajorAxis(new Double(s_OrbitSemiMajorAxis));
 		String s_OrbitEccentricity = planarExtensionMap.get(ORBITECCENTRICITY).toString();
-		planarExtension.setOrbitEccentricity(new Double(s_OrbitEccentricity));
+		planarExtension.setEccentricity(new Double(s_OrbitEccentricity));
 		String s_OrbitInclination = planarExtensionMap.get(ORBITINCLINATION).toString();
-		planarExtension.setOrbitInclination(new Double(s_OrbitInclination));
+		planarExtension.setInclination(new Double(s_OrbitInclination));
 		String s_OrbitLongOfPeriCentre = planarExtensionMap.get(ORBITLONGOFPERICENTRE).toString();
-		planarExtension.setOrbitLongOfPeriCentre(new Double(s_OrbitLongOfPeriCentre));
+		planarExtension.setLongOfPericenter(new Double(s_OrbitLongOfPeriCentre));
 		String s_OrbitMeanLongitude = planarExtensionMap.get(ORBITMEANLONGITUDE).toString();
-		planarExtension.setOrbitMeanLongitude(new Double(s_OrbitMeanLongitude));
+		planarExtension.setMeanLongitude(new Double(s_OrbitMeanLongitude));
 		String s_Obliquity = planarExtensionMap.get(OBLIQUITY).toString();
 		planarExtension.setObliquity(new Double(s_Obliquity));
 		String s_RotationPeriod = planarExtensionMap.get(ROTATIONPERIOD).toString();

@@ -100,26 +100,87 @@ public class PlanarExtension {
 	private Double period;
 	private Double semiMajorAxis;
 	private Double eccentricity;
+	private Double inclination;
 	private Double longOfPericenter;
 	private Double meanLongitude;
 	private Double rotationPeriod;
 	private Double obliquity;
 	private Double albedo;
-	private Double orbitPeriod;
-	private Double orbitSemiMajorAxis;
-	private Double orbitEccentricity;
-	private Double orbitInclination;
-	private Double orbitLongOfPeriCentre;
-	private Double orbitMeanLongitude;
 	private String dateStamp;
 	
+	public PlanarExtension (){}
 	
+	
+
+	public PlanarExtension(Integer planarId, String planarName, PlanarClass planarClass, String texture,
+			String nightTexture, OGL_Color color, String specularTexture, Integer specularPower, OGL_Color hazeColor,
+			Float hazeDensity, Double radius, Double oblateness, Integer atmosphereHeight, OGL_Color lower,
+			OGL_Color upper, OGL_Color sky, Integer cloudHeight, String cloudMap, Integer cloudSpeed, Double period,
+			Double semiMajorAxis, Double eccentricity, Double inclination, Double longOfPericenter,
+			Double meanLongitude, Double rotationPeriod, Double obliquity, Double albedo) {
+		super();
+		this.planarId = planarId;
+		this.planarName = planarName;
+		this.planarClass = planarClass;
+		this.texture = texture;
+		this.nightTexture = nightTexture;
+		this.color = color;
+		this.specularTexture = specularTexture;
+		this.specularPower = specularPower;
+		this.hazeColor = hazeColor;
+		this.hazeDensity = hazeDensity;
+		this.radius = radius;
+		this.oblateness = oblateness;
+		this.atmosphereHeight = atmosphereHeight;
+		this.lower = lower;
+		this.upper = upper;
+		this.sky = sky;
+		this.cloudHeight = cloudHeight;
+		this.cloudMap = cloudMap;
+		this.cloudSpeed = cloudSpeed;
+		this.period = period;
+		this.semiMajorAxis = semiMajorAxis;
+		this.eccentricity = eccentricity;
+		this.inclination = inclination;
+		this.longOfPericenter = longOfPericenter;
+		this.meanLongitude = meanLongitude;
+		this.rotationPeriod = rotationPeriod;
+		this.obliquity = obliquity;
+		this.albedo = albedo;
+	}
+
+
+
 	public static PlanarExtension build(Star star, Planetoid planetoid, PlanarClass planarClass){
 		PlanarExtension instance = new PlanarExtension();
 		instance.planarClass = planarClass;
 		instance.texture = planetoid.getPlanetoidName()+GRAPHIC_SUFFIX;
 		return instance;
 	}
+
+	public PlanarClass getPlanarClass() {
+		return planarClass;
+	}
+
+
+
+	public void setPlanarClass(PlanarClass planarClass) {
+		this.planarClass = planarClass;
+	}
+
+
+
+	public Double getInclination() {
+		return inclination;
+	}
+
+
+
+	public void setInclination(Double inclination) {
+		this.inclination = inclination;
+	}
+
+
 
 	public String getDateStamp() {
 		return dateStamp;
@@ -346,53 +407,6 @@ public class PlanarExtension {
 	}
 
 	
-	public Double getOrbitPeriod() {
-		return orbitPeriod;
-	}
-
-	public void setOrbitPeriod(Double orbitPeriod) {
-		this.orbitPeriod = orbitPeriod;
-	}
-
-	public Double getOrbitSemiMajorAxis() {
-		return orbitSemiMajorAxis;
-	}
-
-	public void setOrbitSemiMajorAxis(Double orbitSemiMajorAxis) {
-		this.orbitSemiMajorAxis = orbitSemiMajorAxis;
-	}
-
-	public Double getOrbitEccentricity() {
-		return orbitEccentricity;
-	}
-
-	public void setOrbitEccentricity(Double orbitEccentricity) {
-		this.orbitEccentricity = orbitEccentricity;
-	}
-
-	public Double getOrbitInclination() {
-		return orbitInclination;
-	}
-
-	public void setOrbitInclination(Double orbitInclination) {
-		this.orbitInclination = orbitInclination;
-	}
-
-	public Double getOrbitLongOfPeriCentre() {
-		return orbitLongOfPeriCentre;
-	}
-
-	public void setOrbitLongOfPeriCentre(Double orbitLongOfPeriCentre) {
-		this.orbitLongOfPeriCentre = orbitLongOfPeriCentre;
-	}
-
-	public Double getOrbitMeanLongitude() {
-		return orbitMeanLongitude;
-	}
-
-	public void setOrbitMeanLongitude(Double orbitMeanLongitude) {
-		this.orbitMeanLongitude = orbitMeanLongitude;
-	}
 
 	@Override
 	public int hashCode() {
@@ -404,21 +418,17 @@ public class PlanarExtension {
 		result = prime * result + ((cloudMap == null) ? 0 : cloudMap.hashCode());
 		result = prime * result + ((cloudSpeed == null) ? 0 : cloudSpeed.hashCode());
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
+		result = prime * result + ((dateStamp == null) ? 0 : dateStamp.hashCode());
 		result = prime * result + ((eccentricity == null) ? 0 : eccentricity.hashCode());
 		result = prime * result + ((hazeColor == null) ? 0 : hazeColor.hashCode());
 		result = prime * result + ((hazeDensity == null) ? 0 : hazeDensity.hashCode());
+		result = prime * result + ((inclination == null) ? 0 : inclination.hashCode());
 		result = prime * result + ((longOfPericenter == null) ? 0 : longOfPericenter.hashCode());
 		result = prime * result + ((lower == null) ? 0 : lower.hashCode());
 		result = prime * result + ((meanLongitude == null) ? 0 : meanLongitude.hashCode());
 		result = prime * result + ((nightTexture == null) ? 0 : nightTexture.hashCode());
 		result = prime * result + ((oblateness == null) ? 0 : oblateness.hashCode());
 		result = prime * result + ((obliquity == null) ? 0 : obliquity.hashCode());
-		result = prime * result + ((orbitEccentricity == null) ? 0 : orbitEccentricity.hashCode());
-		result = prime * result + ((orbitInclination == null) ? 0 : orbitInclination.hashCode());
-		result = prime * result + ((orbitLongOfPeriCentre == null) ? 0 : orbitLongOfPeriCentre.hashCode());
-		result = prime * result + ((orbitMeanLongitude == null) ? 0 : orbitMeanLongitude.hashCode());
-		result = prime * result + ((orbitPeriod == null) ? 0 : orbitPeriod.hashCode());
-		result = prime * result + ((orbitSemiMajorAxis == null) ? 0 : orbitSemiMajorAxis.hashCode());
 		result = prime * result + ((period == null) ? 0 : period.hashCode());
 		result = prime * result + ((planarClass == null) ? 0 : planarClass.hashCode());
 		result = prime * result + ((planarExtensionId == null) ? 0 : planarExtensionId.hashCode());
@@ -474,6 +484,11 @@ public class PlanarExtension {
 				return false;
 		} else if (!color.equals(other.color))
 			return false;
+		if (dateStamp == null) {
+			if (other.dateStamp != null)
+				return false;
+		} else if (!dateStamp.equals(other.dateStamp))
+			return false;
 		if (eccentricity == null) {
 			if (other.eccentricity != null)
 				return false;
@@ -488,6 +503,11 @@ public class PlanarExtension {
 			if (other.hazeDensity != null)
 				return false;
 		} else if (!hazeDensity.equals(other.hazeDensity))
+			return false;
+		if (inclination == null) {
+			if (other.inclination != null)
+				return false;
+		} else if (!inclination.equals(other.inclination))
 			return false;
 		if (longOfPericenter == null) {
 			if (other.longOfPericenter != null)
@@ -518,36 +538,6 @@ public class PlanarExtension {
 			if (other.obliquity != null)
 				return false;
 		} else if (!obliquity.equals(other.obliquity))
-			return false;
-		if (orbitEccentricity == null) {
-			if (other.orbitEccentricity != null)
-				return false;
-		} else if (!orbitEccentricity.equals(other.orbitEccentricity))
-			return false;
-		if (orbitInclination == null) {
-			if (other.orbitInclination != null)
-				return false;
-		} else if (!orbitInclination.equals(other.orbitInclination))
-			return false;
-		if (orbitLongOfPeriCentre == null) {
-			if (other.orbitLongOfPeriCentre != null)
-				return false;
-		} else if (!orbitLongOfPeriCentre.equals(other.orbitLongOfPeriCentre))
-			return false;
-		if (orbitMeanLongitude == null) {
-			if (other.orbitMeanLongitude != null)
-				return false;
-		} else if (!orbitMeanLongitude.equals(other.orbitMeanLongitude))
-			return false;
-		if (orbitPeriod == null) {
-			if (other.orbitPeriod != null)
-				return false;
-		} else if (!orbitPeriod.equals(other.orbitPeriod))
-			return false;
-		if (orbitSemiMajorAxis == null) {
-			if (other.orbitSemiMajorAxis != null)
-				return false;
-		} else if (!orbitSemiMajorAxis.equals(other.orbitSemiMajorAxis))
 			return false;
 		if (period == null) {
 			if (other.period != null)
@@ -636,12 +626,6 @@ public class PlanarExtension {
 		map.put(PlanarExtensionDao.NIGHTTEXTURE, planarExtension.getNightTexture());
 		map.put(PlanarExtensionDao.OBLATENESS, planarExtension.getOblateness());
 		map.put(PlanarExtensionDao.OBLIQUITY, planarExtension.getObliquity());
-		map.put(PlanarExtensionDao.ORBITPERIOD, planarExtension.getOrbitPeriod());
-		map.put(PlanarExtensionDao.ORBITECCENTRICITY, planarExtension.getOrbitEccentricity());
-		map.put(PlanarExtensionDao.ORBITINCLINATION, planarExtension.getOrbitInclination());
-		map.put(PlanarExtensionDao.ORBITLONGOFPERICENTRE, planarExtension.getOrbitLongOfPeriCentre());
-		map.put(PlanarExtensionDao.ORBITMEANLONGITUDE, planarExtension.getOrbitMeanLongitude());
-		map.put(PlanarExtensionDao.ORBITSEMIMAJORAXIS, planarExtension.getOrbitSemiMajorAxis());
 		map.put(PlanarExtensionDao.ROTATIONPERIOD, planarExtension.getRotationPeriod());
 		map.put(PlanarExtensionDao.SEMIMAJORAXIS, planarExtension.getSemiMajorAxis());
 		map.put(PlanarExtensionDao.ATMOSPHERESKYR, planarExtension.getSky().rOfRGB);
@@ -674,10 +658,9 @@ public class PlanarExtension {
 				PlanarExtensionDao.SPECULARPOWER, PlanarExtensionDao.SPECULARTEXTURE, PlanarExtensionDao.TEXTURE,
 				PlanarExtensionDao.ATMOSPHEREUPPERR, PlanarExtensionDao.ATMOSPHEREUPPERG,
 				PlanarExtensionDao.ATMOSPHEREUPPERB, PlanarExtensionDao.PLANETOIDEXTENSIONID, PlanarExtensionDao.PLANETOIDID,
-				PlanarExtensionDao.ORBITECCENTRICITY, PlanarExtensionDao.ORBITINCLINATION, PlanarExtensionDao.ORBITLONGOFPERICENTRE,
-				PlanarExtensionDao.ORBITMEANLONGITUDE, PlanarExtensionDao.ORBITSEMIMAJORAXIS, PlanarExtensionDao.DATESTAMP
+				PlanarExtensionDao.DATESTAMP};
 			};
-	}
+	;
 
 	@Override
 	public String toString() {
@@ -688,12 +671,9 @@ public class PlanarExtension {
 				+ ", oblateness=" + oblateness + ", atmosphereHeight=" + atmosphereHeight + ", lower=" + lower
 				+ ", upper=" + upper + ", sky=" + sky + ", cloudHeight=" + cloudHeight + ", cloudMap=" + cloudMap
 				+ ", cloudSpeed=" + cloudSpeed + ", period=" + period + ", semiMajorAxis=" + semiMajorAxis
-				+ ", eccentricity=" + eccentricity + ", longOfPericenter=" + longOfPericenter + ", meanLongitude="
-				+ meanLongitude + ", rotationPeriod=" + rotationPeriod + ", obliquity=" + obliquity + ", albedo="
-				+ albedo + ", orbitPeriod=" + orbitPeriod + ", orbitSemiMajorAxis=" + orbitSemiMajorAxis
-				+ ", orbitEccentricity=" + orbitEccentricity + ", orbitInclination=" + orbitInclination
-				+ ", orbitLongOfPeriCentre=" + orbitLongOfPeriCentre + ", orbitMeanLongitude=" + orbitMeanLongitude
-				+ ", dateStamp=" + dateStamp + "]";
+				+ ", eccentricity=" + eccentricity + ", inclination=" + inclination + ", longOfPericenter="
+				+ longOfPericenter + ", meanLongitude=" + meanLongitude + ", rotationPeriod=" + rotationPeriod
+				+ ", obliquity=" + obliquity + ", albedo=" + albedo + ", dateStamp=" + dateStamp + "]";
 	}
 	
 	
