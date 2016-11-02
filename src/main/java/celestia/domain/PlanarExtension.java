@@ -645,20 +645,44 @@ public class PlanarExtension {
 	}
 	
 	public static String[] csvPlanarExtension() {
-		return new String[] { PlanarExtensionDao.ALBEDO, PlanarExtensionDao.ATMOSPHEREHEIGHT,
-				PlanarExtensionDao.CLOUDHEIGHT, PlanarExtensionDao.CLOUDMAP, PlanarExtensionDao.CLOUDSPEED,
-				PlanarExtensionDao.COLORR, PlanarExtensionDao.COLORG, PlanarExtensionDao.COLORB,
-				PlanarExtensionDao.ECCENTRICITY, PlanarExtensionDao.HAZECOLORR, PlanarExtensionDao.HAZECOLORG,
-				PlanarExtensionDao.HAZECOLORB, PlanarExtensionDao.ORBITLONGOFPERICENTRE,
-				PlanarExtensionDao.ATMOSPHERELOWERR, PlanarExtensionDao.ATMOSPHERELOWERG,
-				PlanarExtensionDao.ATMOSPHERELOWERB, PlanarExtensionDao.ORBITMEANLONGITUDE,
-				PlanarExtensionDao.NIGHTTEXTURE, PlanarExtensionDao.OBLATENESS, PlanarExtensionDao.OBLIQUITY,
-				PlanarExtensionDao.ORBITPERIOD, PlanarExtensionDao.ROTATIONPERIOD, PlanarExtensionDao.SEMIMAJORAXIS,
-				PlanarExtensionDao.ATMOSPHERESKYR, PlanarExtensionDao.ATMOSPHERESKYG, PlanarExtensionDao.ATMOSPHERESKYB,
-				PlanarExtensionDao.SPECULARPOWER, PlanarExtensionDao.SPECULARTEXTURE, PlanarExtensionDao.TEXTURE,
-				PlanarExtensionDao.ATMOSPHEREUPPERR, PlanarExtensionDao.ATMOSPHEREUPPERG,
-				PlanarExtensionDao.ATMOSPHEREUPPERB, PlanarExtensionDao.PLANETOIDEXTENSIONID, PlanarExtensionDao.PLANETOIDID,
-				PlanarExtensionDao.DATESTAMP};
+		return new String[] { 
+				PlanarExtensionDao.ALBEDO
+				, PlanarExtensionDao.ATMOSPHEREHEIGHT
+				, PlanarExtensionDao.CLOUDHEIGHT
+				, PlanarExtensionDao.CLOUDMAP
+				, PlanarExtensionDao.CLOUDSPEED
+				, PlanarExtensionDao.COLORR
+				, PlanarExtensionDao.COLORG
+				, PlanarExtensionDao.COLORB
+				, PlanarExtensionDao.ECCENTRICITY
+				, PlanarExtensionDao.HAZECOLORR
+				, PlanarExtensionDao.HAZECOLORG
+				, PlanarExtensionDao.HAZECOLORB
+				, PlanarExtensionDao.HAZEDENSITY
+				, PlanarExtensionDao.ORBITLONGOFPERICENTRE
+				, PlanarExtensionDao.ATMOSPHERELOWERR
+				, PlanarExtensionDao.ATMOSPHERELOWERG
+				, PlanarExtensionDao.ATMOSPHERELOWERB
+				, PlanarExtensionDao.ORBITMEANLONGITUDE
+				, PlanarExtensionDao.NIGHTTEXTURE
+				, PlanarExtensionDao.OBLATENESS
+				, PlanarExtensionDao.OBLIQUITY
+				, PlanarExtensionDao.ORBITPERIOD
+				, PlanarExtensionDao.ROTATIONPERIOD
+				, PlanarExtensionDao.SEMIMAJORAXIS
+				, PlanarExtensionDao.ATMOSPHERESKYR
+				, PlanarExtensionDao.ATMOSPHERESKYG
+				, PlanarExtensionDao.ATMOSPHERESKYB
+				, PlanarExtensionDao.SPECULARPOWER
+				, PlanarExtensionDao.SPECULARTEXTURE
+				, PlanarExtensionDao.TEXTURE
+				, PlanarExtensionDao.ATMOSPHEREUPPERR
+				, PlanarExtensionDao.ATMOSPHEREUPPERG
+				, PlanarExtensionDao.ATMOSPHEREUPPERB
+				, PlanarExtensionDao.PLANETOIDEXTENSIONID
+				, PlanarExtensionDao.PLANETOIDID
+				, PlanarExtensionDao.PLANETOIDNAME
+				, PlanarExtensionDao.DATESTAMP};
 			};
 	;
 
