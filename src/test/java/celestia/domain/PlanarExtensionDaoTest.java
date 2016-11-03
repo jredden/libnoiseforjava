@@ -14,33 +14,37 @@ import celestia.domain.PlanarExtension.PlanarClass;
 public class PlanarExtensionDaoTest {
 	
 	private static Logger logger = Logger.getLogger(PlanarExtensionDaoTest.class);
+	private static String PLANAR_NAME;
+	static{
+		GenName.setPrefix("Planar_");
+		PLANAR_NAME = GenName.generate(10);
+	}
 	
 	private static Integer PLANAR_ID = GenRandomRolls.Instance().getD100000();
-	private static String PLANAR_NAME = GenName.generate(10);
 	private static String TEXTURE = GenName.generate(12);
 	private static String NIGHT_TEXTURE = GenName.generate(13);
 	private static Double SEMI_MAJOR_AXIS = GenRandomRolls.Instance().draw_rand();
 	private static Double ECCENTRICITY = GenRandomRolls.Instance().draw_rand(); 
-	private static Float COLOR_R = (float) GenRandomRolls.Instance().draw_rand();
-	private static Float COLOR_G = (float) GenRandomRolls.Instance().draw_rand();
-	private static Float COLOR_B = (float) GenRandomRolls.Instance().draw_rand();
+	private static Double COLOR_R = new Double( GenRandomRolls.Instance().draw_rand());
+	private static Double COLOR_G = new Double( GenRandomRolls.Instance().draw_rand());
+	private static Double COLOR_B = new Double( GenRandomRolls.Instance().draw_rand());
 	private static String SPECULAR_TEXTURE = GenName.generate(20);
 	private static Integer SPECULAR_POWER = GenRandomRolls.Instance().get_D10();
-	private static Float HAZE_COLOR_R = (float) GenRandomRolls.Instance().draw_rand();
-	private static Float HAZE_COLOR_G = (float) GenRandomRolls.Instance().draw_rand();
-	private static Float HAZE_COLOR_B = (float) GenRandomRolls.Instance().draw_rand();
-	private static Float HAZE_DENSITY = (float) GenRandomRolls.Instance().draw_rand();
+	private static Double HAZE_COLOR_R = new Double( GenRandomRolls.Instance().draw_rand());
+	private static Double HAZE_COLOR_G = new Double( GenRandomRolls.Instance().draw_rand());
+	private static Double HAZE_COLOR_B = new Double( GenRandomRolls.Instance().draw_rand());
+	private static Double HAZE_DENSITY = new Double(GenRandomRolls.Instance().draw_rand());
 	private static Double OBLATENESS = GenRandomRolls.Instance().draw_rand();
 	private static Integer ATMOSPHERE_HEIGHT = GenRandomRolls.Instance().getD100();
-	private static Float LOWER_COLOR_R = (float) GenRandomRolls.Instance().draw_rand();
-	private static Float LOWER_COLOR_G = (float) GenRandomRolls.Instance().draw_rand();
-	private static Float LOWER_COLOR_B = (float) GenRandomRolls.Instance().draw_rand();
-	private static Float UPPER_COLOR_R = (float) GenRandomRolls.Instance().draw_rand();
-	private static Float UPPER_COLOR_G = (float) GenRandomRolls.Instance().draw_rand();
-	private static Float UPPER_COLOR_B = (float) GenRandomRolls.Instance().draw_rand();
-	private static Float SKY_COLOR_R = (float) GenRandomRolls.Instance().draw_rand();
-	private static Float SKY_COLOR_G = (float) GenRandomRolls.Instance().draw_rand();
-	private static Float SKY_COLOR_B = (float) GenRandomRolls.Instance().draw_rand();
+	private static Double LOWER_COLOR_R = new Double( GenRandomRolls.Instance().draw_rand());
+	private static Double LOWER_COLOR_G = new Double( GenRandomRolls.Instance().draw_rand());
+	private static Double LOWER_COLOR_B = new Double( GenRandomRolls.Instance().draw_rand());
+	private static Double UPPER_COLOR_R = new Double( GenRandomRolls.Instance().draw_rand());
+	private static Double UPPER_COLOR_G = new Double( GenRandomRolls.Instance().draw_rand());
+	private static Double UPPER_COLOR_B = new Double( GenRandomRolls.Instance().draw_rand());
+	private static Double SKY_COLOR_R = new Double( GenRandomRolls.Instance().draw_rand());
+	private static Double SKY_COLOR_G = new Double( GenRandomRolls.Instance().draw_rand());
+	private static Double SKY_COLOR_B = new Double( GenRandomRolls.Instance().draw_rand());
 	private static Integer CLOUD_HEIGHT = GenRandomRolls.Instance().getD100();
 	private static Integer CLOUD_SPEED = GenRandomRolls.Instance().getD100();
 	private static String CLOUD_MAP = GenName.generate(18);
@@ -119,5 +123,68 @@ public class PlanarExtensionDaoTest {
 	}
 
 
+	@Test
+	public void addReadUpdateAndDeleteTest() {
+		PlanarExtensionDao planarExtensionDao = new PlanarExtensionDao();
+		PlanarExtension planarExtension = new PlanarExtension();
 		
+		OGL_Color ogl_Color = planarExtension.new OGL_Color();
+		ogl_Color.rOfRGB = COLOR_R;
+		ogl_Color.gOfRGB = COLOR_G;
+		ogl_Color.bOfRGB = COLOR_B;
+		OGL_Color hazeColor = planarExtension.new OGL_Color();
+		hazeColor.rOfRGB = HAZE_COLOR_R;
+		hazeColor.gOfRGB = HAZE_COLOR_G;
+		hazeColor.bOfRGB = HAZE_COLOR_B;
+		OGL_Color lowerColor = planarExtension.new OGL_Color();
+		lowerColor.rOfRGB = LOWER_COLOR_R;
+		lowerColor.gOfRGB = LOWER_COLOR_G;
+		lowerColor.bOfRGB = LOWER_COLOR_B;
+		OGL_Color upperColor = planarExtension.new OGL_Color();
+		upperColor.rOfRGB = UPPER_COLOR_R;
+		upperColor.gOfRGB = UPPER_COLOR_G;
+		upperColor.bOfRGB = UPPER_COLOR_B;
+		OGL_Color skyColor = planarExtension.new OGL_Color();
+		skyColor.rOfRGB = SKY_COLOR_R;
+		skyColor.gOfRGB = SKY_COLOR_G;
+		skyColor.bOfRGB = SKY_COLOR_B;
+		
+		planarExtension.setAlbedo(ALBEDO);
+		planarExtension.setAtmosphereHeight(ATMOSPHERE_HEIGHT);
+		planarExtension.setCloudHeight(CLOUD_HEIGHT);
+		planarExtension.setCloudMap(CLOUD_MAP);
+		planarExtension.setCloudSpeed(CLOUD_SPEED);
+		planarExtension.setColor(ogl_Color);
+		planarExtension.setEccentricity(ECCENTRICITY);
+		planarExtension.setHazeColor(hazeColor);
+		planarExtension.setHazeDensity(HAZE_DENSITY);
+		planarExtension.setInclination(ORBIT_INCLINATION);
+		planarExtension.setLongOfPericenter(ORBIT_LONG_OF_PERICENTRE);
+		planarExtension.setLower(lowerColor);
+		planarExtension.setMeanLongitude(ORBIT_OF_MEAN_LONGITUDE);
+		planarExtension.setNightTexture(NIGHT_TEXTURE);
+		planarExtension.setOblateness(OBLATENESS);
+		planarExtension.setObliquity(OBLIQUITY);
+		planarExtension.setPeriod(ORBIT_PERIOD);
+		planarExtension.setPlanarClass(PlanarClass.PLANET);
+		planarExtension.setPlanarId(PLANAR_ID);
+		planarExtension.setPlanarName(PLANAR_NAME);
+		planarExtension.setRadius(RADIUS);
+		planarExtension.setRotationPeriod(ROTATION_PERIOD);
+		planarExtension.setSemiMajorAxis(SEMI_MAJOR_AXIS);
+		planarExtension.setSky(skyColor);
+		planarExtension.setSpecularPower(SPECULAR_POWER);
+		planarExtension.setSpecularTexture(SPECULAR_TEXTURE);
+		planarExtension.setTexture(TEXTURE);
+		planarExtension.setUpper(upperColor);
+		
+		planarExtension = planarExtensionDao.addPlanarExtension(planarExtension);
+		logger.info("Planar Extension:" + planarExtension);
+		assertTrue(planarExtension.getPlanarExtensionId() != null);
+		planarExtension.setAlbedo(GenRandomRolls.Instance().draw_rand());
+		planarExtension = planarExtensionDao.updatePlanarExtensionByName(planarExtension);
+		logger.info("Updated Planar Extension:" + planarExtension);
+		assertTrue(planarExtension.getPlanarExtensionId() != null);
+		planarExtensionDao.deletePlanarExtension(planarExtension);
+	}
 }

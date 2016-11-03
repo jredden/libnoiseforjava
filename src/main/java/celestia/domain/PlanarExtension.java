@@ -31,50 +31,15 @@ public class PlanarExtension {
 	 * Open GL colors ... take HTML colors and divide by 255
 	 */
 	public class OGL_Color{
-		Float rOfRGB;
-		Float gOfRGB;
-		Float bOfRGB;
+		Double rOfRGB;
+		Double gOfRGB;
+		Double bOfRGB;
 		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + getOuterType().hashCode();
-			result = prime * result + ((bOfRGB == null) ? 0 : bOfRGB.hashCode());
-			result = prime * result + ((gOfRGB == null) ? 0 : gOfRGB.hashCode());
-			result = prime * result + ((rOfRGB == null) ? 0 : rOfRGB.hashCode());
-			return result;
+		public String toString() {
+			return "OGL_Color [rOfRGB=" + rOfRGB + ", gOfRGB=" + gOfRGB + ", bOfRGB=" + bOfRGB + "]";
 		}
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			OGL_Color other = (OGL_Color) obj;
-			if (!getOuterType().equals(other.getOuterType()))
-				return false;
-			if (bOfRGB == null) {
-				if (other.bOfRGB != null)
-					return false;
-			} else if (!bOfRGB.equals(other.bOfRGB))
-				return false;
-			if (gOfRGB == null) {
-				if (other.gOfRGB != null)
-					return false;
-			} else if (!gOfRGB.equals(other.gOfRGB))
-				return false;
-			if (rOfRGB == null) {
-				if (other.rOfRGB != null)
-					return false;
-			} else if (!rOfRGB.equals(other.rOfRGB))
-				return false;
-			return true;
-		}
-		private PlanarExtension getOuterType() {
-			return PlanarExtension.this;
-		}
+		
+		
 	}
 	
 	private Integer planarExtensionId;
@@ -87,7 +52,7 @@ public class PlanarExtension {
 	private String specularTexture;
 	private Integer specularPower;
 	private OGL_Color hazeColor;
-	private Float hazeDensity;
+	private Double hazeDensity;
 	private Double radius;
 	private Double oblateness;
 	private Integer atmosphereHeight;
@@ -114,7 +79,7 @@ public class PlanarExtension {
 
 	public PlanarExtension(Integer planarId, String planarName, PlanarClass planarClass, String texture,
 			String nightTexture, OGL_Color color, String specularTexture, Integer specularPower, OGL_Color hazeColor,
-			Float hazeDensity, Double radius, Double oblateness, Integer atmosphereHeight, OGL_Color lower,
+			Double hazeDensity, Double radius, Double oblateness, Integer atmosphereHeight, OGL_Color lower,
 			OGL_Color upper, OGL_Color sky, Integer cloudHeight, String cloudMap, Integer cloudSpeed, Double period,
 			Double semiMajorAxis, Double eccentricity, Double inclination, Double longOfPericenter,
 			Double meanLongitude, Double rotationPeriod, Double obliquity, Double albedo) {
@@ -238,7 +203,7 @@ public class PlanarExtension {
 		this.hazeColor = hazeColor;
 	}
 
-	public Float getHazeDensity() {
+	public Double getHazeDensity() {
 		return hazeDensity;
 	}
 
@@ -266,7 +231,7 @@ public class PlanarExtension {
 		this.planarName = planarName;
 	}
 
-	public void setHazeDensity(Float hazeDensity) {
+	public void setHazeDensity(Double hazeDensity) {
 		this.hazeDensity = hazeDensity;
 	}
 
@@ -618,6 +583,7 @@ public class PlanarExtension {
 		map.put(PlanarExtensionDao.HAZECOLORR, planarExtension.getHazeColor().rOfRGB);		
 		map.put(PlanarExtensionDao.HAZECOLORG, planarExtension.getHazeColor().gOfRGB);		
 		map.put(PlanarExtensionDao.HAZECOLORB, planarExtension.getHazeColor().bOfRGB);
+		map.put(PlanarExtensionDao.HAZEDENSITY, planarExtension.getHazeDensity());
 		map.put(PlanarExtensionDao.ORBITLONGOFPERICENTRE, planarExtension.getLongOfPericenter());
 		map.put(PlanarExtensionDao.ATMOSPHERELOWERR, planarExtension.getLower().rOfRGB);		
 		map.put(PlanarExtensionDao.ATMOSPHERELOWERG, planarExtension.getLower().gOfRGB);		
@@ -640,10 +606,20 @@ public class PlanarExtension {
 		map.put(PlanarExtensionDao.PLANETOIDEXTENSIONID, planarExtension.getPlanarExtensionId());
 		map.put(PlanarExtensionDao.PLANETOIDID, planarExtension.getPlanarId());
 		map.put(PlanarExtensionDao.PLANETOIDNAME, planarExtension.getPlanarName());
+		map.put(PlanarExtensionDao.ORBITPERIOD, planarExtension.getPeriod());
+		map.put(PlanarExtensionDao.ORBITSEMIMAJORAXIS, planarExtension.getSemiMajorAxis());
+		map.put(PlanarExtensionDao.ORBITECCENTRICITY, planarExtension.getEccentricity());
+		map.put(PlanarExtensionDao.ORBITINCLINATION, planarExtension.getInclination());
 		map.put(PlanarExtensionDao.DATESTAMP, planarExtension.getDateStamp());
 		return map;
 	}
+/*
+ * 		,PlanarExtensionDao.ORBITPERIOD
+		,PlanarExtensionDao.ORBITSEMIMAJORAXIS
+		,PlanarExtensionDao.ORBITECCENTRICITY
+		,PlanarExtensionDao.ORBITINCLINATION
 	
+ */
 	public static String[] csvPlanarExtension() {
 		return new String[] { 
 				PlanarExtensionDao.ALBEDO
@@ -667,7 +643,6 @@ public class PlanarExtension {
 				, PlanarExtensionDao.NIGHTTEXTURE
 				, PlanarExtensionDao.OBLATENESS
 				, PlanarExtensionDao.OBLIQUITY
-				, PlanarExtensionDao.ORBITPERIOD
 				, PlanarExtensionDao.ROTATIONPERIOD
 				, PlanarExtensionDao.SEMIMAJORAXIS
 				, PlanarExtensionDao.ATMOSPHERESKYR
@@ -682,6 +657,10 @@ public class PlanarExtension {
 				, PlanarExtensionDao.PLANETOIDEXTENSIONID
 				, PlanarExtensionDao.PLANETOIDID
 				, PlanarExtensionDao.PLANETOIDNAME
+				, PlanarExtensionDao.ORBITPERIOD
+				, PlanarExtensionDao.ORBITSEMIMAJORAXIS
+				, PlanarExtensionDao.ORBITECCENTRICITY
+				, PlanarExtensionDao.ORBITINCLINATION
 				, PlanarExtensionDao.DATESTAMP};
 			};
 	;

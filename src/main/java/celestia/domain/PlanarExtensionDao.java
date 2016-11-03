@@ -54,9 +54,7 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 	public static final String DATESTAMP = "datestamp";
 	
 	private static String lastPlanarExtensionInsertSql = "SELECT MAX("+PLANETOIDEXTENSIONID+") FROM " + PLANET_EXTENSION;
-	
-	// + " plex." + XXX + " "
-	
+		
 	private static String readPlanarExtensionByIdSql = "SELECT "
 			+ " plex." + PLANETOIDEXTENSIONID + " "
 			+ " ,plex." + PLANETOIDID + " "
@@ -156,46 +154,46 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 			+ " = ? ";	
 	
 	private static String updatePlanarExtensionSql = "UPDATE " + PLANET_EXTENSION + " plex SET "
-			+ " plex." + PLANETOIDEXTENSIONID + " "
-			+ " ,plex." + PLANETOIDID + " "
-			+ " ,plex." + PLANETOIDNAME + " "
-			+ " ,plex." + TEXTURE + " "
-			+ " ,plex." + NIGHTTEXTURE + " "			
-			+ " ,plex." + SEMIMAJORAXIS + " "
-			+ " ,plex." + ECCENTRICITY + " "
-			+ " ,plex." + COLORR + " "
-			+ " ,plex." + COLORG + " "
-			+ " ,plex." + COLORB + " "
-			+ " ,plex." + SPECULARTEXTURE + " "
-			+ " ,plex." + SPECULARPOWER + " "
-			+ " ,plex." + HAZECOLORR + " "
-			+ " ,plex." + HAZECOLORG + " "
-			+ " ,plex." + HAZECOLORB + " "
-			+ " ,plex." + HAZEDENSITY + " "
-			+ " ,plex." + OBLATENESS + " "
-			+ " ,plex." + ATMOSPHEREHEIGHT + " "
-			+ " ,plex." + ATMOSPHERELOWERR + " "
-			+ " ,plex." + ATMOSPHERELOWERG + " "
-			+ " ,plex." + ATMOSPHERELOWERB + " "
-			+ " ,plex." + ATMOSPHEREUPPERR + " "
-			+ " ,plex." + ATMOSPHEREUPPERG + " "
-			+ " ,plex." + ATMOSPHEREUPPERB + " "
-			+ " ,plex." + ATMOSPHERESKYR + " "
-			+ " ,plex." + ATMOSPHERESKYG + " "
-			+ " ,plex." + ATMOSPHERESKYB + " "
-			+ " ,plex." + CLOUDHEIGHT + " "
-			+ " ,plex." + CLOUDSPEED + " "
-			+ " ,plex." + CLOUDMAP + " "
-			+ " ,plex." + ORBITPERIOD + " "
-			+ " ,plex." + ORBITSEMIMAJORAXIS + " "
-			+ " ,plex." + ORBITECCENTRICITY + " "
-			+ " ,plex." + ORBITINCLINATION + " "
-			+ " ,plex." + ORBITLONGOFPERICENTRE + " "
-			+ " ,plex." + ORBITMEANLONGITUDE + " "
-			+ " ,plex." + OBLIQUITY + " "
-			+ " ,plex." + ROTATIONPERIOD + " "
-			+ " ,plex." + ALBEDO + " "
-			+ " ,plex." + DATESTAMP + " "
+			+ " plex." + PLANETOIDEXTENSIONID +" = ?  "
+			+ " ,plex." + PLANETOIDID +" = ?  "
+			+ " ,plex." + PLANETOIDNAME +" = ?  "
+			+ " ,plex." + TEXTURE +" = ?  "
+			+ " ,plex." + NIGHTTEXTURE +" = ?  "			
+			+ " ,plex." + SEMIMAJORAXIS +" = ?  "
+			+ " ,plex." + ECCENTRICITY +" = ?  "
+			+ " ,plex." + COLORR +" = ?  "
+			+ " ,plex." + COLORG +" = ?  "
+			+ " ,plex." + COLORB +" = ?  "
+			+ " ,plex." + SPECULARTEXTURE +" = ?  "
+			+ " ,plex." + SPECULARPOWER +" = ?  "
+			+ " ,plex." + HAZECOLORR +" = ?  "
+			+ " ,plex." + HAZECOLORG +" = ?  "
+			+ " ,plex." + HAZECOLORB +" = ?  "
+			+ " ,plex." + HAZEDENSITY +" = ?  "
+			+ " ,plex." + OBLATENESS +" = ?  "
+			+ " ,plex." + ATMOSPHEREHEIGHT +" = ?  "
+			+ " ,plex." + ATMOSPHERELOWERR +" = ?  "
+			+ " ,plex." + ATMOSPHERELOWERG +" = ?  "
+			+ " ,plex." + ATMOSPHERELOWERB +" = ?  "
+			+ " ,plex." + ATMOSPHEREUPPERR +" = ?  "
+			+ " ,plex." + ATMOSPHEREUPPERG +" = ?  "
+			+ " ,plex." + ATMOSPHEREUPPERB +" = ?  "
+			+ " ,plex." + ATMOSPHERESKYR +" = ?  "
+			+ " ,plex." + ATMOSPHERESKYG +" = ?  "
+			+ " ,plex." + ATMOSPHERESKYB +" = ?  "
+			+ " ,plex." + CLOUDHEIGHT +" = ?  "
+			+ " ,plex." + CLOUDSPEED +" = ?  "
+			+ " ,plex." + CLOUDMAP +" = ?  "
+			+ " ,plex." + ORBITPERIOD +" = ?  "
+			+ " ,plex." + ORBITSEMIMAJORAXIS +" = ?  "
+			+ " ,plex." + ORBITECCENTRICITY +" = ?  "
+			+ " ,plex." + ORBITINCLINATION +" = ?  "
+			+ " ,plex." + ORBITLONGOFPERICENTRE +" = ?  "
+			+ " ,plex." + ORBITMEANLONGITUDE +" = ?  "
+			+ " ,plex." + OBLIQUITY +" = ?  "
+			+ " ,plex." + ROTATIONPERIOD +" = ?  "
+			+ " ,plex." + ALBEDO +" = ?  "
+			+ " ,plex." + DATESTAMP +" = ?  "
 			+ " FROM " + PLANET_EXTENSION + " plex "
 			+ " WHERE plex." + PLANETOIDNAME + " = ?"
 		;
@@ -310,6 +308,7 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 				 , planarExtension.getRotationPeriod()
 				 , planarExtension.getAlbedo()
 				 , planarExtension.getDateStamp()
+				 , planarExtension.getPlanarName()
 		});
 		return readPlanarExtensionName(planarExtension.getPlanarName());
 	}
@@ -336,9 +335,9 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		String s_ColorG = planarExtensionMap.get(COLORG).toString();
 		String s_ColorB = planarExtensionMap.get(COLORB).toString();
 		OGL_Color colorRGB = planarExtension.new OGL_Color();
-		colorRGB.rOfRGB = new Float(s_ColorR);
-		colorRGB.gOfRGB = new Float(s_ColorG);
-		colorRGB.bOfRGB = new Float(s_ColorB);
+		colorRGB.rOfRGB = new Double(s_ColorR);
+		colorRGB.gOfRGB = new Double(s_ColorG);
+		colorRGB.bOfRGB = new Double(s_ColorB);
 		planarExtension.setColor(colorRGB);
 		planarExtension.setSpecularTexture(planarExtensionMap.get(SPECULARTEXTURE).toString());
 		String s_SpecularPower = planarExtensionMap.get(SPECULARPOWER).toString();
@@ -347,12 +346,12 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		String s_HazeColorG = planarExtensionMap.get(HAZECOLORG).toString();
 		String s_HazeColorB = planarExtensionMap.get(HAZECOLORB).toString();
 		OGL_Color hazeColorRGB = planarExtension.new OGL_Color();
-		hazeColorRGB.rOfRGB = new Float(s_HazeColorR);
-		hazeColorRGB.gOfRGB = new Float(s_HazeColorG);
-		hazeColorRGB.bOfRGB = new Float(s_HazeColorB);
+		hazeColorRGB.rOfRGB = new Double(s_HazeColorR);
+		hazeColorRGB.gOfRGB = new Double(s_HazeColorG);
+		hazeColorRGB.bOfRGB = new Double(s_HazeColorB);
 		planarExtension.setHazeColor(hazeColorRGB);
 		String s_HazeDensity = planarExtensionMap.get(HAZEDENSITY).toString();
-		planarExtension.setHazeDensity(new Float(s_HazeDensity));
+		planarExtension.setHazeDensity(new Double(s_HazeDensity));
 		String s_Oblateness = planarExtensionMap.get(OBLATENESS).toString();
 		planarExtension.setOblateness(new Double(s_Oblateness));
 		String s_AtmosphereHeight = planarExtensionMap.get(ATMOSPHEREHEIGHT).toString();
@@ -361,25 +360,25 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		String s_AtmosphereLowerColorG = planarExtensionMap.get(ATMOSPHERELOWERG).toString();
 		String s_AtmosphereLowerColorB = planarExtensionMap.get(ATMOSPHERELOWERB).toString();
 		OGL_Color atmosphereLowerColorRGB = planarExtension.new OGL_Color();
-		atmosphereLowerColorRGB.rOfRGB = new Float(s_AtmosphereLowerColorR);
-		atmosphereLowerColorRGB.gOfRGB = new Float(s_AtmosphereLowerColorG);
-		atmosphereLowerColorRGB.bOfRGB = new Float(s_AtmosphereLowerColorB);
+		atmosphereLowerColorRGB.rOfRGB = new Double(s_AtmosphereLowerColorR);
+		atmosphereLowerColorRGB.gOfRGB = new Double(s_AtmosphereLowerColorG);
+		atmosphereLowerColorRGB.bOfRGB = new Double(s_AtmosphereLowerColorB);
 		planarExtension.setLower(atmosphereLowerColorRGB);
 		String s_AtmosphereUpperColorR = planarExtensionMap.get(ATMOSPHEREUPPERR).toString();
 		String s_AtmosphereUpperColorG = planarExtensionMap.get(ATMOSPHEREUPPERG).toString();
 		String s_AtmosphereUpperColorB = planarExtensionMap.get(ATMOSPHEREUPPERB).toString();
 		OGL_Color atmosphereUpperColorRGB = planarExtension.new OGL_Color();
-		atmosphereUpperColorRGB.rOfRGB = new Float(s_AtmosphereUpperColorR);
-		atmosphereUpperColorRGB.gOfRGB = new Float(s_AtmosphereUpperColorG);
-		atmosphereUpperColorRGB.bOfRGB = new Float(s_AtmosphereUpperColorB);
+		atmosphereUpperColorRGB.rOfRGB = new Double(s_AtmosphereUpperColorR);
+		atmosphereUpperColorRGB.gOfRGB = new Double(s_AtmosphereUpperColorG);
+		atmosphereUpperColorRGB.bOfRGB = new Double(s_AtmosphereUpperColorB);
 		planarExtension.setUpper(atmosphereUpperColorRGB);
 		String s_AtmosphereSkyColorR = planarExtensionMap.get(ATMOSPHERESKYR).toString();
 		String s_AtmosphereSkyColorG = planarExtensionMap.get(ATMOSPHERESKYG).toString();
 		String s_AtmosphereSkyColorB = planarExtensionMap.get(ATMOSPHERESKYB).toString();
 		OGL_Color atmosphereSkyColorRGB = planarExtension.new OGL_Color();
-		atmosphereSkyColorRGB.rOfRGB = new Float(s_AtmosphereSkyColorR);
-		atmosphereSkyColorRGB.gOfRGB = new Float(s_AtmosphereSkyColorG);
-		atmosphereSkyColorRGB.bOfRGB = new Float(s_AtmosphereSkyColorB);
+		atmosphereSkyColorRGB.rOfRGB = new Double(s_AtmosphereSkyColorR);
+		atmosphereSkyColorRGB.gOfRGB = new Double(s_AtmosphereSkyColorG);
+		atmosphereSkyColorRGB.bOfRGB = new Double(s_AtmosphereSkyColorB);
 		planarExtension.setSky(atmosphereSkyColorRGB);
 		String s_CloudHeight = planarExtensionMap.get(CLOUDHEIGHT).toString();
 		planarExtension.setCloudHeight(new Integer(s_CloudHeight));
