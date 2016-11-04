@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.zenred.johntredden.domain.AbstractJDBCDao;
 
 import celestia.domain.PlanarExtension.OGL_Color;
+import celestia.domain.PlanarExtension.PlanarClass;
 
 public class PlanarExtensionDao extends AbstractJDBCDao {
 	
@@ -51,6 +52,7 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 	public static final String OBLIQUITY = "obliquity";
 	public static final String ROTATIONPERIOD = "rotationPeriod";
 	public static final String ALBEDO = "albedo";
+	public static final String PLANAR_CLASS = "planarClass";
 	public static final String DATESTAMP = "datestamp";
 	
 	private static String lastPlanarExtensionInsertSql = "SELECT MAX("+PLANETOIDEXTENSIONID+") FROM " + PLANET_EXTENSION;
@@ -95,6 +97,7 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 			+ " ,plex." + OBLIQUITY + " "
 			+ " ,plex." + ROTATIONPERIOD + " "
 			+ " ,plex." + ALBEDO + " "
+			+ " ,plex." + PLANAR_CLASS + " "
 			+ " ,plex." + DATESTAMP + " "
 			+ " FROM " + PLANET_EXTENSION + " plex "
 			+ " WHERE plex." + PLANETOIDEXTENSIONID + " = ? "
@@ -140,6 +143,7 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 			+ " ,plex." + OBLIQUITY + " "
 			+ " ,plex." + ROTATIONPERIOD + " "
 			+ " ,plex." + ALBEDO + " "
+			+ " ,plex." + PLANAR_CLASS + " "
 			+ " ,plex." + DATESTAMP + " "
 			+ " FROM " + PLANET_EXTENSION + " plex "
 			+ " WHERE plex." + PLANETOIDNAME + " = ? "
@@ -193,8 +197,8 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 			+ " ,plex." + OBLIQUITY +" = ?  "
 			+ " ,plex." + ROTATIONPERIOD +" = ?  "
 			+ " ,plex." + ALBEDO +" = ?  "
+			+ " ,plex." + PLANAR_CLASS +" = ?  "
 			+ " ,plex." + DATESTAMP +" = ?  "
-			+ " FROM " + PLANET_EXTENSION + " plex "
 			+ " WHERE plex." + PLANETOIDNAME + " = ?"
 		;
 	/**
@@ -307,6 +311,7 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 				 , planarExtension.getObliquity()
 				 , planarExtension.getRotationPeriod()
 				 , planarExtension.getAlbedo()
+				 , planarExtension.getPlanarClass()
 				 , planarExtension.getDateStamp()
 				 , planarExtension.getPlanarName()
 		});
@@ -403,6 +408,11 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		planarExtension.setRotationPeriod(new Double(s_RotationPeriod));
 		String s_Albedo = planarExtensionMap.get(ALBEDO).toString();
 		planarExtension.setAlbedo(new Double(s_Albedo));
+		String planarClass = planarExtensionMap.get(PLANAR_CLASS).toString();
+		planarExtension.setPlanarClass(PlanarClass.PLANET);
+		if(planarClass.equals("moon")){
+			planarExtension.setPlanarClass(PlanarClass.MOON);  // refactor into PlanarClass
+		}
 		planarExtension.setDateStamp(planarExtensionMap.get(DATESTAMP).toString());
 		return planarExtension;
 	}

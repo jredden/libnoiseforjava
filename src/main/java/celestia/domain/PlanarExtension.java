@@ -610,16 +610,11 @@ public class PlanarExtension {
 		map.put(PlanarExtensionDao.ORBITSEMIMAJORAXIS, planarExtension.getSemiMajorAxis());
 		map.put(PlanarExtensionDao.ORBITECCENTRICITY, planarExtension.getEccentricity());
 		map.put(PlanarExtensionDao.ORBITINCLINATION, planarExtension.getInclination());
+		map.put(PlanarExtensionDao.PLANAR_CLASS, planarExtension.getPlanarClass().type);
 		map.put(PlanarExtensionDao.DATESTAMP, planarExtension.getDateStamp());
 		return map;
 	}
-/*
- * 		,PlanarExtensionDao.ORBITPERIOD
-		,PlanarExtensionDao.ORBITSEMIMAJORAXIS
-		,PlanarExtensionDao.ORBITECCENTRICITY
-		,PlanarExtensionDao.ORBITINCLINATION
-	
- */
+
 	public static String[] csvPlanarExtension() {
 		return new String[] { 
 				PlanarExtensionDao.ALBEDO
@@ -661,6 +656,7 @@ public class PlanarExtension {
 				, PlanarExtensionDao.ORBITSEMIMAJORAXIS
 				, PlanarExtensionDao.ORBITECCENTRICITY
 				, PlanarExtensionDao.ORBITINCLINATION
+				, PlanarExtensionDao.PLANAR_CLASS
 				, PlanarExtensionDao.DATESTAMP};
 			};
 	;

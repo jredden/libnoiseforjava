@@ -179,7 +179,7 @@ public class PlanarExtensionDaoTest {
 		planarExtension.setUpper(upperColor);
 		
 		planarExtension = planarExtensionDao.addPlanarExtension(planarExtension);
-		logger.info("Planar Extension:" + planarExtension);
+		logger.info("Next Planar Extension:" + planarExtension);
 		assertTrue(planarExtension.getPlanarExtensionId() != null);
 		planarExtension.setAlbedo(GenRandomRolls.Instance().draw_rand());
 		planarExtension = planarExtensionDao.updatePlanarExtensionByName(planarExtension);
