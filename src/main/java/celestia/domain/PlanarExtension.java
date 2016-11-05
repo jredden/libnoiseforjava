@@ -31,9 +31,9 @@ public class PlanarExtension {
 	 * Open GL colors ... take HTML colors and divide by 255
 	 */
 	public class OGL_Color{
-		Double rOfRGB;
-		Double gOfRGB;
-		Double bOfRGB;
+		public Double rOfRGB;
+		public Double gOfRGB;
+		public Double bOfRGB;
 		@Override
 		public String toString() {
 			return "OGL_Color [rOfRGB=" + rOfRGB + ", gOfRGB=" + gOfRGB + ", bOfRGB=" + bOfRGB + "]";
