@@ -71,19 +71,25 @@ public class PlanarExtension {
 	private Double rotationPeriod;
 	private Double obliquity;
 	private Double albedo;
+	private Boolean emmisive;
+	private String bumpMap;
+	private Double bumpHeight;
+	private OGL_Color specularColor;
 	private String dateStamp;
 	
 	public PlanarExtension (){}
 	
 	
 
-	public PlanarExtension(Integer planarId, String planarName, PlanarClass planarClass, String texture,
-			String nightTexture, OGL_Color color, String specularTexture, Integer specularPower, OGL_Color hazeColor,
-			Double hazeDensity, Double radius, Double oblateness, Integer atmosphereHeight, OGL_Color lower,
-			OGL_Color upper, OGL_Color sky, Integer cloudHeight, String cloudMap, Integer cloudSpeed, Double period,
-			Double semiMajorAxis, Double eccentricity, Double inclination, Double longOfPericenter,
-			Double meanLongitude, Double rotationPeriod, Double obliquity, Double albedo) {
+	public PlanarExtension(Integer planarExtensionId, Integer planarId, String planarName, PlanarClass planarClass,
+			String texture, String nightTexture, OGL_Color color, String specularTexture, Integer specularPower,
+			OGL_Color hazeColor, Double hazeDensity, Double radius, Double oblateness, Integer atmosphereHeight,
+			OGL_Color lower, OGL_Color upper, OGL_Color sky, Integer cloudHeight, String cloudMap, Integer cloudSpeed,
+			Double period, Double semiMajorAxis, Double eccentricity, Double inclination, Double longOfPericenter,
+			Double meanLongitude, Double rotationPeriod, Double obliquity, Double albedo, Boolean emmisive,
+			String bumpMap, Double bumpHeight, OGL_Color specularColor, String dateStamp) {
 		super();
+		this.planarExtensionId = planarExtensionId;
 		this.planarId = planarId;
 		this.planarName = planarName;
 		this.planarClass = planarClass;
@@ -112,9 +118,12 @@ public class PlanarExtension {
 		this.rotationPeriod = rotationPeriod;
 		this.obliquity = obliquity;
 		this.albedo = albedo;
+		this.emmisive = emmisive;
+		this.bumpMap = bumpMap;
+		this.bumpHeight = bumpHeight;
+		this.specularColor = specularColor;
+		this.dateStamp = dateStamp;
 	}
-
-
 
 	public static PlanarExtension build(Star star, Planetoid planetoid, PlanarClass planarClass){
 		PlanarExtension instance = new PlanarExtension();
@@ -122,6 +131,54 @@ public class PlanarExtension {
 		instance.texture = planetoid.getPlanetoidName()+GRAPHIC_SUFFIX;
 		return instance;
 	}
+
+	public Boolean getEmmisive() {
+		return emmisive;
+	}
+
+
+
+	public void setEmmisive(Boolean emmisive) {
+		this.emmisive = emmisive;
+	}
+
+
+
+	public String getBumpMap() {
+		return bumpMap;
+	}
+
+
+
+	public void setBumpMap(String bumpMap) {
+		this.bumpMap = bumpMap;
+	}
+
+
+
+	public Double getBumpHeight() {
+		return bumpHeight;
+	}
+
+
+
+	public void setBumpHeight(Double bumpHeight) {
+		this.bumpHeight = bumpHeight;
+	}
+
+
+
+	public OGL_Color getSpecularColor() {
+		return specularColor;
+	}
+
+
+
+	public void setSpecularColor(OGL_Color specularColor) {
+		this.specularColor = specularColor;
+	}
+
+
 
 	public PlanarClass getPlanarClass() {
 		return planarClass;
@@ -379,12 +436,15 @@ public class PlanarExtension {
 		int result = 1;
 		result = prime * result + ((albedo == null) ? 0 : albedo.hashCode());
 		result = prime * result + ((atmosphereHeight == null) ? 0 : atmosphereHeight.hashCode());
+		result = prime * result + ((bumpHeight == null) ? 0 : bumpHeight.hashCode());
+		result = prime * result + ((bumpMap == null) ? 0 : bumpMap.hashCode());
 		result = prime * result + ((cloudHeight == null) ? 0 : cloudHeight.hashCode());
 		result = prime * result + ((cloudMap == null) ? 0 : cloudMap.hashCode());
 		result = prime * result + ((cloudSpeed == null) ? 0 : cloudSpeed.hashCode());
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
 		result = prime * result + ((dateStamp == null) ? 0 : dateStamp.hashCode());
 		result = prime * result + ((eccentricity == null) ? 0 : eccentricity.hashCode());
+		result = prime * result + ((emmisive == null) ? 0 : emmisive.hashCode());
 		result = prime * result + ((hazeColor == null) ? 0 : hazeColor.hashCode());
 		result = prime * result + ((hazeDensity == null) ? 0 : hazeDensity.hashCode());
 		result = prime * result + ((inclination == null) ? 0 : inclination.hashCode());
@@ -403,6 +463,7 @@ public class PlanarExtension {
 		result = prime * result + ((rotationPeriod == null) ? 0 : rotationPeriod.hashCode());
 		result = prime * result + ((semiMajorAxis == null) ? 0 : semiMajorAxis.hashCode());
 		result = prime * result + ((sky == null) ? 0 : sky.hashCode());
+		result = prime * result + ((specularColor == null) ? 0 : specularColor.hashCode());
 		result = prime * result + ((specularPower == null) ? 0 : specularPower.hashCode());
 		result = prime * result + ((specularTexture == null) ? 0 : specularTexture.hashCode());
 		result = prime * result + ((texture == null) ? 0 : texture.hashCode());
@@ -428,6 +489,16 @@ public class PlanarExtension {
 			if (other.atmosphereHeight != null)
 				return false;
 		} else if (!atmosphereHeight.equals(other.atmosphereHeight))
+			return false;
+		if (bumpHeight == null) {
+			if (other.bumpHeight != null)
+				return false;
+		} else if (!bumpHeight.equals(other.bumpHeight))
+			return false;
+		if (bumpMap == null) {
+			if (other.bumpMap != null)
+				return false;
+		} else if (!bumpMap.equals(other.bumpMap))
 			return false;
 		if (cloudHeight == null) {
 			if (other.cloudHeight != null)
@@ -458,6 +529,11 @@ public class PlanarExtension {
 			if (other.eccentricity != null)
 				return false;
 		} else if (!eccentricity.equals(other.eccentricity))
+			return false;
+		if (emmisive == null) {
+			if (other.emmisive != null)
+				return false;
+		} else if (!emmisive.equals(other.emmisive))
 			return false;
 		if (hazeColor == null) {
 			if (other.hazeColor != null)
@@ -545,6 +621,11 @@ public class PlanarExtension {
 			if (other.sky != null)
 				return false;
 		} else if (!sky.equals(other.sky))
+			return false;
+		if (specularColor == null) {
+			if (other.specularColor != null)
+				return false;
+		} else if (!specularColor.equals(other.specularColor))
 			return false;
 		if (specularPower == null) {
 			if (other.specularPower != null)
@@ -672,7 +753,8 @@ public class PlanarExtension {
 				+ ", cloudSpeed=" + cloudSpeed + ", period=" + period + ", semiMajorAxis=" + semiMajorAxis
 				+ ", eccentricity=" + eccentricity + ", inclination=" + inclination + ", longOfPericenter="
 				+ longOfPericenter + ", meanLongitude=" + meanLongitude + ", rotationPeriod=" + rotationPeriod
-				+ ", obliquity=" + obliquity + ", albedo=" + albedo + ", dateStamp=" + dateStamp + "]";
+				+ ", obliquity=" + obliquity + ", albedo=" + albedo + ", emmisive=" + emmisive + ", bumpMap=" + bumpMap
+				+ ", bumpHeight=" + bumpHeight + ", specularColor=" + specularColor + ", dateStamp=" + dateStamp + "]";
 	}
 	
 	
