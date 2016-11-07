@@ -58,6 +58,9 @@ public class PlanarExtensionDaoTest {
 	private static Double ROTATION_PERIOD = GenRandomRolls.Instance().draw_rand();
 	private static Double ALBEDO = GenRandomRolls.Instance().draw_rand();
 	private static Double RADIUS = GenRandomRolls.Instance().draw_rand() * 2000.0 + 3000.0;
+	private static Short EMMISIVE = new Short("1");
+	private static String BUMP_MAP = GenName.generate(8);
+	private static Double BUMP_HEIGHT = GenRandomRolls.Instance().draw_rand();
 	
 	
 	@Test
@@ -115,6 +118,9 @@ public class PlanarExtensionDaoTest {
 		planarExtension.setSpecularTexture(SPECULAR_TEXTURE);
 		planarExtension.setTexture(TEXTURE);
 		planarExtension.setUpper(upperColor);
+		planarExtension.setEmmisive(EMMISIVE== 1? Boolean.TRUE : Boolean.FALSE);
+		planarExtension.setBumpMap(BUMP_MAP);
+		planarExtension.setBumpHeight(BUMP_HEIGHT);
 		
 		planarExtension = planarExtensionDao.addPlanarExtension(planarExtension);
 		logger.info("Planar Extension:" + planarExtension);
@@ -177,6 +183,9 @@ public class PlanarExtensionDaoTest {
 		planarExtension.setSpecularTexture(SPECULAR_TEXTURE);
 		planarExtension.setTexture(TEXTURE);
 		planarExtension.setUpper(upperColor);
+		planarExtension.setEmmisive(EMMISIVE== 1? Boolean.TRUE : Boolean.FALSE);
+		planarExtension.setBumpMap(BUMP_MAP);
+		planarExtension.setBumpHeight(BUMP_HEIGHT);
 		
 		planarExtension = planarExtensionDao.addPlanarExtension(planarExtension);
 		logger.info("Next Planar Extension:" + planarExtension);

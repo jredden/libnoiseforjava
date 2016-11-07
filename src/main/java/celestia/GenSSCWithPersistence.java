@@ -38,10 +38,10 @@ public class GenSSCWithPersistence implements SSC_Entry_formatsI {
 	 */
 	private static PlanarExtension buildPlanar(Star star, UnifiedPlanetoidI unifiedPlanetoidI, PlanarExtension planarExtension){
 		planarExtension.setTexture(unifiedPlanetoidI.getPlanetoid().getPlanetoidName());
-// 		lanarExtension.setEmissive(Boolean.true);   // light source from primary
+ 		planarExtension.setEmmisive(Boolean.TRUE);;   // light source from primary
 		planarExtension.setNightTexture(unifiedPlanetoidI.getPlanetoid().getPlanetoidName());
-//		planarExtension.setBumpMap(bumpMap.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), bumpMapType}));
-//		planarExtension.setBumpHeight(bumpHeight.format(new Object[]{BumpHeight.build(unifiedPlanetoidI)}));
+		planarExtension.setBumpMap(bumpMap.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), bumpMapType}));
+		planarExtension.setBumpHeight(BumpHeight.build(unifiedPlanetoidI));
 		ColorRGB colorRGB = StarColorMapping.mapStarColor(star.getStar_color());
 		OGL_Color oglColor = planarExtension.new OGL_Color();
 		oglColor.rOfRGB = colorRGB.getColorR();
@@ -54,7 +54,7 @@ public class GenSSCWithPersistence implements SSC_Entry_formatsI {
 		oglColor.rOfRGB = colorRGB.getColorR();
 		oglColor.gOfRGB = colorRGB.getColorG();
 		oglColor.bOfRGB = colorRGB.getColorB();
-// 		planarExtension.setSpecularColor(oglColor);	
+ 		planarExtension.setSpecularColor(oglColor);	
 		String planarSpecular = PlanarSpecular.build(star, unifiedPlanetoidI).toString();
 		planarExtension.setSpecularPower(new Integer(planarSpecular));
 		Haze haze = PlanarHaze.build(unifiedPlanetoidI);

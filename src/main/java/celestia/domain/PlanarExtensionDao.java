@@ -283,6 +283,10 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 	 * @return planarExtension
 	 */
 	public PlanarExtension updatePlanarExtensionByName(PlanarExtension planarExtension){
+		Short emmisive = 0;
+		if(planarExtension.getEmmisive().equals(Boolean.TRUE)){
+			emmisive = 1;
+		}
 		super.jdbcSetUp().getSimpleJdbcTemplate().update(updatePlanarExtensionSql, new Object[]{
 				 planarExtension.getPlanarExtensionId()
 				 , planarExtension.getPlanarId()
@@ -324,11 +328,12 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 				 , planarExtension.getRotationPeriod()
 				 , planarExtension.getAlbedo()
 				 , planarExtension.getPlanarClass()
-				 , planarExtension.getDateStamp()
-				 , planarExtension.getPlanarName()
-				 , planarExtension.getEmmisive()
+				 , emmisive
 				 , planarExtension.getBumpMap()
 				 , planarExtension.getBumpHeight()
+				 , planarExtension.getDateStamp()
+				 , planarExtension.getPlanarName()
+
 		});
 		return readPlanarExtensionName(planarExtension.getPlanarName());
 	}
