@@ -695,6 +695,9 @@ public class PlanarExtension {
 		map.put(PlanarExtensionDao.EMMISIVE, planarExtension.getEmmisive());
 		map.put(PlanarExtensionDao.BUMP_MAP, planarExtension.getBumpMap());
 		map.put(PlanarExtensionDao.BUMP_HEIGHT, planarExtension.getBumpHeight());
+		map.put(PlanarExtensionDao.SPECULAR_COLORR, planarExtension.getSpecularColor().rOfRGB);
+		map.put(PlanarExtensionDao.SPECULAR_COLORG, planarExtension.getSpecularColor().gOfRGB);
+		map.put(PlanarExtensionDao.SPECULAR_COLORB, planarExtension.getSpecularColor().bOfRGB);
 		map.put(PlanarExtensionDao.DATESTAMP, planarExtension.getDateStamp());
 		return map;
 	}
@@ -744,6 +747,9 @@ public class PlanarExtension {
 				, PlanarExtensionDao.EMMISIVE
 				, PlanarExtensionDao.BUMP_MAP
 				, PlanarExtensionDao.BUMP_HEIGHT
+				, PlanarExtensionDao.SPECULAR_COLORR
+				, PlanarExtensionDao.SPECULAR_COLORG
+				, PlanarExtensionDao.SPECULAR_COLORB
 				, PlanarExtensionDao.DATESTAMP};
 			};
 	;

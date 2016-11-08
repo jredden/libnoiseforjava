@@ -49,8 +49,6 @@ public class PlanarExtensionDaoTest {
 	private static Integer CLOUD_SPEED = GenRandomRolls.Instance().getD100();
 	private static String CLOUD_MAP = GenName.generate(18);
 	private static Double ORBIT_PERIOD = GenRandomRolls.Instance().draw_rand();
-	private static Double ORBIT_SEMI_MAJOR_AXIS  = GenRandomRolls.Instance().draw_rand();
-	private static Double ORBIT_ECCENTRICITY = GenRandomRolls.Instance().draw_rand();
 	private static Double ORBIT_INCLINATION = GenRandomRolls.Instance().draw_rand();
 	private static Double ORBIT_LONG_OF_PERICENTRE = GenRandomRolls.Instance().draw_rand();
 	private static Double ORBIT_OF_MEAN_LONGITUDE = GenRandomRolls.Instance().draw_rand();
@@ -61,6 +59,9 @@ public class PlanarExtensionDaoTest {
 	private static Short EMMISIVE = new Short("1");
 	private static String BUMP_MAP = GenName.generate(8);
 	private static Double BUMP_HEIGHT = GenRandomRolls.Instance().draw_rand();
+	private static Double SPECULAR_COLORR = GenRandomRolls.Instance().draw_rand();
+	private static Double SPECULAR_COLORG = GenRandomRolls.Instance().draw_rand();
+	private static Double SPECULAR_COLORB = GenRandomRolls.Instance().draw_rand();
 	
 	
 	@Test
@@ -89,6 +90,10 @@ public class PlanarExtensionDaoTest {
 		skyColor.rOfRGB = SKY_COLOR_R;
 		skyColor.gOfRGB = SKY_COLOR_G;
 		skyColor.bOfRGB = SKY_COLOR_B;
+		OGL_Color specularColor = planarExtension.new OGL_Color();
+		specularColor.rOfRGB = SPECULAR_COLORR;
+		specularColor.gOfRGB = SPECULAR_COLORG;
+		specularColor.bOfRGB = SPECULAR_COLORB;
 		
 		planarExtension.setAlbedo(ALBEDO);
 		planarExtension.setAtmosphereHeight(ATMOSPHERE_HEIGHT);
@@ -121,6 +126,7 @@ public class PlanarExtensionDaoTest {
 		planarExtension.setEmmisive(EMMISIVE== 1? Boolean.TRUE : Boolean.FALSE);
 		planarExtension.setBumpMap(BUMP_MAP);
 		planarExtension.setBumpHeight(BUMP_HEIGHT);
+		planarExtension.setSpecularColor(specularColor);
 		
 		planarExtension = planarExtensionDao.addPlanarExtension(planarExtension);
 		logger.info("Planar Extension:" + planarExtension);
@@ -154,6 +160,10 @@ public class PlanarExtensionDaoTest {
 		skyColor.rOfRGB = SKY_COLOR_R;
 		skyColor.gOfRGB = SKY_COLOR_G;
 		skyColor.bOfRGB = SKY_COLOR_B;
+		OGL_Color specularColor = planarExtension.new OGL_Color();
+		specularColor.rOfRGB = SPECULAR_COLORR;
+		specularColor.gOfRGB = SPECULAR_COLORG;
+		specularColor.bOfRGB = SPECULAR_COLORB;
 		
 		planarExtension.setAlbedo(ALBEDO);
 		planarExtension.setAtmosphereHeight(ATMOSPHERE_HEIGHT);
@@ -186,6 +196,7 @@ public class PlanarExtensionDaoTest {
 		planarExtension.setEmmisive(EMMISIVE== 1? Boolean.TRUE : Boolean.FALSE);
 		planarExtension.setBumpMap(BUMP_MAP);
 		planarExtension.setBumpHeight(BUMP_HEIGHT);
+		planarExtension.setSpecularColor(specularColor);
 		
 		planarExtension = planarExtensionDao.addPlanarExtension(planarExtension);
 		logger.info("Next Planar Extension:" + planarExtension);

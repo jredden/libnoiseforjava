@@ -56,6 +56,9 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 	public static final String EMMISIVE = "emmisive";
 	public static final String BUMP_MAP = "bumpMap";
 	public static final String BUMP_HEIGHT = "bumpHeight";
+	public static final String SPECULAR_COLORR = "specularColorR";
+	public static final String SPECULAR_COLORG = "specularColorG";
+	public static final String SPECULAR_COLORB = "specularColorB";
 	public static final String DATESTAMP = "datestamp";
 	
 	private static String lastPlanarExtensionInsertSql = "SELECT MAX("+PLANETOIDEXTENSIONID+") FROM " + PLANET_EXTENSION;
@@ -104,6 +107,9 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 			+ " ,plex." + EMMISIVE + " "
 			+ " ,plex." + BUMP_MAP + " "
 			+ " ,plex." + BUMP_HEIGHT + " "
+			+ " ,plex." + SPECULAR_COLORR + " "
+			+ " ,plex." + SPECULAR_COLORG + " "
+			+ " ,plex." + SPECULAR_COLORB + " "
 			+ " ,plex." + DATESTAMP + " "
 			+ " FROM " + PLANET_EXTENSION + " plex "
 			+ " WHERE plex." + PLANETOIDEXTENSIONID + " = ? "
@@ -153,6 +159,9 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 			+ " ,plex." + EMMISIVE + " "
 			+ " ,plex." + BUMP_MAP + " "
 			+ " ,plex." + BUMP_HEIGHT + " "
+			+ " ,plex." + SPECULAR_COLORR + " "
+			+ " ,plex." + SPECULAR_COLORG + " "
+			+ " ,plex." + SPECULAR_COLORB + " "
 			+ " ,plex." + DATESTAMP + " "
 			+ " FROM " + PLANET_EXTENSION + " plex "
 			+ " WHERE plex." + PLANETOIDNAME + " = ? "
@@ -210,6 +219,9 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 			+ " ,plex." + EMMISIVE + " = ?  "
 			+ " ,plex." + BUMP_MAP + " = ?  "
 			+ " ,plex." + BUMP_HEIGHT + " = ?  "
+			+ " ,plex." + SPECULAR_COLORR + " = ? "
+			+ " ,plex." + SPECULAR_COLORG + " = ? "
+			+ " ,plex." + SPECULAR_COLORB + " = ? "
 			+ " ,plex." + DATESTAMP +" = ?  "
 			+ " WHERE plex." + PLANETOIDNAME + " = ?"
 		;
@@ -331,6 +343,9 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 				 , emmisive
 				 , planarExtension.getBumpMap()
 				 , planarExtension.getBumpHeight()
+				 , planarExtension.getSpecularColor().rOfRGB
+				 , planarExtension.getSpecularColor().gOfRGB
+				 , planarExtension.getSpecularColor().bOfRGB
 				 , planarExtension.getDateStamp()
 				 , planarExtension.getPlanarName()
 
@@ -444,6 +459,14 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		planarExtension.setBumpMap(planarExtensionMap.get(BUMP_MAP).toString());
 		String s_bumpHeight = planarExtensionMap.get(BUMP_HEIGHT).toString();
 		planarExtension.setBumpHeight(new Double(s_bumpHeight));
+		String s_SpecularColorR = planarExtensionMap.get(SPECULAR_COLORR).toString();
+		String s_SpecularColorG = planarExtensionMap.get(SPECULAR_COLORG).toString();
+		String s_SpecularColorB = planarExtensionMap.get(SPECULAR_COLORB).toString();
+		OGL_Color specularColor = planarExtension.new OGL_Color();
+		specularColor.rOfRGB = new Double(s_SpecularColorR);
+		specularColor.gOfRGB = new Double(s_SpecularColorG);
+		specularColor.bOfRGB = new Double(s_SpecularColorB);
+		planarExtension.setSpecularColor(specularColor);
 		return planarExtension;
 	}
 }
