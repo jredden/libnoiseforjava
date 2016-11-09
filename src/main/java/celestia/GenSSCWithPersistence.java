@@ -7,6 +7,7 @@ import com.zenred.cosmos.domain.AstronomicalUnits;
 import com.zenred.cosmos.domain.ClusterRep;
 import com.zenred.cosmos.domain.ClusterRepDao;
 import com.zenred.cosmos.domain.ExistingSystemWithStars;
+import com.zenred.cosmos.domain.Planetoid;
 import com.zenred.cosmos.domain.PlanetoidDao;
 import com.zenred.cosmos.domain.Star;
 import com.zenred.cosmos.domain.StarDao;
@@ -18,6 +19,8 @@ import celestia.domain.ColorRGB;
 import celestia.domain.Haze;
 import celestia.domain.PlanarExtension;
 import celestia.domain.PlanarExtension.OGL_Color;
+import celestia.domain.PlanarExtension.PlanarClass;
+import celestia.domain.PlanarExtensionDao;
 import celestia.persistence.BasicFileWriter;
 
 /**
@@ -56,7 +59,7 @@ public class GenSSCWithPersistence implements SSC_Entry_formatsI {
 		oglColor.bOfRGB = colorRGB.getColorB();
  		planarExtension.setSpecularColor(oglColor);	
 		String planarSpecular = PlanarSpecular.build(star, unifiedPlanetoidI).toString();
-		planarExtension.setSpecularPower(new Integer(planarSpecular));
+		planarExtension.setSpecularPower(new Double(planarSpecular));
 		Haze haze = PlanarHaze.build(unifiedPlanetoidI);
 		oglColor = planarExtension.new OGL_Color();
 		oglColor.rOfRGB = haze.getHazeColor().getColorR();
@@ -88,7 +91,7 @@ public class GenSSCWithPersistence implements SSC_Entry_formatsI {
 
 		
 		planarExtension.setAlbedo(PlanarAlbedo.genAlbedoPlanar(unifiedPlanetoidI));		
-		return null;
+		return planarExtension;
 	}
 	/**
 	 * 
@@ -97,21 +100,15 @@ public class GenSSCWithPersistence implements SSC_Entry_formatsI {
 	 * @param axis
 	 * @return orbit component
 	 */
-	private static String buildOrbit(UnifiedPlanetoidI unifiedPlanetoidI, Double period, Double axis){
-		StringBuilder image = new StringBuilder();
+	private static PlanarExtension buildOrbit(UnifiedPlanetoidI unifiedPlanetoidI, Double period, Double axis, PlanarExtension planarExtension){
 		Double eccentricity = AdditionalPlanarOrbitScalars.genEccentricity();
-		Double inclinaton = AdditionalPlanarOrbitScalars.genInclination();
+		Double inclination = AdditionalPlanarOrbitScalars.genInclination();
 		Double longOfPeriCentre = AdditionalPlanarOrbitScalars.genLongOfPericentre();
 		Double meanLongitude = AdditionalPlanarOrbitScalars.genMeanLongitude();
-		image.append(ellipticalOrbit.format(new Object[]{
-		period // {0}
-		,axis	// {1}
-		,eccentricity // {2}
-		,inclinaton 	// {3}
-		,longOfPeriCentre // {4}
-		,meanLongitude	// {5}
-		}));
-		return image.toString();
+		planarExtension.setEccentricity(eccentricity);
+		planarExtension.setInclination(inclination);
+		planarExtension.setLongOfPericenter(longOfPeriCentre);
+		return planarExtension;
 	}
 	/**
 	 * 
@@ -119,14 +116,13 @@ public class GenSSCWithPersistence implements SSC_Entry_formatsI {
 	 * @param unifiedPlanetoidI
 	 * @return planet image
 	 */
-	private static String buildPlanet(Star star, UnifiedPlanetoidI unifiedPlanetoidI, PlanarExtension planarExtension){
-		StringBuilder planetImage = new StringBuilder("");
-		planetImage.append(planarClass.format(new Object[]{planetClass.toString()}));
-		planetImage.append(buildPlanar(star, unifiedPlanetoidI, planarExtension));
+	private static PlanarExtension buildPlanet(Star star, UnifiedPlanetoidI unifiedPlanetoidI, PlanarExtension planarExtension){
+		planarExtension.setPlanarClass(PlanarClass.PLANET);
+		planarExtension = buildPlanar(star, unifiedPlanetoidI, planarExtension);
 		Double planarPeriod = PlanarPeriod.build(star, unifiedPlanetoidI);
 		Double semiMajorAxis = unifiedPlanetoidI.getPlanetoid().getDistanceToPrimary();
-		planetImage.append(buildOrbit(unifiedPlanetoidI, planarPeriod, semiMajorAxis));
-		return planetImage.toString();
+		planarExtension = buildOrbit(unifiedPlanetoidI, planarPeriod, semiMajorAxis, planarExtension);
+		return planarExtension;
 	}
 	/**
 	 * 
@@ -135,14 +131,13 @@ public class GenSSCWithPersistence implements SSC_Entry_formatsI {
 	 * @param unifiedMoonI
 	 * @return moon image
 	 */
-	private static String buildMoon(Star star, UnifiedPlanetoidI unifiedPlanetoidI, UnifiedPlanetoidI unifiedMoonI, PlanarExtension planarExtension){
-		StringBuilder moonImage = new StringBuilder("");
-		moonImage.append(planarClass.format(new Object[]{moonClass.toString()}));
-		moonImage.append(buildPlanar(star, unifiedPlanetoidI, planarExtension));
+	private static PlanarExtension buildMoon(Star star, UnifiedPlanetoidI unifiedPlanetoidI, UnifiedPlanetoidI unifiedMoonI, PlanarExtension planarExtension){
+		planarExtension.setPlanarClass(PlanarClass.MOON);
+		planarExtension = (buildPlanar(star, unifiedPlanetoidI, planarExtension));
 		Double moonPeriod = PlanarPeriod.build(unifiedMoonI);
 		Double semiMajorAxis = unifiedMoonI.getPlanetoid().getDistanceToPrimary() * AstronomicalUnits.MOON_UNIT;
-		moonImage.append(buildOrbit(unifiedPlanetoidI, moonPeriod, semiMajorAxis));
-		return moonImage.toString();
+		planarExtension = buildOrbit(unifiedPlanetoidI, moonPeriod, semiMajorAxis, planarExtension);
+		return planarExtension;
 	}
 	
 	/**
@@ -152,12 +147,12 @@ public class GenSSCWithPersistence implements SSC_Entry_formatsI {
 		SystemDao systemDao = new SystemDao();
 		ClusterRepDao clusterRepDao = new ClusterRepDao();
 		StarDao starDao = new StarDao();
-		PlanetoidDao planetoidDdao = new PlanetoidDao();
+		PlanetoidDao planetoidDao = new PlanetoidDao();
 		PlanarExtension planarExtension = new PlanarExtension();
+		PlanarExtensionDao planarExtensionDao = null;
 		List<SystemClusterSubSet> systemsWithCluster = systemDao.readSystemsWithClusters();
 		for (SystemClusterSubSet systemClusterSubSet : systemsWithCluster) {
 			ClusterRep clusterRep = clusterRepDao.readClusterRepById(systemClusterSubSet.getClusterRepId());
-			StringBuilder masterFileImage = new StringBuilder("");
 			List<Star> starList = starDao.readStarsInCluster(clusterRep);
 			for(Star star : starList){
 				List<UnifiedPlanetoidI> unifiedPlanetoidIs = ExistingSystemWithStars
@@ -166,40 +161,44 @@ public class GenSSCWithPersistence implements SSC_Entry_formatsI {
 					continue; // no planars
 				}
 				else{
-					StringBuilder fileImage = new StringBuilder("");
+					planarExtensionDao = new PlanarExtensionDao();
 					for (UnifiedPlanetoidI unifiedPlanetoidI : unifiedPlanetoidIs){
 						String planetnoidName = unifiedPlanetoidI.getPlanetoid().getPlanetoidName();
-						String planetImage = buildPlanet(star, unifiedPlanetoidI, planarExtension);
-						fileImage.append(planetImage);
-						StringBuilder container = new StringBuilder().append(planar.format(new Object[]{planetnoidName,
-								star.getName(), fileImage}));
-						masterFileImage.append(container);
-						
+						Planetoid planetoid = planetoidDao.readPlanetoidByName(planetnoidName);
+						planarExtension = buildPlanet(star, unifiedPlanetoidI, planarExtension);
+						planarExtension.setPlanarName(planetnoidName);
+						planarExtension.setPlanarId(planetoid.getPlanetoidId());
+						if(planarExtensionDao.doesPlanarExtensionExist(planarExtension)){
+							planarExtensionDao.updatePlanarExtensionByName(planarExtension);
+						}
+						else{
+							planarExtensionDao.addPlanarExtension(planarExtension);
+						}
 						List<UnifiedPlanetoidI> unifiedMoonsIs = ExistingSystemWithStars
 								.readMoonsAroundPlanet(unifiedPlanetoidI.getPlanetoid());
 						if(unifiedMoonsIs.isEmpty()){
 							continue; // no moons
 						}
 						else{
-							fileImage = new StringBuilder("");
+							planarExtension = new PlanarExtension();
 							for (UnifiedPlanetoidI unifiedMoonI : unifiedMoonsIs) {
 								String moonName = unifiedMoonI.getPlanetoid().getPlanetoidName();
-								String moonImage = buildMoon(star, unifiedPlanetoidI, unifiedMoonI, planarExtension);
-								fileImage.append(moonImage);
-								container = new StringBuilder().append(planar.format(new Object[]{moonName, star.getName() + '/' + planetnoidName,
-										fileImage}));
-								masterFileImage.append(container);
+								planetoid = planetoidDao.readPlanetoidByName(moonName);
+								planarExtension = buildMoon(star, unifiedPlanetoidI, unifiedMoonI, planarExtension);
+								planarExtension.setPlanarId(planetoid.getPlanetoidId());
+								planarExtension.setPlanarName(moonName);
+								if(planarExtensionDao.doesPlanarExtensionExist(planarExtension)){
+									planarExtensionDao.updatePlanarExtensionByName(planarExtension);
+								}
+								else{
+									planarExtensionDao.addPlanarExtension(planarExtension);
+								}
 							}
 						}
 					}
 				}
-				String uri = "celestia/cosmos/" + Math.random() + star.getName() + "_cosmos.ssc";
-				BasicFileWriter.writeIt(masterFileImage, uri);
-				masterFileImage = new StringBuilder("");
 			}
-	
 		}
-		
 	}
 
 	public static void main(String[] args) {

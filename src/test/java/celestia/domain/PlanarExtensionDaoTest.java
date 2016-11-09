@@ -29,7 +29,7 @@ public class PlanarExtensionDaoTest {
 	private static Double COLOR_G = new Double( GenRandomRolls.Instance().draw_rand());
 	private static Double COLOR_B = new Double( GenRandomRolls.Instance().draw_rand());
 	private static String SPECULAR_TEXTURE = GenName.generate(20);
-	private static Integer SPECULAR_POWER = GenRandomRolls.Instance().get_D10();
+	private static Double SPECULAR_POWER = GenRandomRolls.Instance().draw_rand()*100.0;
 	private static Double HAZE_COLOR_R = new Double( GenRandomRolls.Instance().draw_rand());
 	private static Double HAZE_COLOR_G = new Double( GenRandomRolls.Instance().draw_rand());
 	private static Double HAZE_COLOR_B = new Double( GenRandomRolls.Instance().draw_rand());

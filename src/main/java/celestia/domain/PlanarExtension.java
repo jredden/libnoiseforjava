@@ -50,7 +50,7 @@ public class PlanarExtension {
 	private String nightTexture;
 	private OGL_Color color;
 	private String specularTexture;
-	private Integer specularPower;
+	private Double specularPower;
 	private OGL_Color hazeColor;
 	private Double hazeDensity;
 	private Double radius;
@@ -82,7 +82,7 @@ public class PlanarExtension {
 	
 
 	public PlanarExtension(Integer planarExtensionId, Integer planarId, String planarName, PlanarClass planarClass,
-			String texture, String nightTexture, OGL_Color color, String specularTexture, Integer specularPower,
+			String texture, String nightTexture, OGL_Color color, String specularTexture, Double specularPower,
 			OGL_Color hazeColor, Double hazeDensity, Double radius, Double oblateness, Integer atmosphereHeight,
 			OGL_Color lower, OGL_Color upper, OGL_Color sky, Integer cloudHeight, String cloudMap, Integer cloudSpeed,
 			Double period, Double semiMajorAxis, Double eccentricity, Double inclination, Double longOfPericenter,
@@ -244,11 +244,11 @@ public class PlanarExtension {
 		this.specularTexture = specularTexture;
 	}
 
-	public Integer getSpecularPower() {
+	public Double getSpecularPower() {
 		return specularPower;
 	}
 
-	public void setSpecularPower(Integer specularPower) {
+	public void setSpecularPower(Double specularPower) {
 		this.specularPower = specularPower;
 	}
 

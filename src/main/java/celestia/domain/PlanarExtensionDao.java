@@ -381,7 +381,7 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		planarExtension.setColor(colorRGB);
 		planarExtension.setSpecularTexture(planarExtensionMap.get(SPECULARTEXTURE).toString());
 		String s_SpecularPower = planarExtensionMap.get(SPECULARPOWER).toString();
-		planarExtension.setSpecularPower(new Integer (s_SpecularPower));
+		planarExtension.setSpecularPower(new Double (s_SpecularPower));
 		String s_HazeColorR = planarExtensionMap.get(HAZECOLORR).toString();
 		String s_HazeColorG = planarExtensionMap.get(HAZECOLORG).toString();
 		String s_HazeColorB = planarExtensionMap.get(HAZECOLORB).toString();
