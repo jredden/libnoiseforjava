@@ -736,7 +736,7 @@ public class PlanarExtension {
 				, PlanarExtensionDao.ATMOSPHEREUPPERR
 				, PlanarExtensionDao.ATMOSPHEREUPPERG
 				, PlanarExtensionDao.ATMOSPHEREUPPERB
-				, PlanarExtensionDao.PLANETOIDEXTENSIONID
+//				, PlanarExtensionDao.PLANETOIDEXTENSIONID
 				, PlanarExtensionDao.PLANETOIDID
 				, PlanarExtensionDao.PLANETOIDNAME
 				, PlanarExtensionDao.ORBITPERIOD

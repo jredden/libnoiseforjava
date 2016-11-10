@@ -2,7 +2,7 @@ package celestia.domain;
 
 public class CelestAtmosphere {
 
-	private Double height;
+	private Integer height;
 	private ColorRGB lower;
 	private ColorRGB upper;
 	private ColorRGB sky;
@@ -12,7 +12,7 @@ public class CelestAtmosphere {
 	
 	public CelestAtmosphere(){}
 	
-	public CelestAtmosphere(Double height, ColorRGB lower, ColorRGB upper, ColorRGB sky, Integer cloudHeight,
+	public CelestAtmosphere(Integer height, ColorRGB lower, ColorRGB upper, ColorRGB sky, Integer cloudHeight,
 			Integer cloudSpeed, String cloudMap) {
 		super();
 		this.height = height;
@@ -24,11 +24,11 @@ public class CelestAtmosphere {
 		this.cloudMap = cloudMap;
 	}
 
-	public Double getHeight() {
+	public Integer getHeight() {
 		return height;
 	}
 
-	public void setHeight(Double height) {
+	public void setHeight(Integer height) {
 		this.height = height;
 	}
 

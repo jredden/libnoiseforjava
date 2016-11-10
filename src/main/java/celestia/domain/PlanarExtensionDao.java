@@ -2,14 +2,17 @@ package celestia.domain;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zenred.johntredden.domain.AbstractJDBCDao;
 
 import celestia.domain.PlanarExtension.OGL_Color;
 import celestia.domain.PlanarExtension.PlanarClass;
+import sun.util.logging.resources.logging;
 
 public class PlanarExtensionDao extends AbstractJDBCDao {
+	private static Logger logger = Logger.getLogger(PlanarExtensionDao.class);
 	
 	public static final String PLANET_EXTENSION = "PlanetoidExtension";
 
@@ -232,7 +235,9 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 	 */
 	@Transactional
 	public PlanarExtension addPlanarExtension(PlanarExtension planarExtension){
+		
 		Map<String, Object> planarExtensionMap = PlanarExtension.getPlanarExtensionMap(planarExtension);
+		logger.info("addPlanarExtension:"+planarExtension);
 		super.jdbcInsertSetup().withTableName(PLANET_EXTENSION).usingColumns(PlanarExtension.csvPlanarExtension()).execute(planarExtensionMap);
 		Integer planarExtensionId = super.jdbcSetUp().getSimpleJdbcTemplate().queryForInt(lastPlanarExtensionInsertSql);
 		planarExtension.setPlanarExtensionId(planarExtensionId);
@@ -295,6 +300,8 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 	 * @return planarExtension
 	 */
 	public PlanarExtension updatePlanarExtensionByName(PlanarExtension planarExtension){
+		logger.info("updatePlanarExtension:"+planarExtension);
+
 		Short emmisive = 0;
 		if(planarExtension.getEmmisive().equals(Boolean.TRUE)){
 			emmisive = 1;
@@ -433,14 +440,14 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		planarExtension.setEccentricity(new Double(s_OrbitEccentricity));
 		String s_OrbitInclination = planarExtensionMap.get(ORBITINCLINATION).toString();
 		planarExtension.setInclination(new Double(s_OrbitInclination));
-		String s_OrbitLongOfPeriCentre = planarExtensionMap.get(ORBITLONGOFPERICENTRE).toString();
-		planarExtension.setLongOfPericenter(new Double(s_OrbitLongOfPeriCentre));
-		String s_OrbitMeanLongitude = planarExtensionMap.get(ORBITMEANLONGITUDE).toString();
-		planarExtension.setMeanLongitude(new Double(s_OrbitMeanLongitude));
-		String s_Obliquity = planarExtensionMap.get(OBLIQUITY).toString();
-		planarExtension.setObliquity(new Double(s_Obliquity));
-		String s_RotationPeriod = planarExtensionMap.get(ROTATIONPERIOD).toString();
-		planarExtension.setRotationPeriod(new Double(s_RotationPeriod));
+//		String s_OrbitLongOfPeriCentre = planarExtensionMap.get(ORBITLONGOFPERICENTRE).toString();
+//		planarExtension.setLongOfPericenter(new Double(s_OrbitLongOfPeriCentre));
+//		String s_OrbitMeanLongitude = planarExtensionMap.get(ORBITMEANLONGITUDE).toString();
+//		planarExtension.setMeanLongitude(new Double(s_OrbitMeanLongitude));
+//		String s_Obliquity = planarExtensionMap.get(OBLIQUITY).toString();
+//		planarExtension.setObliquity(new Double(s_Obliquity));
+//		String s_RotationPeriod = planarExtensionMap.get(ROTATIONPERIOD).toString();
+//		planarExtension.setRotationPeriod(new Double(s_RotationPeriod));
 		String s_Albedo = planarExtensionMap.get(ALBEDO).toString();
 		planarExtension.setAlbedo(new Double(s_Albedo));
 		String planarClass = planarExtensionMap.get(PLANAR_CLASS).toString();

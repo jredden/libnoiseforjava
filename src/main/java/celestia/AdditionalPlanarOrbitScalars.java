@@ -16,6 +16,7 @@ public class AdditionalPlanarOrbitScalars {
 	private static Double yetAnotherNumberOutOfTheEther = 360.0;
 	private static Double commonObliquity = 20.0;
 	private static Double uncommonObliquity = 80.0;
+	private static Double rotationalPeriod = 40.0;
 	
 	public static Double genEccentricity(){
 		Double eccentricity = GenRandomRolls.Instance().draw_rand() * aNumberOutOfTheEther;
@@ -46,5 +47,10 @@ public class AdditionalPlanarOrbitScalars {
 			firstScalar *= -1.0;
 		}
 		return firstScalar;
+	}
+	
+	public static Double genRotationalPeriod(){
+		Double d_rotationalPeriod = GenRandomRolls.Instance().draw_rand() * rotationalPeriod;
+		return d_rotationalPeriod;
 	}
 }

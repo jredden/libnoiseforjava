@@ -1,6 +1,5 @@
 package celestia;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 import com.zenred.cosmos.domain.AstronomicalUnits;
@@ -14,6 +13,7 @@ import com.zenred.cosmos.domain.StarDao;
 import com.zenred.cosmos.domain.SystemClusterSubSet;
 import com.zenred.cosmos.domain.SystemDao;
 import com.zenred.cosmos.domain.UnifiedPlanetoidI;
+
 import celestia.domain.CelestAtmosphere;
 import celestia.domain.ColorRGB;
 import celestia.domain.Haze;
@@ -21,7 +21,6 @@ import celestia.domain.PlanarExtension;
 import celestia.domain.PlanarExtension.OGL_Color;
 import celestia.domain.PlanarExtension.PlanarClass;
 import celestia.domain.PlanarExtensionDao;
-import celestia.persistence.BasicFileWriter;
 
 /**
  * generates a celestia ssc file for each star system
@@ -88,9 +87,14 @@ public class GenSSCWithPersistence implements SSC_Entry_formatsI {
 		oglColor.gOfRGB = celestAtmosphere.getSky().getColorG();
 		oglColor.bOfRGB = celestAtmosphere.getSky().getColorB();
 		planarExtension.setSky(oglColor);
-
+		planarExtension.setCloudHeight(celestAtmosphere.getCloudHeight());
+		planarExtension.setCloudSpeed(celestAtmosphere.getCloudSpeed());
+		planarExtension.setCloudMap(celestAtmosphere.getCloudMap());
+		planarExtension.setAtmosphereHeight(celestAtmosphere.getHeight());
 		
-		planarExtension.setAlbedo(PlanarAlbedo.genAlbedoPlanar(unifiedPlanetoidI));		
+		planarExtension.setAlbedo(PlanarAlbedo.genAlbedoPlanar(unifiedPlanetoidI));	
+		planarExtension.setObliquity(AdditionalPlanarOrbitScalars.genObliquity());
+		planarExtension.setRotationPeriod(AdditionalPlanarOrbitScalars.genRotationalPeriod());
 		return planarExtension;
 	}
 	/**
@@ -108,6 +112,12 @@ public class GenSSCWithPersistence implements SSC_Entry_formatsI {
 		planarExtension.setEccentricity(eccentricity);
 		planarExtension.setInclination(inclination);
 		planarExtension.setLongOfPericenter(longOfPeriCentre);
+		planarExtension.setSemiMajorAxis(axis);
+		if(period == Double.NEGATIVE_INFINITY || period == Double.POSITIVE_INFINITY){
+			period = Double.MAX_VALUE;
+		}
+		planarExtension.setPeriod(period);
+		planarExtension.setMeanLongitude(meanLongitude);
 		return planarExtension;
 	}
 	/**
@@ -169,6 +179,8 @@ public class GenSSCWithPersistence implements SSC_Entry_formatsI {
 						planarExtension.setPlanarName(planetnoidName);
 						planarExtension.setPlanarId(planetoid.getPlanetoidId());
 						if(planarExtensionDao.doesPlanarExtensionExist(planarExtension)){
+							PlanarExtension forKey = planarExtensionDao.readPlanarExtensionName(planarExtension.getPlanarName());
+							planarExtension.setPlanarExtensionId(forKey.getPlanarExtensionId());
 							planarExtensionDao.updatePlanarExtensionByName(planarExtension);
 						}
 						else{
@@ -188,9 +200,12 @@ public class GenSSCWithPersistence implements SSC_Entry_formatsI {
 								planarExtension.setPlanarId(planetoid.getPlanetoidId());
 								planarExtension.setPlanarName(moonName);
 								if(planarExtensionDao.doesPlanarExtensionExist(planarExtension)){
+									PlanarExtension primaryKey = planarExtensionDao.readPlanarExtensionName(moonName);
+									planarExtension.setPlanarExtensionId(primaryKey.getPlanarExtensionId());
 									planarExtensionDao.updatePlanarExtensionByName(planarExtension);
 								}
 								else{
+									planarExtension.setPlanarExtensionId(null);
 									planarExtensionDao.addPlanarExtension(planarExtension);
 								}
 							}

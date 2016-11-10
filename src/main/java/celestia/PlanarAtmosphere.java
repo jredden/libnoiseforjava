@@ -333,7 +333,7 @@ public class PlanarAtmosphere {
 		Integer cloudSpeed = cloudSpeed(unifiedPlanetoidI).intValue();
 		String cloudMap = unifiedPlanetoidI.getPlanetoid().getPlanetoidName() + GenSSC.cloudMapType;
 
-		CelestAtmosphere celestAtmosphere = new CelestAtmosphere(height, lowColor, highColor, skyColor,
+		CelestAtmosphere celestAtmosphere = new CelestAtmosphere(height.intValue(), lowColor, highColor, skyColor,
 				celestCloudHeight, cloudSpeed, cloudMap);
 		return celestAtmosphere;
 	}
