@@ -691,7 +691,7 @@ public class PlanarExtension {
 		map.put(PlanarExtensionDao.ORBITSEMIMAJORAXIS, planarExtension.getSemiMajorAxis());
 		map.put(PlanarExtensionDao.ORBITECCENTRICITY, planarExtension.getEccentricity());
 		map.put(PlanarExtensionDao.ORBITINCLINATION, planarExtension.getInclination());
-		map.put(PlanarExtensionDao.PLANAR_CLASS, planarExtension.getPlanarClass().type);
+		map.put(PlanarExtensionDao.PLANAR_CLASS, planarExtension.getPlanarClass().name());
 		map.put(PlanarExtensionDao.EMMISIVE, planarExtension.getEmmisive());
 		map.put(PlanarExtensionDao.BUMP_MAP, planarExtension.getBumpMap());
 		map.put(PlanarExtensionDao.BUMP_HEIGHT, planarExtension.getBumpHeight());

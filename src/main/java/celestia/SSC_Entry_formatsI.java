@@ -75,77 +75,87 @@ public interface SSC_Entry_formatsI {
 	 */
 	public abstract class BuildSSCFlatFile {
 		private static Logger logger = Logger.getLogger(BuildSSCFlatFile.class);
-		
+
 		public static PlanarExtensionDao planarExtensionDao = new PlanarExtensionDao();
-		
-		public static StringBuilder readCommon(UnifiedPlanetoidI unifiedPlanetoidI,
-		StringBuilder fileImage){
+
+		public static StringBuilder readCommon(UnifiedPlanetoidI unifiedPlanetoidI, StringBuilder fileImage) {
 			PlanarExtension planarExtension = planarExtensionDao
 					.readPlanarExtensionName(unifiedPlanetoidI.getPlanetoid().getPlanetoidName());
-			fileImage.append(planarClass.format(new Object[]{planetClass.toString()}));
+			fileImage.append(planarClass.format(new Object[] { planarExtension.getPlanarClass().getType() }));
 			fileImage.append(
 					texture.format(new Object[] { unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), imageType }));
 			fileImage.append("Emissive true \n"); // light source from primary
-			fileImage.append(nightTexture.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), nightImageType}));
-			fileImage.append(bumpMap.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), bumpMapType}));
-			fileImage.append(bumpHeight.format(new Object[]{planarExtension.getBumpHeight()}));
+			fileImage.append(nightTexture
+					.format(new Object[] { unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), nightImageType }));
+			fileImage.append(
+					bumpMap.format(new Object[] { unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), bumpMapType }));
+			fileImage.append(bumpHeight.format(new Object[] { planarExtension.getBumpHeight() }));
 			fileImage.append(planarBaseColor.format(new Object[] { planarExtension.getColor().rOfRGB,
 					planarExtension.getColor().gOfRGB, planarExtension.getColor().bOfRGB }));
 			fileImage.append(specularTexture
 					.format(new Object[] { unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), specularTextureType }));
 			fileImage.append(specularColor.format(new Object[] { planarExtension.getSpecularColor().rOfRGB,
 					planarExtension.getSpecularColor().gOfRGB, planarExtension.getSpecularColor().bOfRGB }));
-			fileImage.append(specularPower.format(new Object[]{planarExtension.getSpecularPower()}));
+			fileImage.append(specularPower.format(new Object[] { planarExtension.getSpecularPower() }));
 			fileImage.append(hazeColor.format(new Object[] { planarExtension.getHazeColor().rOfRGB,
 					planarExtension.getHazeColor().gOfRGB, planarExtension.getHazeColor().bOfRGB }));
-			fileImage.append(hazePower.format(new Object[]{planarExtension.getHazeDensity()}));
-			fileImage.append(oblateness.format(new Object[]{planarExtension.getOblateness()}));
-			fileImage.append(radius.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getRadius()}));
-			fileImage.append(planarAtmosphere.format(new Object[]{
-					planarExtension.getAtmosphereHeight()		// {0}
-					,planarExtension.getLower().rOfRGB			// {1}
-					,planarExtension.getLower().gOfRGB			// {2}
-					,planarExtension.getLower().bOfRGB			// {3}
-					,planarExtension.getUpper().rOfRGB			// {4}
-					,planarExtension.getUpper().gOfRGB			// {5}
-					,planarExtension.getUpper().bOfRGB			// {6}
-					,planarExtension.getSky().rOfRGB			// {7}
-					,planarExtension.getSky().gOfRGB			// {8}
-					,planarExtension.getSky().bOfRGB			// {9}
-					,planarExtension.getCloudHeight()			// {10}
-					,planarExtension.getCloudSpeed()			// {11}
-					,planarExtension.getCloudMap()				// {12}
+			fileImage.append(hazePower.format(new Object[] { planarExtension.getHazeDensity() }));
+			fileImage.append(oblateness.format(new Object[] { planarExtension.getOblateness() }));
+			fileImage.append(radius.format(new Object[] { unifiedPlanetoidI.getPlanetoid().getRadius() }));
+			// logger.info("at planarAtmosphere");
+			fileImage.append(planarAtmosphere.format(new Object[] { planarExtension.getAtmosphereHeight() // {0}
+					, planarExtension.getLower().rOfRGB // {1}
+					, planarExtension.getLower().gOfRGB // {2}
+					, planarExtension.getLower().bOfRGB // {3}
+					, planarExtension.getUpper().rOfRGB // {4}
+					, planarExtension.getUpper().gOfRGB // {5}
+					, planarExtension.getUpper().bOfRGB // {6}
+					, planarExtension.getSky().rOfRGB // {7}
+					, planarExtension.getSky().gOfRGB // {8}
+					, planarExtension.getSky().bOfRGB // {9}
+					, planarExtension.getCloudHeight() // {10}
+					, planarExtension.getCloudSpeed() // {11}
+					, planarExtension.getCloudMap() // {12}
 			}));
-			fileImage.append(planarAlbedo.format(new Object[]{planarExtension.getAlbedo()}));
-			fileImage.append(ellipticalOrbit.format(new Object[]{
-					planarExtension.getPeriod()				// {0}
-					,planarExtension.getSemiMajorAxis()		// {1}
-					,planarExtension.getEccentricity()		// {2}
-					,planarExtension.getInclination()		// {3}
-					,planarExtension.getLongOfPericenter()	// {4}
-					,planarExtension.getMeanLongitude()		// {5}
-					}));
+			fileImage.append(planarAlbedo.format(new Object[] { planarExtension.getAlbedo() }));
+			// logger.info("at elipticalOrbit");
+
+			fileImage.append(ellipticalOrbit.format(new Object[] { planarExtension.getPeriod() // {0}
+					, planarExtension.getSemiMajorAxis() // {1}
+					, planarExtension.getEccentricity() // {2}
+					, planarExtension.getInclination() // {3}
+					, planarExtension.getLongOfPericenter() // {4}
+					, planarExtension.getMeanLongitude() // {5}
+			}));
+			logger.info("at end:" + fileImage.length());
+
 			return fileImage;
 		}
 
-		public static StringBuilder readPlanet(Star star, UnifiedPlanetoidI unifiedPlanetoidI,
-				StringBuilder fileImage) {
+		public static StringBuilder readPlanet(Star star, UnifiedPlanetoidI unifiedPlanetoidI) {
+			logger.info("Unified Planet:" + unifiedPlanetoidI);
+			StringBuilder fileImage = new StringBuilder();
 			fileImage.append(readCommon(unifiedPlanetoidI, fileImage));
-			StringBuilder container = new StringBuilder().append(planar.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(),
-					star.getName(), fileImage}));
+			StringBuilder container = new StringBuilder().append(planar.format(new Object[] {
+					unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), star.getName(), fileImage.toString() }));
+//			logger.info("planet file image:" + container.toString());
 			return container;
 		}
 
 		public static StringBuilder readMoon(Star star, UnifiedPlanetoidI unifiedPlanetoidI,
-				UnifiedPlanetoidI unifiedMoonI, StringBuilder fileImage) {
+				UnifiedPlanetoidI unifiedMoonI) {
+			logger.info("Unified Moon:" + unifiedMoonI);
+			StringBuilder fileImage = new StringBuilder();
 			fileImage.append(readCommon(unifiedMoonI, fileImage));
 			StringBuilder container = new StringBuilder()
 					.append(planar.format(new Object[] { unifiedMoonI.getPlanetoid().getPlanetoidName(),
-							star.getName() + '/' + unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), fileImage }));
+							star.getName() + '/' + unifiedPlanetoidI.getPlanetoid().getPlanetoidName(),
+							fileImage.toString() }));
+//			logger.info("moon file image:" + container.toString());
 			return container;
 		}
-		
-		public static void genSSC_File () {
+
+		public static void genSSC_File() {
 			StringBuilder fileImage = null;
 			SystemDao systemDao = new SystemDao();
 			ClusterRepDao clusterRepDao = new ClusterRepDao();
@@ -155,30 +165,40 @@ public interface SSC_Entry_formatsI {
 				ClusterRep clusterRep = clusterRepDao.readClusterRepById(systemClusterSubSet.getClusterRepId());
 				List<Star> starList = starDao.readStarsInCluster(clusterRep);
 				for (Star star : starList) {
+					fileImage = new StringBuilder();
 					List<UnifiedPlanetoidI> unifiedPlanetoidIs = ExistingSystemWithStars.readPlanetsAroundStar(star);
 					if (unifiedPlanetoidIs.isEmpty()) {
 						continue; // no planars
 					} else {
-						fileImage = new StringBuilder();
 						for (UnifiedPlanetoidI unifiedPlanetoidI : unifiedPlanetoidIs) {
 							String planetnoidName = unifiedPlanetoidI.getPlanetoid().getPlanetoidName();
-							fileImage = readPlanet(star, unifiedPlanetoidI, fileImage);
+							fileImage.append(readPlanet(star, unifiedPlanetoidI));
+							logger.info("MESSAGE_0:"+ fileImage.toString());
 							logger.info("Planetoid Reading for:" + planetnoidName);
 							List<UnifiedPlanetoidI> unifiedMoonsIs = ExistingSystemWithStars
 									.readMoonsAroundPlanet(unifiedPlanetoidI.getPlanetoid());
 							if (unifiedMoonsIs.isEmpty()) {
+								String uri = "celestia/cosmos/" + Math.random() + star.getName()+"_"
+										+ unifiedPlanetoidI.getPlanetoid().getPlanetoidName() + "_cosmos.ssc";
+								BasicFileWriter.writeIt(fileImage, uri);
+								fileImage = new StringBuilder();
 								continue; // no moons
 							} else {
 								for (UnifiedPlanetoidI unifiedMoonI : unifiedMoonsIs) {
 									String moonName = unifiedMoonI.getPlanetoid().getPlanetoidName();
-									logger.info("Moon Reading for:" + planetnoidName);
-									fileImage = readMoon(star, unifiedPlanetoidI, unifiedMoonI, fileImage);
+									logger.info("Moon Reading for:" + moonName);
+									fileImage.append(readMoon(star, unifiedPlanetoidI, unifiedMoonI));
 								}
+								logger.info("MESSAGE_1:"+ fileImage.toString());
 							}
+							logger.info("MESSAGE_2:"+ fileImage.toString());
+							String uri = "celestia/cosmos/" + Math.random() + star.getName()+"_"
+									+ unifiedPlanetoidI.getPlanetoid().getPlanetoidName() + "_cosmos.ssc";
+							BasicFileWriter.writeIt(fileImage, uri);
+							fileImage = new StringBuilder();
+
 						}
 					}
-					String uri = "celestia/cosmos/" + Math.random() + star.getName() + "_cosmos.ssc";
-					BasicFileWriter.writeIt(fileImage, uri);
 				}
 			}
 			return;
