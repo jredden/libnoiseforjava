@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import com.zenred.cosmos.domain.Star;
 import com.zenred.cosmos.domain.UnifiedPlanetoidI;
@@ -32,7 +34,7 @@ public class PlanarSpecular {
 		Integer genSpecularTemperatureScalar();
 	}
 
-	private static Map<Double, Luminosity> luminosityMap = new HashMap<Double, PlanarSpecular.Luminosity>();
+	private static SortedMap<Double, Luminosity> luminosityMap = new TreeMap<Double, PlanarSpecular.Luminosity>();
 	static {
 		luminosityMap.put(new Double(0.0), new Luminosity() {
 			@Override
@@ -120,7 +122,7 @@ public class PlanarSpecular {
 		});
 	}
 
-	private static Map<Double, Distance> distanceMap = new HashMap<Double, Distance>();
+	private static SortedMap<Double, Distance> distanceMap = new TreeMap<Double, Distance>();
 	static {
 		distanceMap.put(new Double(0.0), new Distance() {
 			@Override
@@ -274,7 +276,7 @@ public class PlanarSpecular {
 		});
 	}
 
-	private static Map<Double, Temperature> temperatureMap = new HashMap<Double, Temperature>();
+	private static SortedMap<Double, Temperature> temperatureMap = new TreeMap<Double, Temperature>();
 	static {
 		temperatureMap.put(new Double(0.0), new Temperature() {
 			@Override

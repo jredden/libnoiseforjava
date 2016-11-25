@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import com.zenred.cosmos.domain.UnifiedPlanetoidI;
 import com.zenred.util.GenRandomRolls;
@@ -26,7 +28,7 @@ public class Oblateness {
 		Double gen(UnifiedPlanetoidI unifiedPlanetoidI);
 	}
 
-	private static Map<Double,Range> rangeMap = new HashMap<Double, Range>();
+	private static SortedMap<Double,Range> rangeMap = new TreeMap<Double, Range>();
 	static{
 		rangeMap.put(Double.MIN_VALUE, new Range(){
 			@Override

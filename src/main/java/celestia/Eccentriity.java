@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import com.zenred.util.GenRandomRolls;
 
@@ -13,7 +15,7 @@ public class Eccentriity {
 		Double gen();
 	}
 	
-	private static Map<Integer,Operation> steps = new HashMap<Integer, Operation>();
+	private static SortedMap<Integer,Operation> steps = new TreeMap<Integer, Operation>();
 	static{
 		steps.put(new Integer(0), new Operation(){
 			@Override

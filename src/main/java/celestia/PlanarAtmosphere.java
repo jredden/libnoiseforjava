@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import com.zenred.cosmos.domain.Star;
 import com.zenred.cosmos.domain.UnifiedPlanetoidI;
@@ -31,7 +33,7 @@ public class PlanarAtmosphere {
 	public static Double highScalar = 2.0;
 	public static Double lowScalar = 5.0;
 
-	private static Map<Double, AtmosphereHeight> heightMap = new HashMap<Double, AtmosphereHeight>();
+	private static SortedMap<Double, AtmosphereHeight> heightMap = new TreeMap<Double, AtmosphereHeight>();
 	static{
 		heightMap.put(0.0, new AtmosphereHeight() {
 			@Override
@@ -107,7 +109,7 @@ public class PlanarAtmosphere {
 		});
 	}
 	
-	private static Map<Double,CloudHeight> cloudHeightMap = new HashMap<Double,CloudHeight>();
+	private static SortedMap<Double,CloudHeight> cloudHeightMap = new TreeMap<Double,CloudHeight>();
 	static{
 		cloudHeightMap.put(0.0, new CloudHeight(){
 			@Override
@@ -183,7 +185,7 @@ public class PlanarAtmosphere {
 		});
 	}
 	
-	private static Map<Double,CloudSpeed> cloudSpeedMap = new HashMap<Double,CloudSpeed>();
+	private static SortedMap<Double,CloudSpeed> cloudSpeedMap = new TreeMap<Double,CloudSpeed>();
 	static{
 		cloudSpeedMap.put(0.0, new CloudSpeed() {
 			@Override
