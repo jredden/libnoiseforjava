@@ -78,7 +78,8 @@ public interface SSC_Entry_formatsI {
 
 		public static PlanarExtensionDao planarExtensionDao = new PlanarExtensionDao();
 
-		public static StringBuilder readCommon(UnifiedPlanetoidI unifiedPlanetoidI, StringBuilder fileImage) {
+		public static StringBuilder readCommon(UnifiedPlanetoidI unifiedPlanetoidI) {
+			StringBuilder fileImage = new StringBuilder();
 			PlanarExtension planarExtension = planarExtensionDao
 					.readPlanarExtensionName(unifiedPlanetoidI.getPlanetoid().getPlanetoidName());
 			fileImage.append(planarClass.format(new Object[] { planarExtension.getPlanarClass().getType() }));
@@ -135,10 +136,10 @@ public interface SSC_Entry_formatsI {
 		public static StringBuilder readPlanet(Star star, UnifiedPlanetoidI unifiedPlanetoidI) {
 			logger.info("Unified Planet:" + unifiedPlanetoidI);
 			StringBuilder fileImage = new StringBuilder();
-			fileImage.append(readCommon(unifiedPlanetoidI, fileImage));
+			fileImage.append(readCommon(unifiedPlanetoidI));
 			StringBuilder container = new StringBuilder().append(planar.format(new Object[] {
 					unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), star.getName(), fileImage.toString() }));
-//			logger.info("planet file image:" + container.toString());
+			logger.info("planet file image:" + container.toString());
 			return container;
 		}
 
@@ -146,17 +147,18 @@ public interface SSC_Entry_formatsI {
 				UnifiedPlanetoidI unifiedMoonI) {
 			logger.info("Unified Moon:" + unifiedMoonI);
 			StringBuilder fileImage = new StringBuilder();
-			fileImage.append(readCommon(unifiedMoonI, fileImage));
+			fileImage.append(readCommon(unifiedMoonI));
 			StringBuilder container = new StringBuilder()
 					.append(planar.format(new Object[] { unifiedMoonI.getPlanetoid().getPlanetoidName(),
 							star.getName() + '/' + unifiedPlanetoidI.getPlanetoid().getPlanetoidName(),
 							fileImage.toString() }));
-//			logger.info("moon file image:" + container.toString());
+			logger.info("moon file image:" + container.toString());
 			return container;
 		}
 
 		public static void genSSC_File() {
 			StringBuilder fileImage = null;
+			StringBuilder masterFileImage = new StringBuilder();
 			SystemDao systemDao = new SystemDao();
 			ClusterRepDao clusterRepDao = new ClusterRepDao();
 			StarDao starDao = new StarDao();
@@ -173,34 +175,33 @@ public interface SSC_Entry_formatsI {
 						for (UnifiedPlanetoidI unifiedPlanetoidI : unifiedPlanetoidIs) {
 							String planetnoidName = unifiedPlanetoidI.getPlanetoid().getPlanetoidName();
 							fileImage.append(readPlanet(star, unifiedPlanetoidI));
-							logger.info("MESSAGE_0:"+ fileImage.toString());
-							logger.info("Planetoid Reading for:" + planetnoidName);
+//							logger.info("MESSAGE_0:"+ fileImage.toString());
+//							logger.info("Planetoid Reading for:" + planetnoidName);
 							List<UnifiedPlanetoidI> unifiedMoonsIs = ExistingSystemWithStars
 									.readMoonsAroundPlanet(unifiedPlanetoidI.getPlanetoid());
 							if (unifiedMoonsIs.isEmpty()) {
-								String uri = "celestia/cosmos/" + Math.random() + star.getName()+"_"
-										+ unifiedPlanetoidI.getPlanetoid().getPlanetoidName() + "_cosmos.ssc";
-								BasicFileWriter.writeIt(fileImage, uri);
+								masterFileImage.append(fileImage);
 								fileImage = new StringBuilder();
 								continue; // no moons
 							} else {
 								for (UnifiedPlanetoidI unifiedMoonI : unifiedMoonsIs) {
 									String moonName = unifiedMoonI.getPlanetoid().getPlanetoidName();
-									logger.info("Moon Reading for:" + moonName);
+//									logger.info("Moon Reading for:" + moonName);
 									fileImage.append(readMoon(star, unifiedPlanetoidI, unifiedMoonI));
 								}
-								logger.info("MESSAGE_1:"+ fileImage.toString());
+//								logger.info("MESSAGE_1:"+ fileImage.toString());
+								masterFileImage.append(fileImage);
+								fileImage = new StringBuilder();							
 							}
-							logger.info("MESSAGE_2:"+ fileImage.toString());
-							String uri = "celestia/cosmos/" + Math.random() + star.getName()+"_"
-									+ unifiedPlanetoidI.getPlanetoid().getPlanetoidName() + "_cosmos.ssc";
-							BasicFileWriter.writeIt(fileImage, uri);
-							fileImage = new StringBuilder();
-
+//							logger.info("MESSAGE_2:"+ fileImage.toString());
 						}
 					}
 				}
 			}
+			String uri = "celestia/cosmos/" + Math.random() + "_cosmos.ssc";
+			BasicFileWriter.writeIt(masterFileImage, uri);
+			fileImage = new StringBuilder();
+
 			return;
 		}
 

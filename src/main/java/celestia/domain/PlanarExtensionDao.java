@@ -440,10 +440,10 @@ public class PlanarExtensionDao extends AbstractJDBCDao {
 		planarExtension.setEccentricity(new Double(s_OrbitEccentricity));
 		String s_OrbitInclination = planarExtensionMap.get(ORBITINCLINATION).toString();
 		planarExtension.setInclination(new Double(s_OrbitInclination));
-//		String s_OrbitLongOfPeriCentre = planarExtensionMap.get(ORBITLONGOFPERICENTRE).toString();
-//		planarExtension.setLongOfPericenter(new Double(s_OrbitLongOfPeriCentre));
-//		String s_OrbitMeanLongitude = planarExtensionMap.get(ORBITMEANLONGITUDE).toString();
-//		planarExtension.setMeanLongitude(new Double(s_OrbitMeanLongitude));
+		String s_OrbitLongOfPeriCentre = planarExtensionMap.get(ORBITLONGOFPERICENTRE).toString();
+		planarExtension.setLongOfPericenter(new Double(s_OrbitLongOfPeriCentre));
+		String s_OrbitMeanLongitude = planarExtensionMap.get(ORBITMEANLONGITUDE).toString();
+		planarExtension.setMeanLongitude(new Double(s_OrbitMeanLongitude));
 //		String s_Obliquity = planarExtensionMap.get(OBLIQUITY).toString();
 //		planarExtension.setObliquity(new Double(s_Obliquity));
 //		String s_RotationPeriod = planarExtensionMap.get(ROTATIONPERIOD).toString();
