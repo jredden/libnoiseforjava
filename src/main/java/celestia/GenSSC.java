@@ -40,33 +40,33 @@ public class GenSSC {
 	// 0 -> planet  1-> star 2-> rest of planet ... or ... 0 -> moon  1 -> planet 2-> rest of moon
 	private static MessageFormat planar = new MessageFormat("\"{0}\" \"{1}\" '{' \n {2} \n '}' \n\n");
 	// 0 -> moon or planet or other in system object
-	private static MessageFormat planarClass = new MessageFormat("Class \"{0}\" \n");
+	private static MessageFormat planarClass = new MessageFormat("\t Class \"{0}\" \n");
 	// png image
-	private static MessageFormat texture = new MessageFormat("Texture \"{0}{1}\" \n ");
+	private static MessageFormat texture = new MessageFormat("\t Texture \"{0}{1}\" \n ");
 	// night png image
-	private static MessageFormat nightTexture = new MessageFormat("NightTexture \"{0}{1}\" \n ");
+	private static MessageFormat nightTexture = new MessageFormat("\t NightTexture \"{0}{1}\" \n ");
 	// bump map png image
-	private static MessageFormat bumpMap = new MessageFormat("BumpMap \"{0}{1}\" \n ");
+	private static MessageFormat bumpMap = new MessageFormat("\t BumpMap \"{0}{1}\" \n ");
 	// bump height
-	private static MessageFormat bumpHeight = new MessageFormat("BumpHeight {0} \n");
+	private static MessageFormat bumpHeight = new MessageFormat("\t BumpHeight {0} \n");
 	// generic color of planet from stars color
-	private static MessageFormat planarBaseColor = new MessageFormat("Color [ {0} {1} {2} ] \n");
+	private static MessageFormat planarBaseColor = new MessageFormat("\t Color [ {0} {1} {2} ] \n\n");
 	// specular png image
-	private static MessageFormat specularTexture = new MessageFormat("SpecularTexture \"{0}{1}\" \n ");
+	private static MessageFormat specularTexture = new MessageFormat("\t SpecularTexture \"{0}{1}\" \n ");
 	// specular power
-	private static MessageFormat specularPower = new MessageFormat("SpecularPower {0} \n");
+	private static MessageFormat specularPower = new MessageFormat("\t SpecularPower {0} \n\n");
 	// specular color
-	private static MessageFormat specularColor = new MessageFormat("SpecularColor [ {0} {1} {2} \n ]");
+	private static MessageFormat specularColor = new MessageFormat("\t SpecularColor [ {0} {1} {2} ] \n\n");
 	// haze color
-	private static MessageFormat hazeColor = new MessageFormat("HazeColor [ {0} {1} {2} \n ]");
+	private static MessageFormat hazeColor = new MessageFormat("\t HazeColor [ {0} {1} {2} ]\n\n");
 	// haze density
-	private static MessageFormat hazePower = new MessageFormat("HazeDensity {0} \n");
+	private static MessageFormat hazePower = new MessageFormat("\t HazeDensity {0} \n");
 	// radius
-	private static MessageFormat radius = new MessageFormat("Radius {0} \n");
+	private static MessageFormat radius = new MessageFormat("\t Radius {0} \n\n");
 	// oblateness
-	private static MessageFormat oblateness = new MessageFormat("Oblateness {0}\n");
+	private static MessageFormat oblateness = new MessageFormat("\t Oblateness {0}\n\n");
 	// atmosphere
-	private static MessageFormat planarAtmosphere = new MessageFormat("Atmosphere '{' \n Height {0} \n"
+	private static MessageFormat planarAtmosphere = new MessageFormat("\t Atmosphere '{' \n Height {0} \n"
 			+ " Lower [ {1} {2} {3} ] \n"
 			+ " Upper [ {4} {5} {6} ] \n"
 			+ " Sky [ {7} {8} {9} ] \n"
@@ -75,16 +75,19 @@ public class GenSSC {
 			+ " CloudMap \"{12}\" \n"
 			+ "'}' \n\n"
 			);
-	private static MessageFormat ellipticalOrbit = new MessageFormat("ElipticalOrbit '{'\n"
+	private static MessageFormat ellipticalOrbit = new MessageFormat("\t ElipticalOrbit '{'\n"
 			+ " Period {0} \n"
 			+ " SemiMajorAxis {1} \n"
 			+ " Eccentricity {2} \n"
 			+ " Inclination {3} \n"
 			+ " LongOfPericenter {4} \n"
-			+ " MeanLongitude {5} \n"
+			+ " AscendingNode {5} \n"
+			+ " MeanLongitude {6} \n"
 			+ "'}' \n\n"
 			);
-	private static MessageFormat planarAlbedo = new MessageFormat("Albedo {0} \n");
+	private static MessageFormat planarAlbedo = new MessageFormat("\t Albedo {0} \n\n");
+	
+	private static MessageFormat mass = new MessageFormat("\t Mass {0} \n\n"); 
 	
 	/**
 	 * generic planar builder for SSC 
