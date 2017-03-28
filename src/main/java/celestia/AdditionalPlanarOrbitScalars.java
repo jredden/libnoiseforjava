@@ -53,4 +53,9 @@ public class AdditionalPlanarOrbitScalars {
 		Double d_rotationalPeriod = GenRandomRolls.Instance().draw_rand() * rotationalPeriod;
 		return d_rotationalPeriod;
 	}
+	
+	public static Double genAscendngNode(){
+		Double d_ascendingNode = GenRandomRolls.Instance().draw_rand() * yetAnotherNumberOutOfTheEther;
+		return d_ascendingNode;
+	}
 }

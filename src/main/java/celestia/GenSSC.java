@@ -99,12 +99,14 @@ public class GenSSC {
 	private static String buildPlanar(Star star, UnifiedPlanetoidI unifiedPlanetoidI){
 		StringBuilder image = new StringBuilder();
 		image.append(texture.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), imageType}));
-		image.append("Emissive true \n");  // light source from primary
+		image.append("\t Emissive true \n");  // light source from primary
 		image.append(nightTexture.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), nightImageType}));
 		image.append(bumpMap.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), bumpMapType}));
 		image.append(bumpHeight.format(new Object[]{BumpHeight.build(unifiedPlanetoidI)}));
 		ColorRGB colorRGB = StarColorMapping.mapStarColor(star.getStar_color());
 		image.append(planarBaseColor.format(new Object[]{colorRGB.getColorR(), colorRGB.getColorG(), colorRGB.getColorB()}));
+		image.append(planarAlbedo.format(new Object[]{PlanarAlbedo.genAlbedoPlanar(unifiedPlanetoidI)}));
+		image.append(mass.format(new Object[]{PlanarMassApproximator.genPlanarMass(unifiedPlanetoidI)}));
 		image.append(specularTexture.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getPlanetoidName(), specularTextureType}));
 		colorRGB = PlanarSpecularColor.build(star, unifiedPlanetoidI);
 		image.append(specularColor.format(new Object[]{colorRGB.getColorR(), colorRGB.getColorG(), colorRGB.getColorB()}));
@@ -113,8 +115,8 @@ public class GenSSC {
 		image.append(hazeColor.format(new Object[] { haze.getHazeColor().getColorR(), haze.getHazeColor().getColorG(),
 				haze.getHazeColor().getColorB() }));
 		image.append(hazePower.format(new Object[]{haze.getHazeDensity()}));
-		image.append(radius.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getRadius()}));
 		image.append(oblateness.format(new Object[]{Oblateness.build(unifiedPlanetoidI)}));
+		image.append(radius.format(new Object[]{unifiedPlanetoidI.getPlanetoid().getRadius()}));
 		CelestAtmosphere celestAtmosphere = PlanarAtmosphere.build(star, unifiedPlanetoidI);
 		image.append(planarAtmosphere.format(new Object[]{
 				celestAtmosphere.getHeight() // {0}
@@ -131,7 +133,6 @@ public class GenSSC {
 				, celestAtmosphere.getCloudSpeed() // {11}
 				, celestAtmosphere.getCloudMap() // {12}
 		}));
-		image.append(planarAlbedo.format(new Object[]{PlanarAlbedo.genAlbedoPlanar(unifiedPlanetoidI)}));
 		return image.toString();
 	}
 	/**
@@ -146,6 +147,7 @@ public class GenSSC {
 		Double eccentricity = AdditionalPlanarOrbitScalars.genEccentricity();
 		Double inclinaton = AdditionalPlanarOrbitScalars.genInclination();
 		Double longOfPeriCentre = AdditionalPlanarOrbitScalars.genLongOfPericentre();
+		Double ascendingNode = AdditionalPlanarOrbitScalars.genAscendngNode();
 		Double meanLongitude = AdditionalPlanarOrbitScalars.genMeanLongitude();
 		image.append(ellipticalOrbit.format(new Object[]{
 		period // {0}
@@ -153,7 +155,8 @@ public class GenSSC {
 		,eccentricity // {2}
 		,inclinaton 	// {3}
 		,longOfPeriCentre // {4}
-		,meanLongitude	// {5}
+		,ascendingNode // {5}
+		,meanLongitude	// {6}
 		}));
 		return image.toString();
 	}
