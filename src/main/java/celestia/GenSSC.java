@@ -66,24 +66,24 @@ public class GenSSC {
 	// oblateness
 	private static MessageFormat oblateness = new MessageFormat("\t Oblateness {0}\n\n");
 	// atmosphere
-	private static MessageFormat planarAtmosphere = new MessageFormat("\t Atmosphere '{' \n Height {0} \n"
-			+ " Lower [ {1} {2} {3} ] \n"
-			+ " Upper [ {4} {5} {6} ] \n"
-			+ " Sky [ {7} {8} {9} ] \n"
-			+ " CloudHeight {10} \n"
-			+ " CloudSpeed {11} \n"
-			+ " CloudMap \"{12}\" \n"
-			+ "'}' \n\n"
+	private static MessageFormat planarAtmosphere = new MessageFormat("\t Atmosphere '{' \n \t Height {0} \n"
+			+ " \t Lower [ {1} {2} {3} ] \n"
+			+ " \t Upper [ {4} {5} {6} ] \n"
+			+ " \t Sky [ {7} {8} {9} ] \n"
+			+ " \t CloudHeight {10} \n"
+			+ " \t CloudSpeed {11} \n"
+			+ " \t CloudMap \"{12}\" \n"
+			+ "\t '}' \n\n"
 			);
-	private static MessageFormat ellipticalOrbit = new MessageFormat("\t ElipticalOrbit '{'\n"
-			+ " Period {0} \n"
-			+ " SemiMajorAxis {1} \n"
-			+ " Eccentricity {2} \n"
-			+ " Inclination {3} \n"
-			+ " LongOfPericenter {4} \n"
-			+ " AscendingNode {5} \n"
-			+ " MeanLongitude {6} \n"
-			+ "'}' \n\n"
+	private static MessageFormat ellipticalOrbit = new MessageFormat("\t EllipticalOrbit '{'\n"
+			+ " \t Period \t {0} \n"
+			+ " \t SemiMajorAxis \t {1} \n"
+			+ " \t Eccentricity \t {2} \n"
+			+ " \t Inclination \t {3} \n"
+			+ " \t LongOfPericenter \t {4} \n"
+			+ " \t AscendingNode \t {5} \n"
+			+ " \t MeanLongitude \t {6} \n"
+			+ "\t '}' \n\n"
 			);
 	private static MessageFormat planarAlbedo = new MessageFormat("\t Albedo {0} \n\n");
 	
@@ -212,8 +212,8 @@ public class GenSSC {
 					continue; // no planars
 				}
 				else{
-					StringBuilder fileImage = new StringBuilder("");
 					for (UnifiedPlanetoidI unifiedPlanetoidI : unifiedPlanetoidIs){
+						StringBuilder fileImage = new StringBuilder("");
 						String planetnoidName = unifiedPlanetoidI.getPlanetoid().getPlanetoidName();
 						String planetImage = buildPlanet(star, unifiedPlanetoidI);
 						fileImage.append(planetImage);
@@ -228,6 +228,7 @@ public class GenSSC {
 						}
 						else{
 							fileImage = new StringBuilder("");
+							container = new StringBuilder("");
 							for (UnifiedPlanetoidI unifiedMoonI : unifiedMoonsIs) {
 								String moonName = unifiedMoonI.getPlanetoid().getPlanetoidName();
 								String moonImage = buildMoon(star, unifiedPlanetoidI, unifiedMoonI);
@@ -235,6 +236,9 @@ public class GenSSC {
 								container = new StringBuilder().append(planar.format(new Object[]{moonName, star.getName() + '/' + planetnoidName,
 										fileImage}));
 								masterFileImage.append(container);
+								fileImage = new StringBuilder("");
+								container = new StringBuilder("");
+
 							}
 						}
 					}
