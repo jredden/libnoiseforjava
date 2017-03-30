@@ -32,27 +32,39 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.zenred.util.GenRandomRolls;
+
+import libnoiseforjava.NoiseGen.NoiseQuality;
+import libnoiseforjava.domain.PerlinBuilder;
 import libnoiseforjava.exception.*;
 import libnoiseforjava.module.*;
 import libnoiseforjava.util.*;
 
-public class TerrainHeightMapExample {
+public class TerrainHeightMapExample3 {
 	// generates an example Terrain Height Map, as shown at
 	// http://libnoise.sourceforge.net/tutorials/tutorial3.html
+	
+	static Double frequency = 1.5;
+	//  static Double persistence = 0.2;
+	static Double persistence = 0.99;
+	static Double lacunarity = 0.1;
+	static Integer octive_count = 3;
 
 	public static void main(String[] args) throws ExceptionInvalidParam {
 		// create Perlin noise module object
-		Perlin perlin1 = new Perlin();
+		Integer currSeed = GenRandomRolls.Instance().getD1000();
+		Perlin perlin = new PerlinBuilder().biuld(currSeed, frequency,
+				persistence, lacunarity, octive_count, NoiseQuality.QUALITY_STD);
 
 		// create Noisemap object
-		NoiseMap heightMap = new NoiseMap(256, 256);
+		NoiseMap heightMap = new NoiseMap(1024, 1024);
 
 		// create Builder object
 		NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
-		heightMapBuilder.setSourceModule(perlin1);
+		heightMapBuilder.setSourceModule(perlin);
 		heightMapBuilder.setDestNoiseMap(heightMap);
-		heightMapBuilder.setDestSize(256, 256);
-		heightMapBuilder.setBounds(2.0, 6.0, 1.0, 5.0);
+		heightMapBuilder.setDestSize(1024, 1024);
+		heightMapBuilder.setBounds(12.0, 16.0, 1.0, 5.0);
 		heightMapBuilder.build();
 
 		// create renderer object
@@ -84,7 +96,7 @@ public class TerrainHeightMapExample {
 		BufferedImage im = buffBuilder(destTexture.getHeight(),
 				destTexture.getWidth(), destTexture);
 		try {
-			ImageIO.write(im, "png", new File("images/terrain_test.png"));
+			ImageIO.write(im, "png", new File("images/terrain_test3.png"));
 		} catch (IOException e1) {
 			System.out.println("Could not write the image file.");
 		}
