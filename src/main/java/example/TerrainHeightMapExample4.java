@@ -29,6 +29,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -53,7 +54,7 @@ public class TerrainHeightMapExample4 {
 	static Double lacunarity = 0.1;
 	static Integer octive_count = 3;
 	static Double medianValue = 0.0;
-	static List<ControlPoint> controlPoints;
+	static List<ControlPoint> controlPoints = new ArrayList<ControlPoint>();
 	
 	static {
 		ControlPoint controlPoint = new ControlPoint();
@@ -106,14 +107,14 @@ public class TerrainHeightMapExample4 {
 		Perlin perlin = new PerlinBuilder().biuld(currSeed, frequency,
 				persistence, lacunarity, octive_count, NoiseQuality.QUALITY_STD);
 		Curve curve = new CurveBuilder().builder(perlin, medianValue, controlPoints);
+		Add add = new Add(curve, perlin);
 		
-
 		// create Noisemap object
 		NoiseMap heightMap = new NoiseMap(1024, 1024);
 
 		// create Builder object
 		NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
-		heightMapBuilder.setSourceModule(perlin);
+		heightMapBuilder.setSourceModule(add);
 		heightMapBuilder.setDestNoiseMap(heightMap);
 		heightMapBuilder.setDestSize(1024, 1024);
 		heightMapBuilder.setBounds(12.0, 16.0, 1.0, 5.0);
@@ -148,7 +149,7 @@ public class TerrainHeightMapExample4 {
 		BufferedImage im = buffBuilder(destTexture.getHeight(),
 				destTexture.getWidth(), destTexture);
 		try {
-			ImageIO.write(im, "png", new File("images/terrain_test3.png"));
+			ImageIO.write(im, "png", new File("images/terrain_test4.png"));
 		} catch (IOException e1) {
 			System.out.println("Could not write the image file.");
 		}
