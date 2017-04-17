@@ -34,6 +34,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
+
 import com.zenred.util.GenRandomRolls;
 
 import libnoiseforjava.NoiseGen.NoiseQuality;
@@ -43,10 +45,13 @@ import libnoiseforjava.domain.PerlinBuilder;
 import libnoiseforjava.domain.ScaleBiasBuilder;
 import libnoiseforjava.domain.VoronoiBuilder;
 import libnoiseforjava.exception.*;
+import libnoiseforjava.model.Sphere;
 import libnoiseforjava.module.*;
 import libnoiseforjava.util.*;
 
-public class TerrainHeightMapExample6 {
+public class TerrainHeightMapExample7 {
+	
+	private static Logger logger = Logger.getLogger(TerrainHeightMapExample7.class);
 	// generates an example Terrain Height Map, as shown at
 	// http://libnoise.sourceforge.net/tutorials/tutorial3.html
 	
@@ -108,12 +113,21 @@ public class TerrainHeightMapExample6 {
 		Integer currSeed = GenRandomRolls.Instance().getD1000();
 		Perlin perlin = new PerlinBuilder().biuld(currSeed, frequency,
 				persistence, lacunarity, octive_count, NoiseQuality.QUALITY_STD);
+		NoiseMapBuilderSphere noiseMapBuilderSphere = new NoiseMapBuilderSphere();
+		noiseMapBuilderSphere.setBounds(0.0, 180.0, 90.0, 270.0);
+		noiseMapBuilderSphere.setDestSize(1024, 1024);
+		noiseMapBuilderSphere.setSourceModule(perlin);
+		NoiseMap noiseMap = new NoiseMap(4096, 2048);
+		noiseMapBuilderSphere.setDestNoiseMap(noiseMap);
+		noiseMapBuilderSphere.build();
+	
 		Curve curve = new CurveBuilder().builder(perlin, medianValue, controlPoints);
 		Add add0 = new Add(curve, perlin);
 		
 		 Voronoi voronoi =  new Voronoi();
 		 Double displacement = GenRandomRolls.Instance().getD49();
 		 Double frequency = GenRandomRolls.Instance().getD49();
+		 logger.info("displacement:"+displacement+" frequency:"+frequency);
 		 
 		 voronoi.setDisplacement(displacement);
 		 voronoi.setFrequency(frequency);
@@ -166,7 +180,7 @@ public class TerrainHeightMapExample6 {
 		BufferedImage im = buffBuilder(destTexture.getHeight(),
 				destTexture.getWidth(), destTexture);
 		try {
-			ImageIO.write(im, "png", new File("images/"+GenRandomRolls.Instance().getD100000()+"terrain_test6.png"));
+			ImageIO.write(im, "png", new File("images/"+GenRandomRolls.Instance().getD100000()+"terrain_test8.png"));
 		} catch (IOException e1) {
 			System.out.println("Could not write the image file.");
 		}

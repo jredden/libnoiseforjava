@@ -80,9 +80,10 @@ public class NoiseMapBuilderSphere extends NoiseMapBuilder
             || destWidth <= 0
             || destHeight <= 0
             || sourceModule == null
-            || destNoiseMap == null) 
-         throw new ExceptionInvalidParam ("Invalid Parameter in NoiseMapBuilderSphere");
-
+				|| destNoiseMap == null)
+			throw new ExceptionInvalidParam("Invalid Parameter in NoiseMapBuilderSphere" + eastLonBound + "::"
+					+ westLonBound + "::" + northLatBound + "::" + destWidth + "::" + destHeight + "::" + sourceModule
+					+ "::" + destNoiseMap + "::");
 
       // Resize the destination noise map so that it can store the new output
       // values from the source model.
