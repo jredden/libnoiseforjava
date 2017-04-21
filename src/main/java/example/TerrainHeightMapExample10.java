@@ -29,127 +29,50 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.imageio.ImageIO;
-
-import org.apache.log4j.Logger;
 
 import com.zenred.util.GenRandomRolls;
 
 import libnoiseforjava.NoiseGen.NoiseQuality;
-import libnoiseforjava.domain.ControlPoint;
-import libnoiseforjava.domain.CurveBuilder;
 import libnoiseforjava.domain.PerlinBuilder;
-import libnoiseforjava.domain.ScaleBiasBuilder;
-import libnoiseforjava.domain.VoronoiBuilder;
 import libnoiseforjava.exception.*;
-import libnoiseforjava.model.Sphere;
 import libnoiseforjava.module.*;
 import libnoiseforjava.util.*;
 
-public class TerrainHeightMapExample8 {
+public class TerrainHeightMapExample10 {
 	// generates an example Terrain Height Map, as shown at
 	// http://libnoise.sourceforge.net/tutorials/tutorial3.html
 	
-	private static Logger logger = Logger.getLogger(TerrainHeightMapExample8.class);
-	
 	static Double frequency = 1.5;
-	//  static Double persistence = 0.2;
-	static Double persistence = 0.99;
-	static Double lacunarity = 0.1;
+	static Double persistence = 0.2;
+	static Double lacunarity = 0.9;
 	static Integer octive_count = 3;
-	static Double medianValue = new Double(GenRandomRolls.Instance().getD1000());
-	static List<ControlPoint> controlPoints = new ArrayList<ControlPoint>();
-	
-	static {
-		ControlPoint controlPoint = new ControlPoint();
-		controlPoint.inputValue = -2.0000;
-		controlPoint.outputValue = -1.625;
-		controlPoints.add(controlPoint);
-		controlPoint = new ControlPoint();
-		controlPoint.inputValue = -1.0000;
-		controlPoint.outputValue = -1.375;
-		controlPoints.add(controlPoint);
-		controlPoint = new ControlPoint();
-		controlPoint.inputValue = 0.0000;
-		controlPoint.outputValue = -0.375;
-		controlPoints.add(controlPoint);
-		controlPoint = new ControlPoint();
-		controlPoint.inputValue = 0.0625;
-		controlPoint.outputValue = 0.125;
-		controlPoints.add(controlPoint);
-		controlPoint = new ControlPoint();
-		controlPoint.inputValue = 0.1250;
-		controlPoint.outputValue = 0.250;
-		controlPoints.add(controlPoint);
-		controlPoint = new ControlPoint();
-		controlPoint.inputValue = 0.2500;
-		controlPoint.outputValue = 1.000;
-		controlPoints.add(controlPoint);
-		controlPoint = new ControlPoint();
-		controlPoint.inputValue = 0.5000;
-		controlPoint.outputValue = 0.2500;
-		controlPoints.add(controlPoint);
-		controlPoint = new ControlPoint();
-		controlPoint.inputValue = 0.7500;
-		controlPoint.outputValue = 0.2500;
-		controlPoints.add(controlPoint);
-		controlPoint = new ControlPoint();
-		controlPoint.inputValue = 1.0000;
-		controlPoint.outputValue = 0.500;
-		controlPoints.add(controlPoint);
-		controlPoint = new ControlPoint();
-		controlPoint.inputValue = 2.0000;
-		controlPoint.outputValue = 0.500;
-		controlPoints.add(controlPoint);
-
-	}
-
 
 	public static void main(String[] args) throws ExceptionInvalidParam {
 		// create Perlin noise module object
 		Integer currSeed = GenRandomRolls.Instance().getD1000();
 		Perlin perlin = new PerlinBuilder().biuld(currSeed, frequency,
 				persistence, lacunarity, octive_count, NoiseQuality.QUALITY_STD);
-		NoiseMapBuilderSphere noiseMapBuilderSphere = new NoiseMapBuilderSphere();
-		noiseMapBuilderSphere.setBounds(0.0, 180.0, 90.0, 270.0);
-		noiseMapBuilderSphere.setDestSize(256, 128);
-		noiseMapBuilderSphere.setSourceModule(perlin);
-		NoiseMap noiseMap = new NoiseMap(4096, 2048);
-		noiseMapBuilderSphere.setDestNoiseMap(noiseMap);
-		noiseMapBuilderSphere.build();
-	
-		logger.info("median value:"+medianValue);
-		Curve curve = new CurveBuilder().builder(perlin, medianValue, controlPoints);
-		Add add0 = new Add(curve, perlin);
 		
-		 Voronoi voronoi =  new Voronoi();
-		 Double displacement = new Double(GenRandomRolls.Instance().getD1000());
-		 Double frequency = GenRandomRolls.Instance().getD49();
-		 logger.info("displacement:"+displacement+" frequency:"+frequency);
-		 voronoi.setDisplacement(displacement);
-		 voronoi.setFrequency(frequency);
-		 voronoi.setSeed(GenRandomRolls.Instance().getD1000());
-		 voronoi.enableDistance(Boolean.TRUE);
-		 
-		 Add add1 = new Add(add0, voronoi);
-
-		
+		Invert invert = new Invert(perlin);
+		double invResult = invert.getValue(20,30,15);
+		ScaleBias scaleBias = new ScaleBias(perlin);
+		scaleBias.setScale(-20.0);
+		scaleBias.setBias(-10.0);
+		Blend blend = new Blend(perlin, perlin, scaleBias);
 		// create Noisemap object
-		NoiseMap heightMap = new NoiseMap(1024, 1024);
+		NoiseMap heightMap = new NoiseMap(512*2, 512*2);
+		
 
 		// create Builder object
 		NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
-		heightMapBuilder.setSourceModule(add1);
+		heightMapBuilder.setSourceModule(blend);
 		heightMapBuilder.setDestNoiseMap(heightMap);
-		heightMapBuilder.setDestSize(1024, 1024);
-		heightMapBuilder.setBounds(2.0, 128.0, 1.0, 128.0);
-		
-		
-		
+		heightMapBuilder.setDestSize(256*2, 256*2);
+		heightMapBuilder.setBounds(1.0, 2.0, 1.0, 2.0);
 		heightMapBuilder.build();
+		
 
 		// create renderer object
 		RendererImage renderer = new RendererImage();
@@ -180,7 +103,7 @@ public class TerrainHeightMapExample8 {
 		BufferedImage im = buffBuilder(destTexture.getHeight(),
 				destTexture.getWidth(), destTexture);
 		try {
-			ImageIO.write(im, "png", new File("images/"+GenRandomRolls.Instance().getD100000()+"terrain_test8.png"));
+			ImageIO.write(im, "png", new File("images/"+GenRandomRolls.Instance().getD100000()+"terrain_test10.png"));
 		} catch (IOException e1) {
 			System.out.println("Could not write the image file.");
 		}

@@ -1,5 +1,7 @@
 package libnoiseforjava.domain;
 
+import org.apache.log4j.Logger;
+
 import libnoiseforjava.exception.ExceptionInvalidParam;
 import libnoiseforjava.util.ImageCafe;
 import libnoiseforjava.util.NoiseMap;
@@ -8,6 +10,8 @@ import libnoiseforjava.util.RendererImage;
 
 
 public class Builder {
+	
+	private static Logger logger = Logger.getLogger(Builder.class);
 
 	/**
 	 * 
@@ -65,6 +69,8 @@ public class Builder {
 		}
 		ImageCafe imageCafe = new ImageCafe(renderImageParameter.getNoiseMap()
 				.getWidth(), renderImageParameter.getNoiseMap().getHeight());
+		logger.info("image width and height:" + renderImageParameter.getNoiseMap().getHeight() + "::"
+				+ renderImageParameter.getNoiseMap().getWidth());
 		renderer.setSourceNoiseMap(renderImageParameter.getNoiseMap());
 
 		renderer.setDestImage(imageCafe);

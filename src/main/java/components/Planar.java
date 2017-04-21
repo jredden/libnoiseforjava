@@ -28,8 +28,8 @@ public abstract class Planar {
 	protected static Double continent_lacunarity = 2.208984375;
 	// octave count determines the amount of perlin noise, the higher the count,
 	// the more detail
-	protected static Integer base_continent_def_octave_count_pe0 = 14;
-	protected static Integer base_continent_def_octave_count_pe1 = 11;
+	protected static Integer base_continent_def_octave_count_pe0 = 3;
+	protected static Integer base_continent_def_octave_count_pe1 = 3;
 	// specifies the planet's sea level. this value must be between -1.0
 	// (minimum planet elevation) and +1.0 (maximum planet elevation.)
 	protected static Double sea_level = PlanarTerranIF.sea_level;
@@ -61,9 +61,9 @@ public abstract class Planar {
 	// easternmost coordinate of elevation grid.
 	protected static Double east_coord = 180.0;
 	// width of elevation grid, in points
-	protected static Integer grid_width = 4096;
+	protected static Integer grid_width = 1024;
 	// height of elevation grid, in points
-	protected static Integer grid_height = 2048;
+	protected static Integer grid_height = 512;
 
 	protected static Double planet_circumference = 44236800.0;
 	protected static Double meters_per_degree = planet_circumference / 360.0;
@@ -302,7 +302,7 @@ public abstract class Planar {
 	// 1: [mountain-ridge module]: this ridged-multifractal-noise module
 	// generates the mountain ridges.
 	static protected Double mountain_base_def_rm0_frequency = 1723.0;
-	static protected Integer mountain_base_def_rm0_octave_count = 4;
+	static protected Integer mountain_base_def_rm0_octave_count = 3;
 
 	// 2: [scaled-mountain-ridge module]: next, a scale/bias module scales the
 	// output value from the mountain-ridge module so that its ridges are not
@@ -396,14 +396,14 @@ public abstract class Planar {
 
 	static protected Double mountainous_low_rm0_frequency = 1381.0;
 	static protected Double mountainous_low_rm0_lacunarity = mountain_lacunarity;
-	static protected Integer mountainous_low_rm0_octave_count = 8;
+	static protected Integer mountainous_low_rm0_octave_count = 3;
 
 	// 1: [lowland-basis-1 module]: this ridged-multifractal-noise module,
 	// along with the lowland-basis-0 module, produces the low mountainous
 	// terrain.
 	static protected Double mountainous_low_rm1_frequency = 1427.0;
 	static protected Double mountainous_low_rm1_lacunarity = mountain_lacunarity;
-	static protected Integer mountainous_low_rm1_octave_count = 8;
+	static protected Integer mountainous_low_rm1_octave_count = 3;
 
 	// //////////////////////////////////////////////////////////////////////////
 	// module subgroup: mountainous terrain (7 noise modules)
@@ -458,7 +458,7 @@ public abstract class Planar {
 
 	protected static Double hilly_terrain_bi_frequency = 1663.0;
 	protected static Double hilly_terrain_bi_persistence = 0.5;
-	protected static Integer hilly_terrain_bi_octave_count = 6;
+	protected static Integer hilly_terrain_bi_octave_count = 3;
 
 	// 2: [scaled-hills module]: next, a scale/bias module scales the output
 	// value from the hills module so that its hilltops are not too high.
@@ -538,7 +538,7 @@ public abstract class Planar {
 	// plains-basis-1 module, produces the plains.
 	protected static Double plains_terrain_bi0_frequency = 1097.0;
 	protected static Double plains_terrain_bi0_persistence = 0.5;
-	protected static Integer plains_terrain_bi0_octave_count = 8;
+	protected static Integer plains_terrain_bi0_octave_count = 3;
 
 	// 2: [positive-plains-basis-0 module]: this scale/bias module makes the
 	// output value from the plains-basis-0 module positive since this output
@@ -552,7 +552,7 @@ public abstract class Planar {
 
 	protected static Double plains_terrain_bi1_frequency = 1319.0;
 	protected static Double plains_terrain_bi1_persistence = 0.5;
-	protected static Integer plains_terrain_bi1_octave_count = 8;
+	protected static Integer plains_terrain_bi1_octave_count = 3;
 
 	// 4: [positive-plains-basis-1 module]: this scale/bias module makes the
 	// output value from the plains-basis-1 module positive since this output
@@ -627,7 +627,7 @@ public abstract class Planar {
 	// noise that will be used to generate the cliffs.
 	static protected Double badlands_cliffs_pe_frequency = continent_frequency * 839;
 	static protected Double badlands_cliffs_pe_persistence = 0.5;
-	static protected Integer badlands_cliffs_pe_octave_count = 6;
+	static protected Integer badlands_cliffs_pe_octave_count = 3;
 
 	// 5: [coarse-turbulence module]: this turbulence module warps the output
 	// value from the terraced-cliffs module, adding some coarse detail to
@@ -735,7 +735,7 @@ public abstract class Planar {
 	// randomly change the elevations of the mountain peaks.
 	static protected Double scaled_mountainous_terrain_pe_frequency = 14.5;
 	static protected Double scaled_mountainous_terrain_pe_persistence = 0.5;
-	static protected Integer scaled_mountainous_terrain_pe_octave_count = 6;
+	static protected Integer scaled_mountainous_terrain_pe_octave_count = 3;
 
 	// 3: [peak-modulation module]: this exponential-curve module applies an
 	// exponential curve to the output value from the base-peak-modulation
@@ -786,7 +786,7 @@ public abstract class Planar {
 	// randomly change the elevations of the hilltops.
 	static protected Double scaled_hilly_terrain_pe_frequency = 13.5;
 	static protected Double scaled_hilly_terrain_pe_persistence = 0.5;
-	static protected Integer scaled_hilly_terrain_pe_octave_count = 6;
+	static protected Integer scaled_hilly_terrain_pe_octave_count = 3;
 
 	// 3: [hilltop-modulation module]: this exponential-curve module applies an
 	// exponential curve to the output value from the base-hilltop-modulation
@@ -887,7 +887,7 @@ public abstract class Planar {
 	// generates some coherent noise that will be used to generate the
 	// oceanic trenches. the ridges represent the bottom of the trenches.
 	static protected Double continental_shelf_frequency_scalar = 4.375;
-	static protected Integer continental_shelf_frequency_octave_count = 16;
+	static protected Integer continental_shelf_frequency_octave_count = 3;
 
 	// 3: [oceanic-trench module]: this scale/bias module inverts the ridges
 	// from the oceanic-trench-basis-module so that the ridges become
