@@ -138,7 +138,7 @@ public class Perlin extends ModuleBase
    static final double DEFAULT_PERLIN_LACUNARITY = 2.0;
 
    /// Default number of octaves for the noise::module::Perlin noise module.
-   static final int DEFAULT_PERLIN_OCTAVE_COUNT = 6;
+   static final int DEFAULT_PERLIN_OCTAVE_COUNT = 3;
 
    /// Default persistence value for the noise::module::Perlin noise module.
    static final double DEFAULT_PERLIN_PERSISTENCE = 0.5;

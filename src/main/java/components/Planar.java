@@ -61,7 +61,7 @@ public abstract class Planar {
 	// easternmost coordinate of elevation grid.
 	protected static Double east_coord = 180.0;
 	// width of elevation grid, in points
-	protected static Integer grid_width = 1024;
+	protected static Integer grid_width = 512;
 	// height of elevation grid, in points
 	protected static Integer grid_height = 512;
 

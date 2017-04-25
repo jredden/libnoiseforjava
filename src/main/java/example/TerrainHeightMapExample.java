@@ -32,6 +32,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.zenred.util.GenRandomRolls;
+
 import libnoiseforjava.exception.*;
 import libnoiseforjava.module.*;
 import libnoiseforjava.util.*;
@@ -45,14 +47,14 @@ public class TerrainHeightMapExample {
 		Perlin perlin1 = new Perlin();
 
 		// create Noisemap object
-		NoiseMap heightMap = new NoiseMap(256, 256);
+		NoiseMap heightMap = new NoiseMap(512, 512);
 
 		// create Builder object
 		NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
 		heightMapBuilder.setSourceModule(perlin1);
 		heightMapBuilder.setDestNoiseMap(heightMap);
-		heightMapBuilder.setDestSize(256, 256);
-		heightMapBuilder.setBounds(2.0, 6.0, 1.0, 5.0);
+		heightMapBuilder.setDestSize(512, 512);
+		heightMapBuilder.setBounds(0.0, 511.0, 0.0, 511.0);
 		heightMapBuilder.build();
 
 		// create renderer object
@@ -84,7 +86,7 @@ public class TerrainHeightMapExample {
 		BufferedImage im = buffBuilder(destTexture.getHeight(),
 				destTexture.getWidth(), destTexture);
 		try {
-			ImageIO.write(im, "png", new File("images/terrain_test.png"));
+			ImageIO.write(im, "png", new File("images/"+GenRandomRolls.Instance().getD100000()+"terrain_test.png"));
 		} catch (IOException e1) {
 			System.out.println("Could not write the image file.");
 		}
