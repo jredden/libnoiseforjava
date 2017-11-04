@@ -56,8 +56,8 @@ public class Output {
 	 * @param uri
 	 */
 	public static void writer(ImageCafe imageCafe, String uri) {
-		BufferedImage bufferedImage = buffBuilder(imageCafe.getHeight(),
-				imageCafe.getWidth(), imageCafe);
+		BufferedImage bufferedImage = buffBuilder(imageCafe.getWidth(),
+				imageCafe.getHeight(), imageCafe);
 		try {
 			ImageIO.write(bufferedImage, "png", new File(uri));
 		} catch (IOException eio) {

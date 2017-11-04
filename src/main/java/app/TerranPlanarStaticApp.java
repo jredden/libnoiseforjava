@@ -110,9 +110,9 @@ public class TerranPlanarStaticApp {
 	// Easternmost coordinate of elevation grid.
 	private static Double EAST_COORD = 180.0;
 	// Width of elevation grid, in points
-	private static Integer GRID_WIDTH = 4096;
+	private static Integer GRID_WIDTH = 2048;
 	// Height of elevation grid, in points
-	private static Integer GRID_HEIGHT = 2048;
+	private static Integer GRID_HEIGHT = 1024;
 
 	private static Double PLANET_CIRCUMFERENCE = 44236800.0;
 	private static Double METERS_PER_DEGREE = PLANET_CIRCUMFERENCE / 360.0;

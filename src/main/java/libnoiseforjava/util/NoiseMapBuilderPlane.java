@@ -28,9 +28,11 @@ package libnoiseforjava.util;
 import libnoiseforjava.Interp;
 import libnoiseforjava.exception.ExceptionInvalidParam;
 import libnoiseforjava.model.Plane;
+import org.apache.log4j.Logger;
 
 public class NoiseMapBuilderPlane extends NoiseMapBuilder
 {
+	static private Logger logger = Logger.getLogger(NoiseMapBuilderPlane.class);
    /// Builds a planar noise map.
    ///
    /// This class builds a noise map by filling it with coherent-noise values
@@ -72,9 +74,10 @@ public class NoiseMapBuilderPlane extends NoiseMapBuilder
       upperZBound = 0.0;
    }
    
-   public NoiseMapBuilderPlane (int height, int width) throws ExceptionInvalidParam
+   public NoiseMapBuilderPlane (int width, int height) throws ExceptionInvalidParam
    {
-      super(height, width);
+      super(width, height);
+      logger.info("NoiseMapBuilderPlane CTOR width:" + width + " CTOR Height:" + height);
       isSeamlessEnabled = false;
       lowerXBound = 0.0;
       lowerZBound = 0.0;
@@ -84,6 +87,7 @@ public class NoiseMapBuilderPlane extends NoiseMapBuilder
 
    public void build () throws ExceptionInvalidParam
    {
+	  logger.info("destWidth:" + destWidth + " destHeight:" + destHeight);
       if ( upperXBound <= lowerXBound
             || upperZBound <= lowerZBound
             || destWidth <= 0

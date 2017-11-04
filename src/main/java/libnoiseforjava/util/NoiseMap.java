@@ -26,9 +26,11 @@
 package libnoiseforjava.util;
 
 import libnoiseforjava.exception.ExceptionInvalidParam;
+import org.apache.log4j.Logger;
 
 public class NoiseMap
 {
+	static private Logger logger = Logger.getLogger(NoiseMap.class);
    /// Implements a noise map, a 2-dimensional array of floating-point
    /// values.
    ///
@@ -57,6 +59,7 @@ public class NoiseMap
 
    public NoiseMap (int width, int height) throws ExceptionInvalidParam
    {
+	  logger.info("NoiseMap CTOR width:" + width + " CTOR height:" + height);
       setSize (width, height);
       noiseMap = new double [width][height];
       borderValue = 0.0;
@@ -103,6 +106,7 @@ public class NoiseMap
    /// position is outside the bounds of the noise map.
    public void setValue (int x, int y, double value)
    {
+	  logger.info("x:" + x + " y:" + y); 
       if (x >= 0 && x < width && y >= 0 && y < height)
          this.noiseMap[x][y]= value;
    }

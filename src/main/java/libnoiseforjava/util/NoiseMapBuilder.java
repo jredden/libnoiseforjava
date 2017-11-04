@@ -27,10 +27,12 @@ package libnoiseforjava.util;
 
 import libnoiseforjava.exception.ExceptionInvalidParam;
 import libnoiseforjava.module.ModuleBase;
+import org.apache.log4j.Logger;
 
 public class NoiseMapBuilder
 {
 
+	static private Logger logger = Logger.getLogger(NoiseMapBuilder.class);
    /// Base class for a noise-map builder
    ///
    /// A builder class builds a noise map by filling it with coherent-noise
@@ -84,12 +86,13 @@ public class NoiseMapBuilder
       sourceModule = new ModuleBase(0);
    }
 
-   public NoiseMapBuilder (int height, int width) throws ExceptionInvalidParam
+   public NoiseMapBuilder (int width, int height) throws ExceptionInvalidParam
    {
+	  logger.info("NoiseMapBuilder CTOR width:" + width + " NoiseMapBuilder CTOR Height:" + height);
       callback = 0;
       destHeight = 0;
       destWidth = 0;
-      destNoiseMap = new NoiseMap(height,width);
+      destNoiseMap = new NoiseMap(width, height);
       sourceModule = new ModuleBase(0);
    }
 
