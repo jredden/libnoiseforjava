@@ -33,6 +33,13 @@ public class TerranPlanar2 extends Planar implements PlanarTerranIF{
 	static protected Integer scaled_hilly_terrain_pe_octave_count = 3;
 	static protected Integer continental_shelf_frequency_octave_count = 3;
 
+	
+	// width of elevation grid, in points
+	protected static Integer grid_width = 2048;
+	// height of elevation grid, in points
+	protected static Integer grid_height = 1024;
+
+
 
 	// implements PlanarTerranIF static variables
 	

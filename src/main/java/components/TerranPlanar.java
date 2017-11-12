@@ -19,6 +19,12 @@ public class TerranPlanar extends Planar implements PlanarTerranIF{
 	protected static Double inverse_res_in_meters = 1.0 / resinmeters;
 
 	protected static Double lightcontrast = new Double(1.0 / resinmeters);
+	
+	// width of elevation grid, in points
+	protected static Integer grid_width = 2048;
+	// height of elevation grid, in points
+	protected static Integer grid_height = 1024;
+
 
 	// implements PlanarTerranIF static variables
 	
