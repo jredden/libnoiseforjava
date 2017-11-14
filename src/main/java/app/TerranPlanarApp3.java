@@ -6,8 +6,11 @@ import libnoiseforjava.util.ImageCafe;
 
 public class TerranPlanarApp3 {
 	
-	static Integer width = 512;
-	static Integer height = 1024;
+	// width of elevation grid, in points
+	protected static Integer width = 2048;
+	// height of elevation grid, in points
+	protected static Integer height = 1024;
+
 	
 	public void basicTerran() {
 		TerranPlanar3 terranPlanar = new TerranPlanar3();

@@ -8,45 +8,10 @@ import libnoiseforjava.util.ImageCafe;
 import libnoiseforjava.util.NoiseMap;
 import libnoiseforjava.util.NoiseMapBuilderSphere;
 
-public class TerranPlanar3 extends Planar implements PlanarTerranIF{
-	
-	
-		
-	// overrides static variables in abstract class
-	protected static Double planet_circumference = 44236800.0;
-	protected static Double meters_per_degree = planet_circumference / 360.0;
-	protected static Double resinmeters = (degextent / gridextent) * meters_per_degree;
-	protected static Double inverse_res_in_meters = 1.0 / resinmeters;
-
-	protected static Double lightcontrast = new Double(1.0 / resinmeters);
-	
-	protected static Double mountains_amount = PlanarTerranIF.mountains_amount;
-	
-	protected static Integer base_continent_def_octave_count_pe0 = 3;
-	protected static Integer base_continent_def_octave_count_pe1 = 3;
-	static protected Integer mountain_base_def_rm0_octave_count = 3;
-	static protected Integer mountainous_low_rm0_octave_count = 3;
-	static protected Integer mountainous_low_rm1_octave_count = 3;
-	protected static Integer hilly_terrain_bi_octave_count = 3;
-	protected static Integer plains_terrain_bi0_octave_count = 3;
-	protected static Integer plains_terrain_bi1_octave_count = 3;
-	static protected Integer badlands_cliffs_pe_octave_count = 3;
-	static protected Integer scaled_mountainous_terrain_pe_octave_count = 3;
-	static protected Integer scaled_hilly_terrain_pe_octave_count = 3;
-	static protected Integer continental_shelf_frequency_octave_count = 3;
-
-	
-
-	// implements PlanarTerranIF static variables
-	
-	class PlanarTerranImpl extends AbstractPlanarTerran{}
-	
-	protected static TerranPlanar3 terranPlanar = new TerranPlanar3();
-	protected static PlanarTerranImpl planarTerranImpl = terranPlanar.new PlanarTerranImpl();
-	
+public class TerranPlanarDefault extends Planar implements PlanarTerranIF{
 	
 	protected static Double scalar_divisor = 0.999;
-	
+		
 	// width of elevation grid, in points
 	protected static Integer grid_width = 2048;
 	// height of elevation grid, in points
