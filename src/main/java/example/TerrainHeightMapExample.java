@@ -47,13 +47,13 @@ public class TerrainHeightMapExample {
 		Perlin perlin1 = new Perlin();
 
 		// create Noisemap object
-		NoiseMap heightMap = new NoiseMap(512, 512);
+		NoiseMap heightMap = new NoiseMap(2048, 1024);
 
 		// create Builder object
 		NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
 		heightMapBuilder.setSourceModule(perlin1);
 		heightMapBuilder.setDestNoiseMap(heightMap);
-		heightMapBuilder.setDestSize(512, 512);
+		heightMapBuilder.setDestSize(2048, 1024);
 		heightMapBuilder.setBounds(0.0, 511.0, 0.0, 511.0);
 		heightMapBuilder.build();
 
