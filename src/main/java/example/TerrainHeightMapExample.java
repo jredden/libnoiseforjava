@@ -83,8 +83,8 @@ public class TerrainHeightMapExample {
 		// Render the texture.
 		renderer.render();
 
-		BufferedImage im = buffBuilder(destTexture.getHeight(),
-				destTexture.getWidth(), destTexture);
+		BufferedImage im = buffBuilder(destTexture.getWidth(),
+				destTexture.getHeight(), destTexture);
 		try {
 			ImageIO.write(im, "png", new File("images/"+GenRandomRolls.Instance().getD100000()+"terrain_test.png"));
 		} catch (IOException e1) {
