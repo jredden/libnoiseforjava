@@ -56,14 +56,14 @@ public class TerrainHeightMapExample2 {
 				persistence, lacunarity, octive_count, NoiseQuality.QUALITY_STD);
 
 		// create Noisemap object
-		NoiseMap heightMap = new NoiseMap(256, 256);
+		NoiseMap heightMap = new NoiseMap(2048, 1024);
 
 		// create Builder object
 		NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
 		heightMapBuilder.setSourceModule(perlin);
 		heightMapBuilder.setDestNoiseMap(heightMap);
-		heightMapBuilder.setDestSize(256, 256);
-		heightMapBuilder.setBounds(12.0, 16.0, 1.0, 5.0);
+		heightMapBuilder.setDestSize(2048, 1024);
+		heightMapBuilder.setBounds(0.0, 511.0, 0.0, 511.0);
 		heightMapBuilder.build();
 
 		// create renderer object
@@ -92,8 +92,8 @@ public class TerrainHeightMapExample2 {
 		// Render the texture.
 		renderer.render();
 
-		BufferedImage im = buffBuilder(destTexture.getHeight(),
-				destTexture.getWidth(), destTexture);
+		BufferedImage im = buffBuilder(destTexture.getWidth(),
+				destTexture.getHeight(), destTexture);
 		try {
 			ImageIO.write(im, "png", new File("images/terrain_test2.png"));
 		} catch (IOException e1) {
