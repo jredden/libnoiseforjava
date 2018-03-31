@@ -110,13 +110,13 @@ public class TerrainHeightMapExample5 {
 		Add add = new Add(curve, perlin);
 		
 		// create Noisemap object
-		NoiseMap heightMap = new NoiseMap(1024, 1024);
+		NoiseMap heightMap = new NoiseMap(2048, 1024);
 
 		// create Builder object
 		NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
 		heightMapBuilder.setSourceModule(add);
 		heightMapBuilder.setDestNoiseMap(heightMap);
-		heightMapBuilder.setDestSize(1024, 1024);
+		heightMapBuilder.setDestSize(2048, 1024);
 		heightMapBuilder.setBounds(12.0, 16.0, 1.0, 5.0);
 		heightMapBuilder.build();
 
@@ -146,8 +146,8 @@ public class TerrainHeightMapExample5 {
 		// Render the texture.
 		renderer.render();
 
-		BufferedImage im = buffBuilder(destTexture.getHeight(),
-				destTexture.getWidth(), destTexture);
+		BufferedImage im = buffBuilder(destTexture.getWidth(),
+				destTexture.getHeight(), destTexture);
 		try {
 			ImageIO.write(im, "png", new File("images/terrain_test5.png"));
 		} catch (IOException e1) {
