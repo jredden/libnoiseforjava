@@ -115,9 +115,9 @@ public class TerrainHeightMapExample7 {
 				persistence, lacunarity, octive_count, NoiseQuality.QUALITY_STD);
 		NoiseMapBuilderSphere noiseMapBuilderSphere = new NoiseMapBuilderSphere();
 		noiseMapBuilderSphere.setBounds(0.0, 180.0, 90.0, 270.0);
-		noiseMapBuilderSphere.setDestSize(1024, 1024);
+		noiseMapBuilderSphere.setDestSize(2048, 1024);
 		noiseMapBuilderSphere.setSourceModule(perlin);
-		NoiseMap noiseMap = new NoiseMap(4096, 2048);
+		NoiseMap noiseMap = new NoiseMap(2048, 1024);
 		noiseMapBuilderSphere.setDestNoiseMap(noiseMap);
 		noiseMapBuilderSphere.build();
 	
@@ -138,13 +138,13 @@ public class TerrainHeightMapExample7 {
 
 		
 		// create Noisemap object
-		NoiseMap heightMap = new NoiseMap(1024, 1024);
+		NoiseMap heightMap = new NoiseMap(2048, 1024);
 
 		// create Builder object
 		NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
 		heightMapBuilder.setSourceModule(add1);
 		heightMapBuilder.setDestNoiseMap(heightMap);
-		heightMapBuilder.setDestSize(1024, 1024);
+		heightMapBuilder.setDestSize(2048, 1024);
 		heightMapBuilder.setBounds(9.0, 10.0, 1.0, 5.0);
 		
 		
@@ -177,10 +177,10 @@ public class TerrainHeightMapExample7 {
 		// Render the texture.
 		renderer.render();
 
-		BufferedImage im = buffBuilder(destTexture.getHeight(),
-				destTexture.getWidth(), destTexture);
+		BufferedImage im = buffBuilder(destTexture.getWidth(),
+				destTexture.getHeight(), destTexture);
 		try {
-			ImageIO.write(im, "png", new File("images/"+GenRandomRolls.Instance().getD100000()+"terrain_test8.png"));
+			ImageIO.write(im, "png", new File("images/"+GenRandomRolls.Instance().getD100000()+"terrain_test7.png"));
 		} catch (IOException e1) {
 			System.out.println("Could not write the image file.");
 		}

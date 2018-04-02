@@ -49,7 +49,7 @@ public class TerrainHeightMapExample9 {
 		
 		
 		// create Noisemap object
-		NoiseMap heightMap = new NoiseMap(1024, 1024);
+		NoiseMap heightMap = new NoiseMap(2048, 1024);
 
 		
 		ScaleBias scaleBias = new ScaleBias(perlin1);
@@ -60,7 +60,7 @@ public class TerrainHeightMapExample9 {
 
 		NoiseMapBuilderPlane noiseMapBuilderPlane = new NoiseMapBuilderPlane();
 		noiseMapBuilderPlane.setBounds(-2.0, 16.0, -20.0, -1);
-		noiseMapBuilderPlane.setDestSize(1024, 1024);
+		noiseMapBuilderPlane.setDestSize(2048, 1024);
 		noiseMapBuilderPlane.setSourceModule(scaleBias);
 		noiseMapBuilderPlane.setDestNoiseMap(heightMap);
 		noiseMapBuilderPlane.build();
@@ -91,8 +91,8 @@ public class TerrainHeightMapExample9 {
 		// Render the texture.
 		renderer.render();
 
-		BufferedImage im = buffBuilder(destTexture.getHeight(),
-				destTexture.getWidth(), destTexture);
+		BufferedImage im = buffBuilder(destTexture.getWidth(),
+				destTexture.getHeight(), destTexture);
 		try {
 			ImageIO.write(im, "png", new File("images/"+GenRandomRolls.Instance().getD100000()+"terrain_test9.png"));
 		} catch (IOException e1) {
