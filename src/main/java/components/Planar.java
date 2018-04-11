@@ -61,9 +61,9 @@ public abstract class Planar {
 	// easternmost coordinate of elevation grid.
 	protected static Double east_coord = 180.0;
 	// width of elevation grid, in points
-	protected static Integer grid_width = 512;
+	protected static Integer grid_width = 2048;
 	// height of elevation grid, in points
-	protected static Integer grid_height = 512;
+	protected static Integer grid_height = 1024;
 
 	protected static Double planet_circumference = 44236800.0;
 	protected static Double meters_per_degree = planet_circumference / 360.0;
